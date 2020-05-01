@@ -1,0 +1,16 @@
+# Set default behavior to automatically normalize line endings.
+* text=auto
+
+# Explicit define text files types.
+*.cs text diff=csharp
+
+# Explicit exclude binary files from the line ending normalization.
+*.png binary
+*.JLS binary
+*.jls binary
+*.bmp binary
+*.raw binary
+
+# Export ignore all files that are only needed for git and CI (used when downloading the repository as a zip file).
+.gitattributes export-ignore
+.gitignore export-ignore
