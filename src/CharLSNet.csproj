@@ -18,23 +18,20 @@
   </PropertyGroup>
 
   <Target Name="BuildNativeCharLS" BeforeTargets="CopyNativeCharLSFiles">
-      <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=Release;Platform=Win32"/>
-      <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=Release;Platform=x64"/>
+      <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=Release;Platform=Win32" />
+      <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=Release;Platform=x64" />
   </Target>
 
   <ItemGroup>
-        <MySourceFiles Include="..\extern\charls\bin\Release\x86\charls-2-x86.dll;
-                                ..\extern\charls\bin\Release\x86\charls-2-x86.pdb;
-                                ..\extern\charls\bin\Release\x64\charls-2-x64.dll;
-                                ..\extern\charls\bin\Release\x64\charls-2-x64.pdb"/>
+        <MySourceFiles Include="..\extern\charls\bin\Release\x86\charls-2-x86.dll;&#xD;&#xA;                                ..\extern\charls\bin\Release\x86\charls-2-x86.pdb;&#xD;&#xA;                                ..\extern\charls\bin\Release\x64\charls-2-x64.dll;&#xD;&#xA;                                ..\extern\charls\bin\Release\x64\charls-2-x64.pdb" />
   </ItemGroup>
 
   <Target Name="CopyNativeCharLSFiles" BeforeTargets="Build">
-    <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+    <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
   </Target>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
