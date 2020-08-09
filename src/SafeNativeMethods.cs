@@ -3,6 +3,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using CharLS.Native;
 
 namespace CharLS
 {
@@ -60,5 +61,45 @@ namespace CharLS
 
         [DllImport(NativeX64Library, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true, EntryPoint = "charls_get_error_message")]
         internal static extern IntPtr CharLSGetErrorMessageX64(int errorValue);
+
+        [DllImport(NativeX86Library, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
+            ThrowOnUnmappableChar = true, EntryPoint = "charls_jpegls_encoder_set_frame_info")]
+        internal static extern JpegLSError CharLSSetFrameInfoX86(IntPtr encoder, [In] ref FrameInfoNative frameInfo);
+
+        [DllImport(NativeX64Library, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
+            ThrowOnUnmappableChar = true, EntryPoint = "charls_jpegls_encoder_set_frame_info")]
+        internal static extern JpegLSError CharLSSetFrameInfoX64(IntPtr encoder, [In] ref FrameInfoNative frameInfo);
+
+        [DllImport(NativeX86Library, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
+            ThrowOnUnmappableChar = true, EntryPoint = "charls_jpegls_encoder_create")]
+        internal static extern IntPtr CharLSCreateEncoderX86();
+
+        [DllImport(NativeX64Library, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
+            ThrowOnUnmappableChar = true, EntryPoint = "charls_jpegls_encoder_create")]
+        internal static extern IntPtr CharLSCreateEncoderX64();
+
+        [DllImport(NativeX86Library, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
+            ThrowOnUnmappableChar = true, EntryPoint = "charls_jpegls_decoder_create")]
+        internal static extern IntPtr CharLSCreateDecoderX86();
+
+        [DllImport(NativeX64Library, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
+            ThrowOnUnmappableChar = true, EntryPoint = "charls_jpegls_decoder_create")]
+        internal static extern IntPtr CharLSCreateDecoderX64();
+
+        [DllImport(NativeX86Library, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
+            ThrowOnUnmappableChar = true, EntryPoint = "charls_jpegls_decoder_read_spiff_header")]
+        internal static extern IntPtr CharLSReadSpiffHeaderX86(IntPtr decoder);
+
+        [DllImport(NativeX64Library, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
+            ThrowOnUnmappableChar = true, EntryPoint = "charls_jpegls_decoder_read_spiff_header")]
+        internal static extern IntPtr CharLSReadSpiffHeaderX64(IntPtr decoder);
+
+        [DllImport(NativeX86Library, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
+            ThrowOnUnmappableChar = true, EntryPoint = "charls_jpegls_decoder_read_header")]
+        internal static extern JpegLSError JpegLSDecoderReadHeaderX86(IntPtr decoder);
+
+        [DllImport(NativeX64Library, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
+            ThrowOnUnmappableChar = true, EntryPoint = "charls_jpegls_decoder_read_header")]
+        internal static extern JpegLSError JpegLSDecoderReadHeaderX64(IntPtr decoder);
     }
 }

@@ -230,21 +230,7 @@ namespace CharLS
             HandleResult(error);
         }
 
-        private static void JpegLsReadHeaderThrowWhenError(byte[] source, int length, out JlsParameters info)
-        {
-            var result = Environment.Is64BitProcess ?
-                SafeNativeMethods.JpegLsReadHeaderX64(source, length, out info, IntPtr.Zero) :
-                SafeNativeMethods.JpegLsReadHeaderX86(source, length, out info, IntPtr.Zero);
-            HandleResult(result);
-        }
-
-        private static int GetUncompressedSize(ref JlsParameters info)
-        {
-            var size = info.Width * info.Height * info.Components * ((info.BitsPerSample + 7) / 8);
-            return size;
-        }
-
-        private static void HandleResult(JpegLSError result)
+        internal static void HandleResult(JpegLSError result)
         {
             Exception exception;
 
@@ -313,6 +299,20 @@ namespace CharLS
             // ReSharper disable once PossibleNullReferenceException
             data.Add(nameof(JpegLSError), result);
             throw exception;
+        }
+
+        private static void JpegLsReadHeaderThrowWhenError(byte[] source, int length, out JlsParameters info)
+        {
+            var result = Environment.Is64BitProcess ?
+                SafeNativeMethods.JpegLsReadHeaderX64(source, length, out info, IntPtr.Zero) :
+                SafeNativeMethods.JpegLsReadHeaderX86(source, length, out info, IntPtr.Zero);
+            HandleResult(result);
+        }
+
+        private static int GetUncompressedSize(ref JlsParameters info)
+        {
+            var size = info.Width * info.Height * info.Components * ((info.BitsPerSample + 7) / 8);
+            return size;
         }
 
         private static string GetErrorMessage(JpegLSError result)
