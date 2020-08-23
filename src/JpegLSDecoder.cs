@@ -119,9 +119,17 @@ namespace CharLS.Native
 
             var decoder = new JpegLSDecoder(source);
             decoder.ReadHeader();
+            return decoder.Decode();
+        }
 
-            var destination = new byte[decoder.GetDestinationSize()];
-            decoder.DecodeToBuffer(destination);
+        /// <summary>
+        /// Decodes this instance.
+        /// </summary>
+        /// <returns>A byte array with the pixel data.</returns>
+        public byte[] Decode()
+        {
+            var destination = new byte[GetDestinationSize()];
+            DecodeToBuffer(destination);
 
             return destination;
         }

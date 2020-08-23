@@ -67,25 +67,30 @@ namespace CharLS.Test
         }
 
         [Test]
-        public void Compress()
+        public void Encode()
         {
-            var info = new JpegLSMetadataInfo(256, 256, 8, 3);
+            var info = new FrameInfo(256, 256, 8, 3);
 
             var uncompressedOriginal = ReadAllBytes("TEST8.PPM", 15);
             uncompressedOriginal = TripletToPlanar(uncompressedOriginal, info.Width, info.Height);
 
-            var compressedSegment = JpegLSCodec.Compress(info, uncompressedOriginal);
-            var compressed = new byte[compressedSegment.Count];
-            Array.Copy(compressedSegment.Array, compressed, compressed.Length);
+            var encoder = new JpegLSEncoder { FrameInfo = info };
 
-            var compressedInfo = JpegLSCodec.GetMetadataInfo(compressed);
-            Assert.AreEqual(info, compressedInfo);
+            var encoded = new byte[encoder.EstimatedDestinationSize];
+            encoder.SetDestination(encoded);
+            encoder.Encode(uncompressedOriginal);
 
-            var uncompressed = JpegLSCodec.Decompress(compressed);
-            Assert.AreEqual(info.UncompressedSize, uncompressed.Length);
+            Array.Resize(ref encoded, (int)encoder.BytesWritten);
+
+            var decoder = new JpegLSDecoder(encoded);
+            decoder.ReadHeader();
+            ////var compressedInfo = JpegLSCodec.GetMetadataInfo(compressed);
+            ////Assert.AreEqual(info, compressedInfo);
+
+            var uncompressed = decoder.Decode();
+            Assert.AreEqual(uncompressedOriginal.Length, uncompressed.Length);
             Assert.AreEqual(uncompressedOriginal, uncompressed);
         }
-
 
         [Test]
         public void CompressPartOfInputBuffer()
@@ -110,37 +115,43 @@ namespace CharLS.Test
         [Test]
         public void CompressOneByOneColor()
         {
-            var info = new JpegLSMetadataInfo(1, 1, 8, 3);
             var uncompressedOriginal = new byte[] { 77, 33, 255 };
+            var encoder = new JpegLSEncoder { FrameInfo = new FrameInfo(1, 1, 8, 3) };
 
-            var compressedSegment = JpegLSCodec.Compress(info, uncompressedOriginal);
-            var compressed = new byte[compressedSegment.Count];
-            Array.Copy(compressedSegment.Array, compressed, compressed.Length);
+            var encoded = new byte[encoder.EstimatedDestinationSize];
+            encoder.SetDestination(encoded);
+            encoder.Encode(uncompressedOriginal);
 
-            var uncompressed = JpegLSCodec.Decompress(compressed);
-            Assert.AreEqual(info.UncompressedSize, uncompressed.Length);
+            var decoder = new JpegLSDecoder(encoded);
+            decoder.ReadHeader();
+
+            var uncompressed = decoder.Decode();
+            Assert.AreEqual(uncompressedOriginal.Length, uncompressed.Length);
             Assert.AreEqual(uncompressedOriginal, uncompressed);
         }
 
         [Test]
         public void Compress2BitMonochrome()
         {
-            var info = new JpegLSMetadataInfo(1, 1, 2, 1);
             var uncompressedOriginal = new byte[] { 1 };
+            var encoder = new JpegLSEncoder { FrameInfo = new FrameInfo(1, 1, 2, 1) };
 
-            var compressedSegment = JpegLSCodec.Compress(info, uncompressedOriginal);
-            var compressed = new byte[compressedSegment.Count];
-            Array.Copy(compressedSegment.Array, compressed, compressed.Length);
+            var encoded = new byte[encoder.EstimatedDestinationSize];
+            encoder.SetDestination(encoded);
+            encoder.Encode(uncompressedOriginal);
 
-            var uncompressed = JpegLSCodec.Decompress(compressed);
-            Assert.AreEqual(info.UncompressedSize, uncompressed.Length);
+            var decoder = new JpegLSDecoder(encoded);
+            decoder.ReadHeader();
+
+            var uncompressed = decoder.Decode();
+            Assert.AreEqual(uncompressedOriginal.Length, uncompressed.Length);
             Assert.AreEqual(uncompressedOriginal, uncompressed);
         }
 
         [Test]
         public void DecodeBitStreamWithNoMarkerStart()
         {
-            var source = new byte[] {0x33, 0x33};
+            var source = new byte[] { 0x33, 0x33 };
 
             var exception = Assert.Throws<InvalidDataException>(() => JpegLSDecoder.Decode(source));
             Assert.AreEqual(JpegLSError.JpegMarkerStartByteNotFound, exception.Data["JpegLSError"]);
