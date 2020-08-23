@@ -255,7 +255,7 @@ namespace CharLS
                 case JpegLSError.DuplicateStartOfFrameMarker:
                 case JpegLSError.DuplicateComponentIdInStartOfFrameSegment:
                 case JpegLSError.UnexpectedEndOfImageMarker:
-                case JpegLSError.InvalidJpeglsPresetParameterType:
+                case JpegLSError.InvalidJpegLSPresetParameterType:
                 case JpegLSError.JpeglsPresetExtendedParameterTypeNotSupported:
                 case JpegLSError.MissingEndOfSpiffDirectory:
                 case JpegLSError.InvalidParameterWidth:

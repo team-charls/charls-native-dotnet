@@ -136,6 +136,14 @@ namespace CharLS
             ThrowOnUnmappableChar = true, EntryPoint = "charls_jpegls_decoder_get_near_lossless")]
         internal static extern JpegLSError CharLSGetNearLosslessX64(SafeHandleJpegLSDecoder decoder, int component, [Out] out int nearLossless);
 
+        [DllImport(NativeX64Library, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
+            ThrowOnUnmappableChar = true, EntryPoint = "charls_jpegls_decoder_get_interleave_mode")]
+        internal static extern JpegLSError CharLSGetInterleaveModeX64(SafeHandleJpegLSDecoder decoder, [Out] out JpegLSInterleaveMode interleaveMode);
+
+        [DllImport(NativeX86Library, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
+            ThrowOnUnmappableChar = true, EntryPoint = "charls_jpegls_decoder_get_interleave_mode")]
+        internal static extern JpegLSError CharLSGetInterleaveModeX86(SafeHandleJpegLSDecoder decoder, [Out] out JpegLSInterleaveMode interleaveMode);
+
         [DllImport(NativeX86Library, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
             ThrowOnUnmappableChar = true, EntryPoint = "charls_jpegls_decoder_get_destination_size")]
         internal static extern JpegLSError CharLSGetDestinationSizeX86(SafeHandleJpegLSDecoder decoder, uint stride, [Out] out UIntPtr destinationSize);

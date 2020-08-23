@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using CharLS.Native;
 using NUnit.Framework;
 
 namespace CharLS.Test
@@ -16,36 +17,50 @@ namespace CharLS.Test
         public void GetMetadataInfoFromLosslessEncodedColorImage()
         {
             var source = ReadAllBytes("T8C0E0.JLS");
-            var info = JpegLSCodec.GetMetadataInfo(source);
-            var expected = new JpegLSMetadataInfo { Height = 256, Width = 256, BitsPerComponent = 8, ComponentCount = 3 };
 
-            Assert.AreEqual(expected, info);
+            var decoder = new JpegLSDecoder(source);
+            decoder.ReadHeader();
+
+            var frameInfo = decoder.FrameInfo;
+
+            Assert.AreEqual(frameInfo.Height, 256);
+            Assert.AreEqual(frameInfo.Width, 256);
+            Assert.AreEqual(frameInfo.BitsPerSample, 8);
+            Assert.AreEqual(frameInfo.ComponentCount, 3);
+            Assert.AreEqual(decoder.NearLossless, 0);
         }
 
         [Test]
         public void GetMetadataInfoFromNearLosslessEncodedColorImage()
         {
             var source = ReadAllBytes("T8C0E3.JLS");
-            var info = JpegLSCodec.GetMetadataInfo(source);
-            var expected = new JpegLSMetadataInfo { Height = 256, Width = 256, BitsPerComponent = 8, ComponentCount = 3, AllowedLossyError = 3 };
 
-            Assert.AreEqual(expected, info);
+            var decoder = new JpegLSDecoder(source);
+            decoder.ReadHeader();
 
-            info = JpegLSCodec.GetMetadataInfo(source, source.Length);
-            Assert.AreEqual(expected, info);
+            var frameInfo = decoder.FrameInfo;
+
+            Assert.AreEqual(frameInfo.Height, 256);
+            Assert.AreEqual(frameInfo.Width, 256);
+            Assert.AreEqual(frameInfo.BitsPerSample, 8);
+            Assert.AreEqual(frameInfo.ComponentCount, 3);
+            Assert.AreEqual(decoder.NearLossless, 3);
         }
 
         [Test]
-        public void Decompress()
+        public void Decode()
         {
             var source = ReadAllBytes("T8C0E0.JLS");
             var expected = ReadAllBytes("TEST8.PPM", 15);
-            var uncompressed = JpegLSCodec.Decompress(source);
+            var uncompressed = JpegLSDecoder.Decode(source);
 
-            var info = JpegLSCodec.GetMetadataInfo(source);
-            if (info.InterleaveMode == JpegLSInterleaveMode.None && info.ComponentCount == 3)
+            var decoder = new JpegLSDecoder(source);
+            decoder.ReadHeader();
+
+            var frameInfo = decoder.FrameInfo;
+            if (decoder.InterleaveMode == JpegLSInterleaveMode.None && frameInfo.ComponentCount == 3)
             {
-                expected = TripletToPlanar(expected, info.Width, info.Height);
+                expected = TripletToPlanar(expected, (int)frameInfo.Width, (int)frameInfo.Height);
             }
 
             Assert.AreEqual(expected, uncompressed);
@@ -123,38 +138,38 @@ namespace CharLS.Test
         }
 
         [Test]
-        public void DecompressBitStreamWithNoMarkerStart()
+        public void DecodeBitStreamWithNoMarkerStart()
         {
-            var compressed = new byte[] { 0x33, 0x33 };
+            var source = new byte[] {0x33, 0x33};
 
-            var exception = Assert.Throws<InvalidDataException>(() => JpegLSCodec.Decompress(compressed));
+            var exception = Assert.Throws<InvalidDataException>(() => JpegLSDecoder.Decode(source));
             Assert.AreEqual(JpegLSError.JpegMarkerStartByteNotFound, exception.Data["JpegLSError"]);
         }
 
         [Test]
         public void DecodeBitStreamWithUnsupportedEncoding()
         {
-            var compressed = new byte[]
+            var source = new byte[]
                 {
                     0xFF, 0xD8, // Start Of Image (JPEG_SOI)
                     0xFF, 0xC3, // Start Of Frame (lossless, Huffman) (JPEG_SOF_3)
                     0x00, 0x00 // Length of data of the marker
                 };
-            var exception = Assert.Throws<InvalidDataException>(() => JpegLSCodec.Decompress(compressed));
+            var exception = Assert.Throws<InvalidDataException>(() => JpegLSDecoder.Decode(source));
             Assert.AreEqual(JpegLSError.EncodingNotSupported, exception.Data["JpegLSError"]);
         }
 
         [Test]
-        public void TestDecodeBitStreamWithUnknownJpegMarker()
+        public void DecodeBitStreamWithUnknownJpegMarker()
         {
-            var compressed = new byte[]
+            var source = new byte[]
                 {
                     0xFF, 0xD8, // Start Of Image (JPEG_SOI)
                     0xFF, 0x01, // Undefined marker
                     0x00, 0x00 // Length of data of the marker
                 };
 
-            var exception = Assert.Throws<InvalidDataException>(() => JpegLSCodec.Decompress(compressed));
+            var exception = Assert.Throws<InvalidDataException>(() => JpegLSDecoder.Decode(source));
             Assert.AreEqual(JpegLSError.UnknownJpegMarkerFound, exception.Data["JpegLSError"]);
         }
 
@@ -180,14 +195,12 @@ namespace CharLS.Test
             if (bytesToSkip == 0)
                 return File.ReadAllBytes(fullPath);
 
-            using (var stream = File.OpenRead(fullPath))
-            {
-                var result = new byte[new FileInfo(fullPath).Length - bytesToSkip];
+            using var stream = File.OpenRead(fullPath);
+            var result = new byte[new FileInfo(fullPath).Length - bytesToSkip];
 
-                stream.Seek(bytesToSkip, SeekOrigin.Begin);
-                stream.Read(result, 0, result.Length);
-                return result;
-            }
+            stream.Seek(bytesToSkip, SeekOrigin.Begin);
+            stream.Read(result, 0, result.Length);
+            return result;
         }
 
         private static string DataFileDirectory

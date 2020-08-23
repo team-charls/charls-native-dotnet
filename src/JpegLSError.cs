@@ -121,7 +121,7 @@ namespace CharLS
         /// <summary>
         /// This error is returned when the stream contains an invalid type parameter in the JPEG-LS segment.
         /// </summary>
-        InvalidJpeglsPresetParameterType = 22,
+        InvalidJpegLSPresetParameterType = 22,
 
         /// <summary>
         /// This error is returned when the stream contains an unsupported type parameter in the JPEG-LS segment.

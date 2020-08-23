@@ -18,8 +18,8 @@ namespace CharLS.Native
     {
         private uint _width;
         private uint _height;
-        ////public int BitsPerSample;
-        ////public int ComponentCount;
+        private int _bitsPerSample;
+        private int _componentCount;
 
         public uint Width
         {
@@ -38,6 +38,18 @@ namespace CharLS.Native
         {
             get => _height;
             set => _height = value;
+        }
+
+        public int BitsPerSample
+        {
+            get => _bitsPerSample;
+            set => _bitsPerSample = value;
+        }
+
+        public int ComponentCount
+        {
+            get => _componentCount;
+            set => _componentCount = value;
         }
 
         public static bool operator ==(FrameInfoNative frameInfo1, FrameInfoNative frameInfo2)
