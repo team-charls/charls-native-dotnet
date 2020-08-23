@@ -9,7 +9,7 @@ namespace CharLS.Native
     /// <summary>
     /// JPEG-LS Decoder.
     /// </summary>
-    public class JpegLSDecoder
+    public sealed class JpegLSDecoder : IDisposable
     {
         private readonly SafeHandleJpegLSDecoder _decoder = CreateDecoder();
         private FrameInfoNative? _frameInfo;
@@ -117,9 +117,17 @@ namespace CharLS.Native
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            var decoder = new JpegLSDecoder(source);
+            using var decoder = new JpegLSDecoder(source);
             decoder.ReadHeader();
             return decoder.Decode();
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            _decoder.Dispose();
         }
 
         /// <summary>

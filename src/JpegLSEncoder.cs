@@ -8,7 +8,7 @@ namespace CharLS.Native
     /// <summary>
     /// JPEG-LS Encoder.
     /// </summary>
-    public class JpegLSEncoder
+    public sealed class JpegLSEncoder : IDisposable
     {
         private readonly SafeHandleJpegLSEncoder _encoder = CreateEncoder();
         private FrameInfo _frameInfo;
@@ -109,6 +109,14 @@ namespace CharLS.Native
 
                 return (long)bytesWritten;
             }
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            _encoder.Dispose();
         }
 
         /// <summary>

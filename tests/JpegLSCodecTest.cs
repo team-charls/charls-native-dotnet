@@ -18,7 +18,7 @@ namespace CharLS.Test
         {
             var source = ReadAllBytes("T8C0E0.JLS");
 
-            var decoder = new JpegLSDecoder(source);
+            using var decoder = new JpegLSDecoder(source);
             decoder.ReadHeader();
 
             var frameInfo = decoder.FrameInfo;
@@ -35,7 +35,7 @@ namespace CharLS.Test
         {
             var source = ReadAllBytes("T8C0E3.JLS");
 
-            var decoder = new JpegLSDecoder(source);
+            using var decoder = new JpegLSDecoder(source);
             decoder.ReadHeader();
 
             var frameInfo = decoder.FrameInfo;
@@ -54,7 +54,7 @@ namespace CharLS.Test
             var expected = ReadAllBytes("TEST8.PPM", 15);
             var uncompressed = JpegLSDecoder.Decode(source);
 
-            var decoder = new JpegLSDecoder(source);
+            using var decoder = new JpegLSDecoder(source);
             decoder.ReadHeader();
 
             var frameInfo = decoder.FrameInfo;
@@ -74,7 +74,7 @@ namespace CharLS.Test
             var uncompressedOriginal = ReadAllBytes("TEST8.PPM", 15);
             uncompressedOriginal = TripletToPlanar(uncompressedOriginal, info.Width, info.Height);
 
-            var encoder = new JpegLSEncoder { FrameInfo = info };
+            using var encoder = new JpegLSEncoder { FrameInfo = info };
 
             var encoded = new byte[encoder.EstimatedDestinationSize];
             encoder.SetDestination(encoded);
@@ -82,7 +82,7 @@ namespace CharLS.Test
 
             Array.Resize(ref encoded, (int)encoder.BytesWritten);
 
-            var decoder = new JpegLSDecoder(encoded);
+            using var decoder = new JpegLSDecoder(encoded);
             decoder.ReadHeader();
             ////var compressedInfo = JpegLSCodec.GetMetadataInfo(compressed);
             ////Assert.AreEqual(info, compressedInfo);
@@ -116,13 +116,13 @@ namespace CharLS.Test
         public void CompressOneByOneColor()
         {
             var uncompressedOriginal = new byte[] { 77, 33, 255 };
-            var encoder = new JpegLSEncoder { FrameInfo = new FrameInfo(1, 1, 8, 3) };
+            using var encoder = new JpegLSEncoder { FrameInfo = new FrameInfo(1, 1, 8, 3) };
 
             var encoded = new byte[encoder.EstimatedDestinationSize];
             encoder.SetDestination(encoded);
             encoder.Encode(uncompressedOriginal);
 
-            var decoder = new JpegLSDecoder(encoded);
+            using var decoder = new JpegLSDecoder(encoded);
             decoder.ReadHeader();
 
             var uncompressed = decoder.Decode();
@@ -134,13 +134,13 @@ namespace CharLS.Test
         public void Compress2BitMonochrome()
         {
             var uncompressedOriginal = new byte[] { 1 };
-            var encoder = new JpegLSEncoder { FrameInfo = new FrameInfo(1, 1, 2, 1) };
+            using var encoder = new JpegLSEncoder { FrameInfo = new FrameInfo(1, 1, 2, 1) };
 
             var encoded = new byte[encoder.EstimatedDestinationSize];
             encoder.SetDestination(encoded);
             encoder.Encode(uncompressedOriginal);
 
-            var decoder = new JpegLSDecoder(encoded);
+            using var decoder = new JpegLSDecoder(encoded);
             decoder.ReadHeader();
 
             var uncompressed = decoder.Decode();
