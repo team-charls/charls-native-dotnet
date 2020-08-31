@@ -149,6 +149,72 @@ namespace CharLS.Test
         }
 
         [Test]
+        public void WriteStandardSpiffHeader()
+        {
+            var uncompressedOriginal = new byte[] { 1 };
+            using var encoder = new JpegLSEncoder { FrameInfo = new FrameInfo(1, 1, 2, 1) };
+
+            var encoded = new byte[encoder.EstimatedDestinationSize];
+            encoder.SetDestination(encoded);
+            encoder.WriteStandardSpiffHeader(SpiffColorSpace.Grayscale);
+            encoder.Encode(uncompressedOriginal);
+
+            using var decoder = new JpegLSDecoder(encoded);
+            bool spiffHeaderPresent = decoder.TryReadSpiffHeader(out var spiffHeader);
+
+            Assert.IsTrue(spiffHeaderPresent);
+
+            Assert.AreEqual(SpiffProfileId.None, spiffHeader.ProfileId);
+            Assert.AreEqual(1, spiffHeader.ComponentCount);
+            Assert.AreEqual(1, spiffHeader.Height);
+            Assert.AreEqual(1, spiffHeader.Width);
+            Assert.AreEqual(SpiffColorSpace.Grayscale, spiffHeader.ColorSpace);
+            Assert.AreEqual(2, spiffHeader.BitsPerSample);
+            Assert.AreEqual(SpiffCompressionType.JpegLS, spiffHeader.CompressionType);
+            Assert.AreEqual(SpiffResolutionUnit.AspectRatio, spiffHeader.ResolutionUnit);
+            Assert.AreEqual(1, spiffHeader.VerticalResolution);
+            Assert.AreEqual(1, spiffHeader.HorizontalResolution);
+        }
+
+        [Test]
+        public void WriteSpiffHeader()
+        {
+            var uncompressedOriginal = new byte[] { 1 };
+            using var encoder = new JpegLSEncoder { FrameInfo = new FrameInfo(1, 1, 2, 1) };
+
+            var encoded = new byte[encoder.EstimatedDestinationSize];
+            encoder.SetDestination(encoded);
+
+            var originalSpiffHeader = new SpiffHeader
+            {
+                ColorSpace = SpiffColorSpace.Grayscale,
+                Height = 1,
+                Width = 1,
+                ComponentCount = 1,
+                BitsPerSample = 2
+            };
+
+            encoder.WriteSpiffHeader(originalSpiffHeader);
+            encoder.Encode(uncompressedOriginal);
+
+            using var decoder = new JpegLSDecoder(encoded);
+            bool spiffHeaderPresent = decoder.TryReadSpiffHeader(out var spiffHeader);
+
+            Assert.IsTrue(spiffHeaderPresent);
+
+            Assert.AreEqual(SpiffProfileId.None, spiffHeader.ProfileId);
+            Assert.AreEqual(1, spiffHeader.ComponentCount);
+            Assert.AreEqual(1, spiffHeader.Height);
+            Assert.AreEqual(1, spiffHeader.Width);
+            Assert.AreEqual(SpiffColorSpace.Grayscale, spiffHeader.ColorSpace);
+            Assert.AreEqual(2, spiffHeader.BitsPerSample);
+            Assert.AreEqual(SpiffCompressionType.JpegLS, spiffHeader.CompressionType);
+            Assert.AreEqual(SpiffResolutionUnit.AspectRatio, spiffHeader.ResolutionUnit);
+            Assert.AreEqual(1, spiffHeader.VerticalResolution);
+            Assert.AreEqual(1, spiffHeader.HorizontalResolution);
+        }
+
+        [Test]
         public void DecodeBitStreamWithNoMarkerStart()
         {
             var source = new byte[] { 0x33, 0x33 };

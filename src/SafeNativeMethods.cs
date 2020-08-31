@@ -123,6 +123,24 @@ namespace CharLS
         internal static extern JpegLSError CharLSEncodeFromBufferX64(SafeHandleJpegLSEncoder encoder, [In] byte[] source, IntPtr sourceSizeBytes, uint stride);
 
         [DllImport(NativeX86Library, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
+            ThrowOnUnmappableChar = true, EntryPoint = "charls_jpegls_encoder_write_standard_spiff_header")]
+        internal static extern JpegLSError CharLSWriteStandardSpiffHeaderX86(SafeHandleJpegLSEncoder encoder,
+            SpiffColorSpace colorSpace, SpiffResolutionUnit resolutionUnit, uint verticalResolution, uint horizontalResolution);
+
+        [DllImport(NativeX64Library, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
+            ThrowOnUnmappableChar = true, EntryPoint = "charls_jpegls_encoder_write_standard_spiff_header")]
+        internal static extern JpegLSError CharLSWriteStandardSpiffHeaderX64(SafeHandleJpegLSEncoder encoder,
+            SpiffColorSpace colorSpace, SpiffResolutionUnit resolutionUnit, uint verticalResolution, uint horizontalResolution);
+
+        [DllImport(NativeX86Library, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
+            ThrowOnUnmappableChar = true, EntryPoint = "charls_jpegls_encoder_write_spiff_header")]
+        internal static extern JpegLSError CharLSWriteSpiffHeaderX86(SafeHandleJpegLSEncoder encoder, [In] ref SpiffHeaderNative spiffHeader);
+
+        [DllImport(NativeX64Library, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
+            ThrowOnUnmappableChar = true, EntryPoint = "charls_jpegls_encoder_write_spiff_header")]
+        internal static extern JpegLSError CharLSWriteSpiffHeaderX64(SafeHandleJpegLSEncoder encoder, [In] ref SpiffHeaderNative spiffHeader);
+
+        [DllImport(NativeX86Library, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
             ThrowOnUnmappableChar = true, EntryPoint = "charls_jpegls_encoder_get_bytes_written")]
         internal static extern JpegLSError CharLSGetBytesWrittenX86(SafeHandleJpegLSEncoder encoder, [Out] out IntPtr bytesWritten);
 
@@ -158,11 +176,13 @@ namespace CharLS
 
         [DllImport(NativeX86Library, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
             ThrowOnUnmappableChar = true, EntryPoint = "charls_jpegls_decoder_read_spiff_header")]
-        internal static extern IntPtr CharLSReadSpiffHeaderX86(SafeHandleJpegLSDecoder decoder);
+        internal static extern JpegLSError CharLSReadSpiffHeaderX86(SafeHandleJpegLSDecoder decoder,
+            [Out] out SpiffHeaderNative spiffHeader, [Out] out int headerFound);
 
         [DllImport(NativeX64Library, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
             ThrowOnUnmappableChar = true, EntryPoint = "charls_jpegls_decoder_read_spiff_header")]
-        internal static extern IntPtr CharLSReadSpiffHeaderX64(SafeHandleJpegLSDecoder decoder);
+        internal static extern JpegLSError CharLSReadSpiffHeaderX64(SafeHandleJpegLSDecoder decoder,
+            [Out] out SpiffHeaderNative spiffHeader, [Out] out int headerFound);
 
         [DllImport(NativeX86Library, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
             ThrowOnUnmappableChar = true, EntryPoint = "charls_jpegls_decoder_read_header")]

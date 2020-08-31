@@ -180,12 +180,29 @@ namespace CharLS.Native
         /// <summary>
         /// Reads the SPIFF header.
         /// </summary>
-        public void ReadSpiffHeader()
+        /// <param name="spiffHeader">The header.</param>
+        /// <returns>true if a SPIFF header was present and could be read.</returns>
+        public bool TryReadSpiffHeader(out SpiffHeader spiffHeader)
         {
-            if (Environment.Is64BitProcess)
-                SafeNativeMethods.CharLSReadSpiffHeaderX64(_decoder);
+            SpiffHeaderNative headerNative;
+            int headerFound;
+
+            var error = Environment.Is64BitProcess
+                ? SafeNativeMethods.CharLSReadSpiffHeaderX64(_decoder, out headerNative, out headerFound)
+                : SafeNativeMethods.CharLSReadSpiffHeaderX86(_decoder, out headerNative, out headerFound);
+            JpegLSCodec.HandleResult(error);
+
+            bool found = headerFound != 0;
+            if (found)
+            {
+                found = SpiffHeader.TryCreate(headerNative, out spiffHeader);
+            }
             else
-                SafeNativeMethods.CharLSReadSpiffHeaderX86(_decoder);
+            {
+                spiffHeader = default;
+            }
+
+            return found;
         }
 
         /// <summary>

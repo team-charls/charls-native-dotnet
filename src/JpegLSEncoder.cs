@@ -156,6 +156,37 @@ namespace CharLS.Native
             JpegLSCodec.HandleResult(error);
         }
 
+        /// <summary>
+        /// Writes a standard SPIFF header to the destination. The additional values are computed from the current encoder settings.
+        /// A SPIFF header is optional, but recommended for standalone JPEG-LS files.
+        /// </summary>
+        /// <param name="colorSpace">The color space of the image.</param>
+        /// <param name="resolutionUnit">The resolution units of the next 2 parameters.</param>
+        /// <param name="verticalResolution">The vertical resolution.</param>
+        /// <param name="horizontalResolution">The horizontal resolution.</param>
+        public void WriteStandardSpiffHeader(SpiffColorSpace colorSpace, SpiffResolutionUnit resolutionUnit = SpiffResolutionUnit.AspectRatio,
+            int verticalResolution = 1, int horizontalResolution = 1)
+        {
+            var error = Environment.Is64BitProcess
+                ? SafeNativeMethods.CharLSWriteStandardSpiffHeaderX64(_encoder, colorSpace, resolutionUnit, (uint)verticalResolution, (uint)horizontalResolution)
+                : SafeNativeMethods.CharLSWriteStandardSpiffHeaderX86(_encoder, colorSpace, resolutionUnit, (uint)verticalResolution, (uint)horizontalResolution);
+            JpegLSCodec.HandleResult(error);
+        }
+
+        /// <summary>
+        /// Writes a SPIFF header to the destination.
+        /// </summary>
+        /// <param name="spiffHeader">Reference to a SPIFF header that will be written to the destination.</param>
+        public void WriteSpiffHeader(SpiffHeader spiffHeader)
+        {
+            var headerNative = new SpiffHeaderNative(spiffHeader);
+
+            var error = Environment.Is64BitProcess
+                ? SafeNativeMethods.CharLSWriteSpiffHeaderX64(_encoder, ref headerNative)
+                : SafeNativeMethods.CharLSWriteSpiffHeaderX86(_encoder, ref headerNative);
+            JpegLSCodec.HandleResult(error);
+        }
+
         private static SafeHandleJpegLSEncoder CreateEncoder()
         {
             var encoder = Environment.Is64BitProcess
