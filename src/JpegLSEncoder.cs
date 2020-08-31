@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 using System;
+using System.Buffers;
+using System.Runtime.InteropServices;
 
 namespace CharLS.Native
 {
@@ -13,6 +15,7 @@ namespace CharLS.Native
         private readonly SafeHandleJpegLSEncoder _encoder = CreateEncoder();
         private FrameInfo? _frameInfo;
         private int _nearLossless;
+        private MemoryHandle _destinationPin;
 
         /// <summary>
         /// Gets or sets the frame information.
@@ -82,7 +85,7 @@ namespace CharLS.Native
         {
             get
             {
-                IntPtr sizeInBytes;
+                UIntPtr sizeInBytes;
 
                 var error = Environment.Is64BitProcess
                     ? SafeNativeMethods.CharLSGetEstimatedDestinationSizeX64(_encoder, out sizeInBytes)
@@ -103,7 +106,7 @@ namespace CharLS.Native
         {
             get
             {
-                IntPtr bytesWritten;
+                UIntPtr bytesWritten;
 
                 var error = Environment.Is64BitProcess
                     ? SafeNativeMethods.CharLSGetBytesWrittenX64(_encoder, out bytesWritten)
@@ -120,42 +123,44 @@ namespace CharLS.Native
         public void Dispose()
         {
             _encoder.Dispose();
+            _destinationPin.Dispose();
         }
 
         /// <summary>
         /// Sets the destination buffer that contains the pixels that need to be encoded.
         /// </summary>
         /// <param name="destination">The destination buffer.</param>
-        /// <param name="destinationLength">Length of the destination buffer, when 0 .</param>
-        public void SetDestination(byte[] destination, int destinationLength = 0)
+        public void SetDestination(Memory<byte> destination)
         {
-            if (destinationLength == 0)
-            {
-                destinationLength = destination.Length;
-            }
+            _destinationPin = destination.Pin();
 
-            var error = Environment.Is64BitProcess
-                ? SafeNativeMethods.CharLSSetDestinationBufferX64(_encoder, destination, (uint)destinationLength)
-                : SafeNativeMethods.CharLSSetDestinationBufferX86(_encoder, destination, (uint)destinationLength);
-            JpegLSCodec.HandleResult(error);
+            try
+            {
+                unsafe
+                {
+                    var error = Environment.Is64BitProcess
+                        ? SafeNativeMethods.CharLSSetDestinationBufferX64(_encoder, (byte*)_destinationPin.Pointer, (UIntPtr)destination.Length)
+                        : SafeNativeMethods.CharLSSetDestinationBufferX86(_encoder, (byte*)_destinationPin.Pointer, (UIntPtr)destination.Length);
+                    JpegLSCodec.HandleResult(error);
+                }
+            }
+            catch
+            {
+                _destinationPin.Dispose();
+                throw;
+            }
         }
 
         /// <summary>
         /// Encodes the specified source.
         /// </summary>
         /// <param name="source">The source.</param>
-        /// <param name="sourceLength">Length of the source.</param>
         /// <param name="stride">The stride.</param>
-        public void Encode(byte[] source, int sourceLength = 0, int stride = 0)
+        public void Encode(ReadOnlySpan<byte> source, int stride = 0)
         {
-            if (sourceLength == 0)
-            {
-                sourceLength = source.Length;
-            }
-
             var error = Environment.Is64BitProcess
-                ? SafeNativeMethods.CharLSEncodeFromBufferX64(_encoder, source, (IntPtr)sourceLength, (uint)stride)
-                : SafeNativeMethods.CharLSEncodeFromBufferX86(_encoder, source, (IntPtr)sourceLength, (uint)stride);
+                ? SafeNativeMethods.CharLSEncodeFromBufferX64(_encoder, ref MemoryMarshal.GetReference(source), (UIntPtr)source.Length, (uint)stride)
+                : SafeNativeMethods.CharLSEncodeFromBufferX86(_encoder, ref MemoryMarshal.GetReference(source), (UIntPtr)source.Length, (uint)stride);
             JpegLSCodec.HandleResult(error);
         }
 

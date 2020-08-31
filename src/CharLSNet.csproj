@@ -16,6 +16,7 @@
     <CodeAnalysisRuleSet>CharLS.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>$(OutDir)CharLSNet.xml</DocumentationFile>
     <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <Target Name="BuildNativeCharLS" BeforeTargets="CopyNativeCharLSFiles">

@@ -86,7 +86,8 @@ namespace CharLS.Native
             var message = Environment.Is64BitProcess ?
                 SafeNativeMethods.CharLSGetErrorMessageX64((int)result) :
                 SafeNativeMethods.CharLSGetErrorMessageX86((int)result);
-            return Marshal.PtrToStringAnsi(message);
+
+            return Marshal.PtrToStringAnsi(message) ?? string.Empty;
         }
     }
 }

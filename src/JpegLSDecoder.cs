@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 using System;
+using System.Buffers;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace CharLS.Native
 {
@@ -15,15 +17,15 @@ namespace CharLS.Native
         private FrameInfo? _frameInfo;
         private int? _nearLossless;
         private JpegLSInterleaveMode? _interleaveMode;
+        private MemoryHandle _sourcePin;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="JpegLSDecoder"/> class.
         /// </summary>
         /// <param name="source">The source buffer.</param>
-        /// <param name="sourceLength">Length of the source buffer.</param>
-        public JpegLSDecoder(byte[] source, int sourceLength = 0)
+        public JpegLSDecoder(ReadOnlyMemory<byte> source)
         {
-            SetSource(source, sourceLength);
+            SetSource(source);
         }
 
         /// <summary>
@@ -128,6 +130,7 @@ namespace CharLS.Native
         public void Dispose()
         {
             _decoder.Dispose();
+            _sourcePin.Dispose();
         }
 
         /// <summary>
@@ -146,18 +149,25 @@ namespace CharLS.Native
         /// Sets the source buffer that contains the encoded JPEG-LS bytes.
         /// </summary>
         /// <param name="source">The source buffer.</param>
-        /// <param name="sourceLength">Length of the source buffer, when 0 .</param>
-        public void SetSource(byte[] source, int sourceLength)
+        public void SetSource(ReadOnlyMemory<byte> source)
         {
-            if (sourceLength == 0)
-            {
-                sourceLength = source.Length;
-            }
+            _sourcePin = source.Pin();
 
-            var error = Environment.Is64BitProcess
-                ? SafeNativeMethods.CharLSSetSourceBufferX64(_decoder, source, sourceLength)
-                : SafeNativeMethods.CharLSSetSourceBufferX86(_decoder, source, sourceLength);
-            JpegLSCodec.HandleResult(error);
+            try
+            {
+                unsafe
+                {
+                    var error = Environment.Is64BitProcess
+                        ? SafeNativeMethods.CharLSSetSourceBufferX64(_decoder, (byte*)_sourcePin.Pointer, (UIntPtr)source.Length)
+                        : SafeNativeMethods.CharLSSetSourceBufferX86(_decoder, (byte*)_sourcePin.Pointer, (UIntPtr)source.Length);
+                    JpegLSCodec.HandleResult(error);
+                }
+            }
+            catch
+            {
+                _sourcePin.Dispose();
+                throw;
+            }
         }
 
         /// <summary>
@@ -220,18 +230,12 @@ namespace CharLS.Native
         /// Decodes the encoded JPEG-LS source to a byte buffer.
         /// </summary>
         /// <param name="destination">The destination.</param>
-        /// <param name="destinationSize">Size of the destination.</param>
         /// <param name="stride">The stride.</param>
-        public void DecodeToBuffer(byte[] destination, long destinationSize = 0, int stride = 0)
+        public void DecodeToBuffer(Span<byte> destination, int stride = 0)
         {
-            if (destinationSize == 0)
-            {
-                destinationSize = destination.Length;
-            }
-
             var error = Environment.Is64BitProcess
-                ? SafeNativeMethods.CharLSDecodeToBufferX64(_decoder, destination, (UIntPtr)destinationSize, (uint)stride)
-                : SafeNativeMethods.CharLSDecodeToBufferX86(_decoder, destination, (UIntPtr)destinationSize, (uint)stride);
+                ? SafeNativeMethods.CharLSDecodeToBufferX64(_decoder, ref MemoryMarshal.GetReference(destination), (UIntPtr)destination.Length, (uint)stride)
+                : SafeNativeMethods.CharLSDecodeToBufferX86(_decoder, ref MemoryMarshal.GetReference(destination), (UIntPtr)destination.Length, (uint)stride);
             JpegLSCodec.HandleResult(error);
         }
 
