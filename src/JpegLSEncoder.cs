@@ -11,7 +11,7 @@ namespace CharLS.Native
     public sealed class JpegLSEncoder : IDisposable
     {
         private readonly SafeHandleJpegLSEncoder _encoder = CreateEncoder();
-        private FrameInfo _frameInfo;
+        private FrameInfo? _frameInfo;
         private int _nearLossless;
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace CharLS.Native
         /// <value>
         /// The frame information.
         /// </value>
-        public FrameInfo FrameInfo
+        public FrameInfo? FrameInfo
         {
             get
             {
@@ -29,6 +29,9 @@ namespace CharLS.Native
 
             set
             {
+                if (value is null)
+                    throw new ArgumentNullException(nameof(value));
+
                 FrameInfoNative infoNative = default;
 
                 infoNative.Height = (uint)value.Height;

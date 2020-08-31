@@ -15,6 +15,7 @@
     <Configurations>Debug;Release;Checked</Configurations>
     <CodeAnalysisRuleSet>CharLS.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>$(OutDir)CharLSNet.xml</DocumentationFile>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <Target Name="BuildNativeCharLS" BeforeTargets="CopyNativeCharLSFiles">

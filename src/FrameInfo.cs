@@ -112,7 +112,7 @@ namespace CharLS.Native
         /// </returns>
         public override bool Equals(object obj)
         {
-            return Equals(obj as FrameInfo);
+            return Equals((obj as FrameInfo) !);
         }
 
         /// <summary>

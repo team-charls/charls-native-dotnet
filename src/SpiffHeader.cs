@@ -126,7 +126,7 @@ namespace CharLS.Native
         /// <returns>
         /// <c>true</c> if the specified <see cref="object"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return Equals(obj as SpiffHeader);
         }
@@ -138,7 +138,7 @@ namespace CharLS.Native
         /// <returns>
         /// <c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(SpiffHeader other)
+        public bool Equals(SpiffHeader? other)
         {
             if (other == null)
                 return false;
@@ -177,7 +177,7 @@ namespace CharLS.Native
             return hashCode.ToHashCode();
         }
 
-        internal static bool TryCreate(in SpiffHeaderNative headerNative, out SpiffHeader spiffHeader)
+        internal static bool TryCreate(in SpiffHeaderNative headerNative, out SpiffHeader? spiffHeader)
         {
             if (headerNative.Height > int.MaxValue ||
                 headerNative.Width > int.MaxValue ||

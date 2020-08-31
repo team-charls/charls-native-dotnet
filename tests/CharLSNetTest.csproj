@@ -9,6 +9,7 @@
 
     <Configurations>Debug;Release;Checked</Configurations>
     <CodeAnalysisRuleSet>CharLSNetTest.ruleset</CodeAnalysisRuleSet>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

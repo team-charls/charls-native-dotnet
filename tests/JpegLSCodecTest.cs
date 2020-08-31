@@ -5,10 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using CharLS.Native;
 using NUnit.Framework;
 
-namespace CharLS.Test
+namespace CharLS.Native.Test
 {
     [TestFixture]
     public class JpegLSCodecTest
@@ -60,7 +59,7 @@ namespace CharLS.Test
             var frameInfo = decoder.FrameInfo;
             if (decoder.InterleaveMode == JpegLSInterleaveMode.None && frameInfo.ComponentCount == 3)
             {
-                expected = TripletToPlanar(expected, (int)frameInfo.Width, (int)frameInfo.Height);
+                expected = TripletToPlanar(expected, frameInfo.Width, frameInfo.Height);
             }
 
             Assert.AreEqual(expected, uncompressed);
@@ -164,7 +163,7 @@ namespace CharLS.Test
 
             Assert.IsTrue(spiffHeaderPresent);
 
-            Assert.AreEqual(SpiffProfileId.None, spiffHeader.ProfileId);
+            Assert.AreEqual(SpiffProfileId.None, spiffHeader!.ProfileId);
             Assert.AreEqual(1, spiffHeader.ComponentCount);
             Assert.AreEqual(1, spiffHeader.Height);
             Assert.AreEqual(1, spiffHeader.Width);
@@ -202,7 +201,7 @@ namespace CharLS.Test
 
             Assert.IsTrue(spiffHeaderPresent);
 
-            Assert.AreEqual(SpiffProfileId.None, spiffHeader.ProfileId);
+            Assert.AreEqual(SpiffProfileId.None, spiffHeader!.ProfileId);
             Assert.AreEqual(1, spiffHeader.ComponentCount);
             Assert.AreEqual(1, spiffHeader.Height);
             Assert.AreEqual(1, spiffHeader.Width);
@@ -284,7 +283,7 @@ namespace CharLS.Test
         {
             get
             {
-                var assemblyLocation = new Uri(Assembly.GetExecutingAssembly().CodeBase);
+                var assemblyLocation = new Uri(Assembly.GetExecutingAssembly().CodeBase!);
                 return Path.GetDirectoryName(assemblyLocation.LocalPath) + @"\DataFiles\";
             }
         }

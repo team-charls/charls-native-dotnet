@@ -12,7 +12,7 @@ namespace CharLS.Native
     public sealed class JpegLSDecoder : IDisposable
     {
         private readonly SafeHandleJpegLSDecoder _decoder = CreateDecoder();
-        private FrameInfo _frameInfo;
+        private FrameInfo? _frameInfo;
         private int? _nearLossless;
         private JpegLSInterleaveMode? _interleaveMode;
 
@@ -36,7 +36,7 @@ namespace CharLS.Native
         {
             get
             {
-                if (_frameInfo == null)
+                if (_frameInfo is null)
                 {
                     FrameInfoNative frameInfoNative;
 
@@ -182,7 +182,7 @@ namespace CharLS.Native
         /// </summary>
         /// <param name="spiffHeader">The header.</param>
         /// <returns>true if a SPIFF header was present and could be read.</returns>
-        public bool TryReadSpiffHeader(out SpiffHeader spiffHeader)
+        public bool TryReadSpiffHeader(out SpiffHeader? spiffHeader)
         {
             SpiffHeaderNative headerNative;
             int headerFound;

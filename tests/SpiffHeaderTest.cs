@@ -70,7 +70,7 @@ namespace CharLS.Native.Test
             var a = new SpiffHeader();
 
             Assert.IsFalse(a.Equals(null));
-            Assert.IsFalse(a.Equals((object)null));
+            Assert.IsFalse(a!.Equals((object)null!));
         }
     }
 }

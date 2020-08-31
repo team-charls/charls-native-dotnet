@@ -47,8 +47,8 @@ namespace CharLS.Native.Test
         {
             var a = new FrameInfo(256, 1024, 8, 3);
 
-            Assert.IsFalse(a.Equals(null));
-            Assert.IsFalse(a.Equals((object)null));
+            Assert.IsFalse(a.Equals(null!));
+            Assert.IsFalse(a!.Equals((object)null!));
         }
     }
 }
