@@ -12,7 +12,7 @@ namespace CharLS.Native
     public sealed class JpegLSDecoder : IDisposable
     {
         private readonly SafeHandleJpegLSDecoder _decoder = CreateDecoder();
-        private FrameInfoNative? _frameInfo;
+        private FrameInfo _frameInfo;
         private int? _nearLossless;
         private JpegLSInterleaveMode? _interleaveMode;
 
@@ -32,23 +32,23 @@ namespace CharLS.Native
         /// <value>
         /// The frame information.
         /// </value>
-        public FrameInfoNative FrameInfo
+        public FrameInfo FrameInfo
         {
             get
             {
-                if (!_frameInfo.HasValue)
+                if (_frameInfo == null)
                 {
-                    FrameInfoNative frameInfo;
+                    FrameInfoNative frameInfoNative;
 
                     var error = Environment.Is64BitProcess
-                        ? SafeNativeMethods.CharLSGetFrameInfoX64(_decoder, out frameInfo)
-                        : SafeNativeMethods.CharLSGetFrameInfoX86(_decoder, out frameInfo);
+                        ? SafeNativeMethods.CharLSGetFrameInfoX64(_decoder, out frameInfoNative)
+                        : SafeNativeMethods.CharLSGetFrameInfoX86(_decoder, out frameInfoNative);
                     JpegLSCodec.HandleResult(error);
 
-                    _frameInfo = frameInfo;
+                    _frameInfo = new FrameInfo(frameInfoNative);
                 }
 
-                return _frameInfo.Value;
+                return _frameInfo;
             }
         }
 
