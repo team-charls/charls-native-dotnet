@@ -51,7 +51,7 @@ namespace CharLS.Native.Test
         {
             var source = ReadAllBytes("T8C0E0.JLS");
             var expected = ReadAllBytes("TEST8.PPM", 15);
-            var uncompressed = JpegLSDecoder.Decode(source);
+            var uncompressed = Decode(source);
 
             using var decoder = new JpegLSDecoder(source);
             decoder.ReadHeader();
@@ -218,7 +218,7 @@ namespace CharLS.Native.Test
         {
             var source = new byte[] { 0x33, 0x33 };
 
-            var exception = Assert.Throws<InvalidDataException>(() => JpegLSDecoder.Decode(source));
+            var exception = Assert.Throws<InvalidDataException>(() => Decode(source));
             Assert.AreEqual(JpegLSError.JpegMarkerStartByteNotFound, exception.Data["JpegLSError"]);
         }
 
@@ -231,7 +231,7 @@ namespace CharLS.Native.Test
                     0xFF, 0xC3, // Start Of Frame (lossless, Huffman) (JPEG_SOF_3)
                     0x00, 0x00 // Length of data of the marker
                 };
-            var exception = Assert.Throws<InvalidDataException>(() => JpegLSDecoder.Decode(source));
+            var exception = Assert.Throws<InvalidDataException>(() => Decode(source));
             Assert.AreEqual(JpegLSError.EncodingNotSupported, exception.Data["JpegLSError"]);
         }
 
@@ -245,7 +245,7 @@ namespace CharLS.Native.Test
                     0x00, 0x00 // Length of data of the marker
                 };
 
-            var exception = Assert.Throws<InvalidDataException>(() => JpegLSDecoder.Decode(source));
+            var exception = Assert.Throws<InvalidDataException>(() => Decode(source));
             Assert.AreEqual(JpegLSError.UnknownJpegMarkerFound, exception.Data["JpegLSError"]);
         }
 
@@ -286,6 +286,12 @@ namespace CharLS.Native.Test
                 var assemblyLocation = new Uri(Assembly.GetExecutingAssembly().CodeBase!);
                 return Path.GetDirectoryName(assemblyLocation.LocalPath) + @"\DataFiles\";
             }
+        }
+        private static byte[] Decode(byte[] source)
+        {
+            using var decoder = new JpegLSDecoder(source);
+            decoder.ReadHeader();
+            return decoder.Decode();
         }
     }
 }

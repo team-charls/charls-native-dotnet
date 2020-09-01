@@ -108,23 +108,6 @@ namespace CharLS.Native
         }
 
         /// <summary>
-        /// Decompresses the JPEG-LS encoded data passed in the source byte array.
-        /// </summary>
-        /// <param name="source">The byte array that contains the JPEG-LS encoded data to decompress.</param>
-        /// <returns>A byte array with the pixel data.</returns>
-        /// <exception cref="ArgumentNullException">source is null.</exception>
-        /// <exception cref="InvalidDataException">Thrown when the source array contains invalid compressed data.</exception>
-        public static byte[] Decode(byte[] source)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            using var decoder = new JpegLSDecoder(source);
-            decoder.ReadHeader();
-            return decoder.Decode();
-        }
-
-        /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
