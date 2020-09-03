@@ -92,9 +92,9 @@ namespace CharLS.Native
         /// <returns>
         ///   <see langword="true" /> if the current object is equal to the <paramref name="other" /> parameter; otherwise, <see langword="false" />.
         /// </returns>
-        public bool Equals(FrameInfo other)
+        public bool Equals(FrameInfo? other)
         {
-            if (ReferenceEquals(null, other))
+            if (other is null)
                 return false;
 
             return Width == other.Width &&
@@ -110,7 +110,7 @@ namespace CharLS.Native
         /// <returns>
         ///   <c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return Equals((obj as FrameInfo) !);
         }

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
 
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
 
     <Description>".NET interop layer for the CharLS JPEG-LS codec"</Description>
     <Company>Team-CharLS</Company>
