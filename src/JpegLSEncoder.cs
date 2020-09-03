@@ -42,9 +42,7 @@ namespace CharLS.Native
                 infoNative.BitsPerSample = value.BitsPerSample;
                 infoNative.ComponentCount = value.ComponentCount;
 
-                var error = Environment.Is64BitProcess
-                    ? SafeNativeMethods.CharLSSetFrameInfoX64(_encoder, ref infoNative)
-                    : SafeNativeMethods.CharLSSetFrameInfoX86(_encoder, ref infoNative);
+                var error = SafeNativeMethods.CharLSSetFrameInfo(_encoder, ref infoNative);
                 JpegLSCodec.HandleResult(error);
 
                 _frameInfo = value;
@@ -66,9 +64,7 @@ namespace CharLS.Native
 
             set
             {
-                var error = Environment.Is64BitProcess
-                    ? SafeNativeMethods.CharLSSetNearLosslessX64(_encoder, value)
-                    : SafeNativeMethods.CharLSSetNearLosslessX86(_encoder, value);
+                var error = SafeNativeMethods.CharLSSetNearLossless(_encoder, value);
                 JpegLSCodec.HandleResult(error);
 
                 _nearLossless = value;
@@ -85,11 +81,7 @@ namespace CharLS.Native
         {
             get
             {
-                UIntPtr sizeInBytes;
-
-                var error = Environment.Is64BitProcess
-                    ? SafeNativeMethods.CharLSGetEstimatedDestinationSizeX64(_encoder, out sizeInBytes)
-                    : SafeNativeMethods.CharLSGetEstimatedDestinationSizeX86(_encoder, out sizeInBytes);
+                var error = SafeNativeMethods.CharLSGetEstimatedDestinationSize(_encoder, out var sizeInBytes);
                 JpegLSCodec.HandleResult(error);
 
                 return (long)sizeInBytes;
@@ -106,11 +98,7 @@ namespace CharLS.Native
         {
             get
             {
-                UIntPtr bytesWritten;
-
-                var error = Environment.Is64BitProcess
-                    ? SafeNativeMethods.CharLSGetBytesWrittenX64(_encoder, out bytesWritten)
-                    : SafeNativeMethods.CharLSGetBytesWrittenX86(_encoder, out bytesWritten);
+                var error = SafeNativeMethods.CharLSGetBytesWritten(_encoder, out var bytesWritten);
                 JpegLSCodec.HandleResult(error);
 
                 return (long)bytesWritten;
@@ -138,9 +126,7 @@ namespace CharLS.Native
             {
                 unsafe
                 {
-                    var error = Environment.Is64BitProcess
-                        ? SafeNativeMethods.CharLSSetDestinationBufferX64(_encoder, (byte*)_destinationPin.Pointer, (UIntPtr)destination.Length)
-                        : SafeNativeMethods.CharLSSetDestinationBufferX86(_encoder, (byte*)_destinationPin.Pointer, (UIntPtr)destination.Length);
+                    var error = SafeNativeMethods.CharLSSetDestinationBuffer(_encoder, (byte*)_destinationPin.Pointer, (UIntPtr)destination.Length);
                     JpegLSCodec.HandleResult(error);
                 }
             }
@@ -158,9 +144,7 @@ namespace CharLS.Native
         /// <param name="stride">The stride.</param>
         public void Encode(ReadOnlySpan<byte> source, int stride = 0)
         {
-            var error = Environment.Is64BitProcess
-                ? SafeNativeMethods.CharLSEncodeFromBufferX64(_encoder, ref MemoryMarshal.GetReference(source), (UIntPtr)source.Length, (uint)stride)
-                : SafeNativeMethods.CharLSEncodeFromBufferX86(_encoder, ref MemoryMarshal.GetReference(source), (UIntPtr)source.Length, (uint)stride);
+            var error = SafeNativeMethods.CharLSEncodeFromBuffer(_encoder, ref MemoryMarshal.GetReference(source), (UIntPtr)source.Length, (uint)stride);
             JpegLSCodec.HandleResult(error);
         }
 
@@ -175,9 +159,7 @@ namespace CharLS.Native
         public void WriteStandardSpiffHeader(SpiffColorSpace colorSpace, SpiffResolutionUnit resolutionUnit = SpiffResolutionUnit.AspectRatio,
             int verticalResolution = 1, int horizontalResolution = 1)
         {
-            var error = Environment.Is64BitProcess
-                ? SafeNativeMethods.CharLSWriteStandardSpiffHeaderX64(_encoder, colorSpace, resolutionUnit, (uint)verticalResolution, (uint)horizontalResolution)
-                : SafeNativeMethods.CharLSWriteStandardSpiffHeaderX86(_encoder, colorSpace, resolutionUnit, (uint)verticalResolution, (uint)horizontalResolution);
+            var error = SafeNativeMethods.CharLSWriteStandardSpiffHeader(_encoder, colorSpace, resolutionUnit, (uint)verticalResolution, (uint)horizontalResolution);
             JpegLSCodec.HandleResult(error);
         }
 
@@ -189,17 +171,13 @@ namespace CharLS.Native
         {
             var headerNative = new SpiffHeaderNative(spiffHeader);
 
-            var error = Environment.Is64BitProcess
-                ? SafeNativeMethods.CharLSWriteSpiffHeaderX64(_encoder, ref headerNative)
-                : SafeNativeMethods.CharLSWriteSpiffHeaderX86(_encoder, ref headerNative);
+            var error = SafeNativeMethods.CharLSWriteSpiffHeader(_encoder, ref headerNative);
             JpegLSCodec.HandleResult(error);
         }
 
         private static SafeHandleJpegLSEncoder CreateEncoder()
         {
-            var encoder = Environment.Is64BitProcess
-                ? SafeNativeMethods.CharLSCreateEncoderX64()
-                : SafeNativeMethods.CharLSCreateEncoderX86();
+            var encoder = SafeNativeMethods.CharLSCreateEncoder();
             if (encoder.IsInvalid)
                 throw new OutOfMemoryException();
 

@@ -42,9 +42,7 @@ namespace CharLS.Native
                 {
                     FrameInfoNative frameInfoNative;
 
-                    var error = Environment.Is64BitProcess
-                        ? SafeNativeMethods.CharLSGetFrameInfoX64(_decoder, out frameInfoNative)
-                        : SafeNativeMethods.CharLSGetFrameInfoX86(_decoder, out frameInfoNative);
+                    var error = SafeNativeMethods.CharLSGetFrameInfo(_decoder, out frameInfoNative);
                     JpegLSCodec.HandleResult(error);
 
                     _frameInfo = new FrameInfo(frameInfoNative);
@@ -66,11 +64,7 @@ namespace CharLS.Native
             {
                 if (!_nearLossless.HasValue)
                 {
-                    int nearLossless;
-
-                    var error = Environment.Is64BitProcess
-                        ? SafeNativeMethods.CharLSGetNearLosslessX64(_decoder, 0, out nearLossless)
-                        : SafeNativeMethods.CharLSGetNearLosslessX86(_decoder, 0, out nearLossless);
+                    var error = SafeNativeMethods.CharLSGetNearLossless(_decoder, 0, out var nearLossless);
                     JpegLSCodec.HandleResult(error);
 
                     _nearLossless = nearLossless;
@@ -93,11 +87,7 @@ namespace CharLS.Native
             {
                 if (!_interleaveMode.HasValue)
                 {
-                    JpegLSInterleaveMode interleaveMode;
-
-                    var error = Environment.Is64BitProcess
-                        ? SafeNativeMethods.CharLSGetInterleaveModeX64(_decoder, out interleaveMode)
-                        : SafeNativeMethods.CharLSGetInterleaveModeX86(_decoder, out interleaveMode);
+                    var error = SafeNativeMethods.CharLSGetInterleaveMode(_decoder, out var interleaveMode);
                     JpegLSCodec.HandleResult(error);
 
                     _interleaveMode = interleaveMode;
@@ -140,9 +130,7 @@ namespace CharLS.Native
             {
                 unsafe
                 {
-                    var error = Environment.Is64BitProcess
-                        ? SafeNativeMethods.CharLSSetSourceBufferX64(_decoder, (byte*)_sourcePin.Pointer, (UIntPtr)source.Length)
-                        : SafeNativeMethods.CharLSSetSourceBufferX86(_decoder, (byte*)_sourcePin.Pointer, (UIntPtr)source.Length);
+                    var error = SafeNativeMethods.CharLSSetSourceBuffer(_decoder, (byte*)_sourcePin.Pointer, (UIntPtr)source.Length);
                     JpegLSCodec.HandleResult(error);
                 }
             }
@@ -160,11 +148,7 @@ namespace CharLS.Native
         /// <returns>The size of the destination buffer in bytes.</returns>
         public long GetDestinationSize(int stride = 0)
         {
-            UIntPtr destinationSize;
-
-            var error = Environment.Is64BitProcess
-                ? SafeNativeMethods.CharLSGetDestinationSizeX64(_decoder, (uint)stride, out destinationSize)
-                : SafeNativeMethods.CharLSGetDestinationSizeX86(_decoder, (uint)stride, out destinationSize);
+            var error = SafeNativeMethods.CharLSGetDestinationSize(_decoder, (uint)stride, out var destinationSize);
             JpegLSCodec.HandleResult(error);
 
             return (long)destinationSize;
@@ -177,12 +161,7 @@ namespace CharLS.Native
         /// <returns>true if a SPIFF header was present and could be read.</returns>
         public bool TryReadSpiffHeader(out SpiffHeader? spiffHeader)
         {
-            SpiffHeaderNative headerNative;
-            int headerFound;
-
-            var error = Environment.Is64BitProcess
-                ? SafeNativeMethods.CharLSReadSpiffHeaderX64(_decoder, out headerNative, out headerFound)
-                : SafeNativeMethods.CharLSReadSpiffHeaderX86(_decoder, out headerNative, out headerFound);
+            var error = SafeNativeMethods.CharLSReadSpiffHeader(_decoder, out var headerNative, out var headerFound);
             JpegLSCodec.HandleResult(error);
 
             bool found = headerFound != 0;
@@ -203,9 +182,7 @@ namespace CharLS.Native
         /// </summary>
         public void ReadHeader()
         {
-            var error = Environment.Is64BitProcess
-                ? SafeNativeMethods.JpegLSDecoderReadHeaderX64(_decoder)
-                : SafeNativeMethods.JpegLSDecoderReadHeaderX86(_decoder);
+            var error = SafeNativeMethods.JpegLSDecoderReadHeader(_decoder);
             JpegLSCodec.HandleResult(error);
         }
 
@@ -216,17 +193,13 @@ namespace CharLS.Native
         /// <param name="stride">The stride.</param>
         public void DecodeToBuffer(Span<byte> destination, int stride = 0)
         {
-            var error = Environment.Is64BitProcess
-                ? SafeNativeMethods.CharLSDecodeToBufferX64(_decoder, ref MemoryMarshal.GetReference(destination), (UIntPtr)destination.Length, (uint)stride)
-                : SafeNativeMethods.CharLSDecodeToBufferX86(_decoder, ref MemoryMarshal.GetReference(destination), (UIntPtr)destination.Length, (uint)stride);
+            var error = SafeNativeMethods.CharLSDecodeToBuffer(_decoder, ref MemoryMarshal.GetReference(destination), (UIntPtr)destination.Length, (uint)stride);
             JpegLSCodec.HandleResult(error);
         }
 
         private static SafeHandleJpegLSDecoder CreateDecoder()
         {
-            var encoder = Environment.Is64BitProcess
-                ? SafeNativeMethods.CharLSCreateDecoderX64()
-                : SafeNativeMethods.CharLSCreateDecoderX86();
+            var encoder = SafeNativeMethods.CharLSCreateDecoder();
             if (encoder.IsInvalid)
                 throw new OutOfMemoryException();
 

@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Team CharLS.
 // SPDX-License-Identifier: BSD-3-Clause
 
-using System;
 using Microsoft.Win32.SafeHandles;
 
 namespace CharLS.Native
@@ -15,11 +14,7 @@ namespace CharLS.Native
 
         protected override bool ReleaseHandle()
         {
-            if (Environment.Is64BitProcess)
-                SafeNativeMethods.CharLSDestroyDecoderX64(handle);
-            else
-                SafeNativeMethods.CharLSDestroyDecoderX86(handle);
-
+            SafeNativeMethods.CharLSDestroyDecoder(handle);
             return true;
         }
     }

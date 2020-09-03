@@ -83,9 +83,7 @@ namespace CharLS.Native
 
         private static string GetErrorMessage(JpegLSError result)
         {
-            var message = Environment.Is64BitProcess ?
-                SafeNativeMethods.CharLSGetErrorMessageX64((int)result) :
-                SafeNativeMethods.CharLSGetErrorMessageX86((int)result);
+            var message = SafeNativeMethods.CharLSGetErrorMessage((int)result);
 
             return Marshal.PtrToStringAnsi(message) ?? string.Empty;
         }
