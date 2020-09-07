@@ -140,10 +140,8 @@ namespace CharLS.Native
         /// </returns>
         public bool Equals(SpiffHeader? other)
         {
-            if (other == null)
-                return false;
-
-            return ProfileId == other.ProfileId &&
+            return other != null &&
+                   ProfileId == other.ProfileId &&
                    ComponentCount == other.ComponentCount &&
                    Height == other.Height &&
                    Width == other.Width &&

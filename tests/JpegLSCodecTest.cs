@@ -15,7 +15,7 @@ namespace CharLS.Native.Test
         [Test]
         public void GetMetadataInfoFromLosslessEncodedColorImage()
         {
-            var source = ReadAllBytes("T8C0E0.JLS");
+            byte[] source = ReadAllBytes("T8C0E0.JLS");
 
             using var decoder = new JpegLSDecoder(source);
             decoder.ReadHeader();
@@ -274,8 +274,8 @@ namespace CharLS.Native.Test
             using var stream = File.OpenRead(fullPath);
             var result = new byte[new FileInfo(fullPath).Length - bytesToSkip];
 
-            stream.Seek(bytesToSkip, SeekOrigin.Begin);
-            stream.Read(result, 0, result.Length);
+            _ = stream.Seek(bytesToSkip, SeekOrigin.Begin);
+            _ = stream.Read(result, 0, result.Length);
             return result;
         }
 

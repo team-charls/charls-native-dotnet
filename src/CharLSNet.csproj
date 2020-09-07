@@ -13,7 +13,6 @@
     <Copyright>Copyright 2019 Team CharLS</Copyright>
     <Platforms>AnyCPU</Platforms>
     <Configurations>Debug;Release;Checked</Configurations>
-    <CodeAnalysisRuleSet>CharLS.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>$(OutDir)CharLSNet.xml</DocumentationFile>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

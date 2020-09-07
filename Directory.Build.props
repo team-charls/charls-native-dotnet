@@ -25,7 +25,5 @@
 
     <!-- Define treat warnings as errors for C# projects -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)default.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 </Project>

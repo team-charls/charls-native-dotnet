@@ -94,10 +94,8 @@ namespace CharLS.Native
         /// </returns>
         public bool Equals(FrameInfo? other)
         {
-            if (other is null)
-                return false;
-
-            return Width == other.Width &&
+            return !(other is null) &&
+                   Width == other.Width &&
                    Height == other.Height &&
                    BitsPerSample == other.BitsPerSample &&
                    ComponentCount == other.ComponentCount;

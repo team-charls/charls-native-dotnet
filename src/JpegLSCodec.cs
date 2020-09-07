@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 using System;
+using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -74,7 +75,7 @@ namespace CharLS.Native
                     break;
             }
 
-            var data = exception.Data;
+            IDictionary? data = exception.Data;
 
             // ReSharper disable once PossibleNullReferenceException
             data.Add(nameof(JpegLSError), result);
@@ -83,7 +84,7 @@ namespace CharLS.Native
 
         private static string GetErrorMessage(JpegLSError result)
         {
-            var message = SafeNativeMethods.CharLSGetErrorMessage((int)result);
+            IntPtr message = SafeNativeMethods.CharLSGetErrorMessage((int)result);
 
             return Marshal.PtrToStringAnsi(message) ?? string.Empty;
         }

@@ -89,18 +89,8 @@ namespace CharLS
             IntPtr libHandle = IntPtr.Zero;
             if (libraryName == NativeLibraryName)
             {
-                string library;
-
-                if (Environment.Is64BitProcess)
-                {
-                    library = "charls-2-x64.dll";
-                }
-                else
-                {
-                    library = "charls-2-x86.dll";
-                }
-
-                var libraryLoaded = NativeLibrary.TryLoad(library, assembly, DllImportSearchPath.AssemblyDirectory, out libHandle);
+                string library = Environment.Is64BitProcess ? "charls-2-x64.dll" : "charls-2-x86.dll";
+                bool libraryLoaded = NativeLibrary.TryLoad(library, assembly, DllImportSearchPath.AssemblyDirectory, out libHandle);
                 if (!libraryLoaded)
                 {
                     throw new Exception($"Unable to Load Library: {library}");

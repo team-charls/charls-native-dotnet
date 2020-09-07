@@ -38,8 +38,10 @@ csharp_style_expression_bodied_constructors = false:suggestion
 csharp_style_expression_bodied_methods = false:suggestion
 csharp_style_expression_bodied_properties = true:suggestion
 csharp_style_inlined_variable_declaration = false:suggestion
-csharp_style_var_for_built_in_types = true:suggestion
+csharp_style_var_for_built_in_types = false:none
 csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_var_elsewhere = true:silent
+csharp_prefer_braces = when_multiline:suggestion
 
 dotnet_sort_system_directives_first = true
 
@@ -48,3 +50,23 @@ dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
 dotnet_style_qualification_for_field = false:suggestion
 dotnet_style_qualification_for_method = false:suggestion
 dotnet_style_qualification_for_property = false:suggestion
+
+# Default severity for analyzer diagnostics - Requires **VS2019 16.5** or later
+dotnet_analyzer_diagnostic.severity = error
+dotnet_diagnostic.CA1026.severity = none
+dotnet_diagnostic.CA1062.severity = none
+dotnet_diagnostic.CA1303.severity = none
+dotnet_diagnostic.CS1591.severity = none
+dotnet_diagnostic.CS3003.severity = none
+dotnet_diagnostic.IDE0018.severity = none
+dotnet_diagnostic.SA1101.severity = none
+dotnet_diagnostic.SA1116.severity = none
+dotnet_diagnostic.SA1117.severity = none
+dotnet_diagnostic.SA1120.severity = none
+dotnet_diagnostic.SA1309.severity = none
+dotnet_diagnostic.SA1413.severity = none
+dotnet_diagnostic.SA1503.severity = none
+dotnet_diagnostic.SA1600.severity = none
+dotnet_diagnostic.SA1633.severity = none
+dotnet_diagnostic.SX1101.severity = warning
+dotnet_diagnostic.IDE0055.severity = none
