@@ -28,6 +28,9 @@ namespace CharLS
         [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_set_near_lossless")]
         internal static extern JpegLSError CharLSSetNearLossless(SafeHandleJpegLSEncoder encoder, [In] int nearLossless);
 
+        [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_set_interleave_mode")]
+        internal static extern JpegLSError CharLSSetInterleaveMode(SafeHandleJpegLSEncoder encoder, [In] JpegLSInterleaveMode interleaveMode);
+
         [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_create")]
         internal static extern SafeHandleJpegLSEncoder CharLSCreateEncoder();
 

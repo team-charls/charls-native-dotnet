@@ -1,4 +1,4 @@
-# GIT ignore file for CharLS
+# GIT ignore file for charls-dotnet
 
 obj/
 bin/
@@ -22,6 +22,7 @@ TestResults/
 *.db
 *.aps
 *.sqlite
+**/Properties/launchSettings.json
 
 # NuGet Packages
 *.nupkg
@@ -29,6 +30,3 @@ TestResults/
 **/packages/*
 # except build/, which is used as an MSBuild target.
 !**/packages/build/
-
-# Ignore Coverity build folder
-cov-int/

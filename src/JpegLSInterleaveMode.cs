@@ -1,7 +1,7 @@
 // Copyright (c) Team CharLS.
 // SPDX-License-Identifier: BSD-3-Clause
 
-namespace CharLS
+namespace CharLS.Native
 {
     /// <summary>
     /// Defines the interleave mode for multi-component (color) pixel data.

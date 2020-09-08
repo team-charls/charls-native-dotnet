@@ -15,6 +15,7 @@ namespace CharLS.Native
         private readonly SafeHandleJpegLSEncoder _encoder = CreateEncoder();
         private FrameInfo? _frameInfo;
         private int _nearLossless;
+        private JpegLSInterleaveMode _interleaveMode;
         private MemoryHandle _destinationPin;
 
         /// <summary>
@@ -64,6 +65,23 @@ namespace CharLS.Native
                 JpegLSCodec.HandleResult(error);
 
                 _nearLossless = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the interleave mode.
+        /// </summary>
+        /// <value>
+        /// The interleave mode.
+        /// </value>
+        public JpegLSInterleaveMode InterleaveMode
+        {
+            get => _interleaveMode;
+
+            set
+            {
+                JpegLSCodec.HandleResult(SafeNativeMethods.CharLSSetInterleaveMode(_encoder, value));
+                _interleaveMode = value;
             }
         }
 
