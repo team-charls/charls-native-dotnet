@@ -16,6 +16,7 @@ namespace CharLS.Native
         private FrameInfo? _frameInfo;
         private int _nearLossless;
         private JpegLSInterleaveMode _interleaveMode;
+        private Memory<byte> _destination;
         private MemoryHandle _destinationPin;
 
         /// <summary>
@@ -103,19 +104,54 @@ namespace CharLS.Native
         }
 
         /// <summary>
+        /// Gets or sets the destination.
+        /// </summary>
+        /// <value>
+        /// The destination.
+        /// </value>
+        public Memory<byte> Destination
+        {
+            get => _destination;
+
+            set
+            {
+                _destinationPin.Dispose();
+                _destinationPin = value.Pin();
+
+                try
+                {
+                    unsafe
+                    {
+                        JpegLSError error = SafeNativeMethods.CharLSSetDestinationBuffer(_encoder,
+                            (byte*)_destinationPin.Pointer, (UIntPtr)value.Length);
+                        JpegLSCodec.HandleResult(error);
+                    }
+
+                    _destination = value;
+                }
+                catch
+                {
+                    _destination = default;
+                    _destinationPin.Dispose();
+                    throw;
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the bytes written.
         /// </summary>
         /// <value>
         /// The bytes written.
         /// </value>
-        public long BytesWritten
+        public int BytesWritten
         {
             get
             {
                 JpegLSError error = SafeNativeMethods.CharLSGetBytesWritten(_encoder, out UIntPtr bytesWritten);
                 JpegLSCodec.HandleResult(error);
 
-                return (long)bytesWritten;
+                return (int)bytesWritten;
             }
         }
 
@@ -126,29 +162,6 @@ namespace CharLS.Native
         {
             _encoder.Dispose();
             _destinationPin.Dispose();
-        }
-
-        /// <summary>
-        /// Sets the destination buffer that contains the pixels that need to be encoded.
-        /// </summary>
-        /// <param name="destination">The destination buffer.</param>
-        public void SetDestination(Memory<byte> destination)
-        {
-            _destinationPin = destination.Pin();
-
-            try
-            {
-                unsafe
-                {
-                    JpegLSError error = SafeNativeMethods.CharLSSetDestinationBuffer(_encoder, (byte*)_destinationPin.Pointer, (UIntPtr)destination.Length);
-                    JpegLSCodec.HandleResult(error);
-                }
-            }
-            catch
-            {
-                _destinationPin.Dispose();
-                throw;
-            }
         }
 
         /// <summary>

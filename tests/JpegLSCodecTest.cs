@@ -75,13 +75,10 @@ namespace CharLS.Native.Test
 
             using var encoder = new JpegLSEncoder { FrameInfo = info };
 
-            var encoded = new byte[encoder.EstimatedDestinationSize];
-            encoder.SetDestination(encoded);
+            encoder.Destination = new byte[encoder.EstimatedDestinationSize];
             encoder.Encode(uncompressedOriginal);
 
-            Array.Resize(ref encoded, (int)encoder.BytesWritten);
-
-            using var decoder = new JpegLSDecoder(encoded);
+            using var decoder = new JpegLSDecoder(encoder.Destination.Slice(0, encoder.BytesWritten));
             decoder.ReadHeader();
             ////var compressedInfo = JpegLSCodec.GetMetadataInfo(compressed);
             ////Assert.AreEqual(info, compressedInfo);
@@ -117,11 +114,10 @@ namespace CharLS.Native.Test
             var uncompressedOriginal = new byte[] { 77, 33, 255 };
             using var encoder = new JpegLSEncoder { FrameInfo = new FrameInfo(1, 1, 8, 3) };
 
-            var encoded = new byte[encoder.EstimatedDestinationSize];
-            encoder.SetDestination(encoded);
+            encoder.Destination = new byte[encoder.EstimatedDestinationSize];
             encoder.Encode(uncompressedOriginal);
 
-            using var decoder = new JpegLSDecoder(encoded);
+            using var decoder = new JpegLSDecoder(encoder.Destination);
             decoder.ReadHeader();
 
             var uncompressed = decoder.Decode();
@@ -135,11 +131,10 @@ namespace CharLS.Native.Test
             var uncompressedOriginal = new byte[] { 1 };
             using var encoder = new JpegLSEncoder { FrameInfo = new FrameInfo(1, 1, 2, 1) };
 
-            var encoded = new byte[encoder.EstimatedDestinationSize];
-            encoder.SetDestination(encoded);
+            encoder.Destination = new byte[encoder.EstimatedDestinationSize];
             encoder.Encode(uncompressedOriginal);
 
-            using var decoder = new JpegLSDecoder(encoded);
+            using var decoder = new JpegLSDecoder(encoder.Destination);
             decoder.ReadHeader();
 
             var uncompressed = decoder.Decode();
@@ -153,12 +148,11 @@ namespace CharLS.Native.Test
             var uncompressedOriginal = new byte[] { 1 };
             using var encoder = new JpegLSEncoder { FrameInfo = new FrameInfo(1, 1, 2, 1) };
 
-            var encoded = new byte[encoder.EstimatedDestinationSize];
-            encoder.SetDestination(encoded);
+            encoder.Destination = new byte[encoder.EstimatedDestinationSize];
             encoder.WriteStandardSpiffHeader(SpiffColorSpace.Grayscale);
             encoder.Encode(uncompressedOriginal);
 
-            using var decoder = new JpegLSDecoder(encoded);
+            using var decoder = new JpegLSDecoder(encoder.Destination);
             bool spiffHeaderPresent = decoder.TryReadSpiffHeader(out var spiffHeader);
 
             Assert.IsTrue(spiffHeaderPresent);
@@ -181,8 +175,7 @@ namespace CharLS.Native.Test
             var uncompressedOriginal = new byte[] { 1 };
             using var encoder = new JpegLSEncoder { FrameInfo = new FrameInfo(1, 1, 2, 1) };
 
-            var encoded = new byte[encoder.EstimatedDestinationSize];
-            encoder.SetDestination(encoded);
+            encoder.Destination = new byte[encoder.EstimatedDestinationSize];
 
             var originalSpiffHeader = new SpiffHeader
             {
@@ -196,7 +189,7 @@ namespace CharLS.Native.Test
             encoder.WriteSpiffHeader(originalSpiffHeader);
             encoder.Encode(uncompressedOriginal);
 
-            using var decoder = new JpegLSDecoder(encoded);
+            using var decoder = new JpegLSDecoder(encoder.Destination);
             bool spiffHeaderPresent = decoder.TryReadSpiffHeader(out var spiffHeader);
 
             Assert.IsTrue(spiffHeaderPresent);

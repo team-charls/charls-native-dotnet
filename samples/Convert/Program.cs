@@ -51,12 +51,11 @@ namespace Convert
                     FrameInfo = new FrameInfo(bitmapData.Width, bitmapData.Height, 8, 3)
                 };
 
-                var encodedData = new byte[jpeglsEncoder.EstimatedDestinationSize];
-                jpeglsEncoder.SetDestination(encodedData);
+                jpeglsEncoder.Destination = new byte[jpeglsEncoder.EstimatedDestinationSize];
                 jpeglsEncoder.InterleaveMode = JpegLSInterleaveMode.Sample;
                 jpeglsEncoder.Encode(pixels, bitmapData.Stride);
 
-                Save(encodedData, jpeglsEncoder.BytesWritten, GetOutputPath(inputPath));
+                Save(GetOutputPath(inputPath), jpeglsEncoder.Destination.Slice(0, jpeglsEncoder.BytesWritten).Span);
 
                 return Success;
             }
@@ -73,10 +72,10 @@ namespace Convert
             return Path.ChangeExtension(inputPath, ".jls");
         }
 
-        private static void Save(byte[] pixels, long count, string path) // TODO: use ReadOnlySpan
+        private static void Save(string path, ReadOnlySpan<byte> encodedData)
         {
             using var output = new FileStream(path, FileMode.OpenOrCreate);
-            output.Write(pixels, 0, (int)count); // TODO get rid of int cast.
+            output.Write(encodedData);
         }
 
         private static bool TryParseArguments(string[] args, out string inputPath)
