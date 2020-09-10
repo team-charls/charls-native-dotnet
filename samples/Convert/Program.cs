@@ -3,6 +3,7 @@
 
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using CharLS.Native;
 
@@ -15,42 +16,46 @@ namespace Convert
 
         private static int Main(string[] args)
         {
-            // This sample demonstrates how to convert 8 bit monochrome images and 24 bit color images to a .jls
-            // The input path should be a absolute path to a file format .NET can read (.bmp, .png, etc).
+            // This sample demonstrates how to convert another encoded image to a JPEG-LS encoded image.
+            // The input path should be an absolute path to a file format .NET can read (.bmp, .png, etc).
             string inputPath;
             if (!TryParseArguments(args, out inputPath))
             {
-                Console.WriteLine("Usage: Converter <path to image file>");
+                Console.WriteLine("Usage: Convert <path to image file>");
                 return Failure;
             }
 
             try
             {
-                using var imageStream = new FileStream(inputPath, FileMode.Open, FileAccess.Read);
-                using var image = new Bitmap(imageStream);
+                using var image = new Bitmap(inputPath);
 
-                // TODO: check pixel format.
+                var bitmapData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height),
+                    ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
+                if (bitmapData.Stride < 0)
+                {
+                    Console.WriteLine("Image {inputPath} is not top down.");
+                    return Failure;
+                }
 
-                var rect = new Rectangle(0, 0, image.Width, image.Height);
-                var bmpData = image.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, image.PixelFormat);
+                Span<byte> pixels;
+                unsafe
+                {
+                    pixels = new Span<byte>(bitmapData.Scan0.ToPointer(), bitmapData.Stride * image.Height);
+                }
 
-                // Declare an array to hold the bytes of the bitmap.
-                int bytes = Math.Abs(bmpData.Stride) * image.Height;
-                byte[] rgbValues = new byte[bytes];
+                // GDI+ returns bgr pixels, JPEG-LS (Spiff) only knows RGB as colorspace. 
+                ConvertBgrToRgb(pixels, image.Width, image.Height, bitmapData.Stride);
 
-                // Copy the RGB values into the array.
-                System.Runtime.InteropServices.Marshal.Copy(bmpData.Scan0, rgbValues, 0, bytes);
-
-                var encoder = new JpegLSEncoder {
-                    FrameInfo = new FrameInfo(bmpData.Width, bmpData.Height, 8, 3)
+                using var jpeglsEncoder = new JpegLSEncoder {
+                    FrameInfo = new FrameInfo(bitmapData.Width, bitmapData.Height, 8, 3)
                 };
 
-                var encodedData = new byte[encoder.EstimatedDestinationSize];
-                encoder.SetDestination(encodedData);
-                encoder.InterleaveMode = JpegLSInterleaveMode.Sample;
-                encoder.Encode(rgbValues, bmpData.Stride);
+                var encodedData = new byte[jpeglsEncoder.EstimatedDestinationSize];
+                jpeglsEncoder.SetDestination(encodedData);
+                jpeglsEncoder.InterleaveMode = JpegLSInterleaveMode.Sample;
+                jpeglsEncoder.Encode(pixels, bitmapData.Stride);
 
-                Save(encodedData, encoder.BytesWritten, GetOutputPath(inputPath));
+                Save(encodedData, jpeglsEncoder.BytesWritten, GetOutputPath(inputPath));
 
                 return Success;
             }
@@ -82,6 +87,26 @@ namespace Convert
 
             inputPath = args[0];
             return true;
+        }
+
+        private static void ConvertBgrToRgb(Span<byte> pixels, int width, int height, int stride)
+        {
+            const int bytes_per_rgb_pixel = 3;
+
+            for (int line = 0; line < height; ++line)
+            {
+                int line_start = line * stride;
+                for (int pixel = 0; pixel<width; ++pixel)
+                {
+                    int column = pixel * bytes_per_rgb_pixel;
+                    int a = line_start + column;
+                    int b = line_start + column + 2;
+
+                    byte temp = pixels[a];
+                    pixels[a] = pixels[b];
+                    pixels[b] = temp;
+                }
+            }
         }
     }
 }
