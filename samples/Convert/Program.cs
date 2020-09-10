@@ -43,10 +43,11 @@ namespace Convert
                     pixels = new Span<byte>(bitmapData.Scan0.ToPointer(), bitmapData.Stride * image.Height);
                 }
 
-                // GDI+ returns bgr pixels, JPEG-LS (Spiff) only knows RGB as colorspace. 
+                // GDI+ returns bgr pixels, JPEG-LS (Spiff) only knows RGB as colorspace.
                 ConvertBgrToRgb(pixels, image.Width, image.Height, bitmapData.Stride);
 
-                using var jpeglsEncoder = new JpegLSEncoder {
+                using var jpeglsEncoder = new JpegLSEncoder
+                {
                     FrameInfo = new FrameInfo(bitmapData.Width, bitmapData.Height, 8, 3)
                 };
 
@@ -91,14 +92,14 @@ namespace Convert
 
         private static void ConvertBgrToRgb(Span<byte> pixels, int width, int height, int stride)
         {
-            const int bytes_per_rgb_pixel = 3;
+            const int BytesPerRgbPixel = 3;
 
             for (int line = 0; line < height; ++line)
             {
                 int line_start = line * stride;
-                for (int pixel = 0; pixel<width; ++pixel)
+                for (int pixel = 0; pixel < width; ++pixel)
                 {
-                    int column = pixel * bytes_per_rgb_pixel;
+                    int column = pixel * BytesPerRgbPixel;
                     int a = line_start + column;
                     int b = line_start + column + 2;
 
