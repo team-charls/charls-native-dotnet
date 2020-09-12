@@ -1,5 +1,5 @@
 
-<img src="https://raw.githubusercontent.com/team-charls/charls-dotnet/master/doc/jpeg_ls_logo.png" alt="JPEG-LS Logo" width="100"/>
+<img src="doc/jpeg_ls_logo.png" alt="JPEG-LS Logo" width="100"/>
 
 # CharLS .NET
 
