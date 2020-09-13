@@ -20,6 +20,30 @@ namespace CharLS.Native
         private MemoryHandle _destinationPin;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="JpegLSEncoder"/> class.
+        /// </summary>
+        public JpegLSEncoder()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JpegLSEncoder"/> class.
+        /// </summary>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="bitsPerSample">The bits per sample.</param>
+        /// <param name="componentCount">The component count.</param>
+        /// <param name="allocateDestination">Flag to control if destination buffer should be allocated or not.</param>
+        public JpegLSEncoder(int width, int height, int bitsPerSample, int componentCount, bool allocateDestination = true)
+        {
+            FrameInfo = new FrameInfo(width, height, bitsPerSample, componentCount);
+            if (allocateDestination)
+            {
+                Destination = new byte[EstimatedDestinationSize];
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the frame information.
         /// </summary>
         /// <value>

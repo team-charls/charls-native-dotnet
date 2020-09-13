@@ -18,8 +18,7 @@ namespace Convert
         {
             // This sample demonstrates how to convert another encoded image to a JPEG-LS encoded image.
             // The input path should be an absolute path to a file format .NET can read (.bmp, .png, etc).
-            string inputPath;
-            if (!TryParseArguments(args, out inputPath))
+            if (!TryParseArguments(args, out string inputPath))
             {
                 Console.WriteLine("Usage: Convert <path to image file>");
                 return Failure;
@@ -43,16 +42,15 @@ namespace Convert
                     pixels = new Span<byte>(bitmapData.Scan0.ToPointer(), bitmapData.Stride * image.Height);
                 }
 
-                // GDI+ returns bgr pixels, JPEG-LS (Spiff) only knows RGB as colorspace.
+                // GDI+ returns bgr pixels, JPEG-LS (Spiff) only knows RGB as color space.
                 ConvertBgrToRgb(pixels, image.Width, image.Height, bitmapData.Stride);
 
-                using var jpeglsEncoder = new JpegLSEncoder
+                using var jpeglsEncoder = new JpegLSEncoder(bitmapData.Width, bitmapData.Height, 8, 3)
                 {
-                    FrameInfo = new FrameInfo(bitmapData.Width, bitmapData.Height, 8, 3)
+                    InterleaveMode = JpegLSInterleaveMode.Sample
                 };
 
-                jpeglsEncoder.Destination = new byte[jpeglsEncoder.EstimatedDestinationSize];
-                jpeglsEncoder.InterleaveMode = JpegLSInterleaveMode.Sample;
+                jpeglsEncoder.WriteStandardSpiffHeader(SpiffColorSpace.Rgb);
                 jpeglsEncoder.Encode(pixels, bitmapData.Stride);
 
                 Save(GetOutputPath(inputPath), jpeglsEncoder.Destination.Slice(0, jpeglsEncoder.BytesWritten).Span);
@@ -91,16 +89,16 @@ namespace Convert
 
         private static void ConvertBgrToRgb(Span<byte> pixels, int width, int height, int stride)
         {
-            const int BytesPerRgbPixel = 3;
+            const int bytesPerRgbPixel = 3;
 
             for (int line = 0; line < height; ++line)
             {
-                int line_start = line * stride;
+                int lineStart = line * stride;
                 for (int pixel = 0; pixel < width; ++pixel)
                 {
-                    int column = pixel * BytesPerRgbPixel;
-                    int a = line_start + column;
-                    int b = line_start + column + 2;
+                    int column = pixel * bytesPerRgbPixel;
+                    int a = lineStart + column;
+                    int b = lineStart + column + 2;
 
                     byte temp = pixels[a];
                     pixels[a] = pixels[b];
