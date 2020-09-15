@@ -89,18 +89,11 @@ namespace CharLS
 
         private static IntPtr DllImportResolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
         {
-            IntPtr libHandle = IntPtr.Zero;
-            if (libraryName == NativeLibraryName)
-            {
-                string library = Environment.Is64BitProcess ? "charls-2-x64.dll" : "charls-2-x86.dll";
-                bool libraryLoaded = NativeLibrary.TryLoad(library, assembly, DllImportSearchPath.AssemblyDirectory, out libHandle);
-                if (!libraryLoaded)
-                {
-                    throw new Exception($"Unable to Load Library: {library}");
-                }
-            }
+            if (libraryName != NativeLibraryName)
+                return IntPtr.Zero;
 
-            return libHandle;
+            string library = Environment.Is64BitProcess ? "charls-2-x64.dll" : "charls-2-x86.dll";
+            return NativeLibrary.Load(library, assembly, DllImportSearchPath.AssemblyDirectory);
         }
     }
 }
