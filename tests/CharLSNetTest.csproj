@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
 
     <Platforms>AnyCPU</Platforms>
 
-    <Configurations>Debug;Release;Checked</Configurations>
+    <Configurations>Debug;Release</Configurations>
     <CodeAnalysisRuleSet>CharLSNetTest.ruleset</CodeAnalysisRuleSet>
     <Nullable>enable</Nullable>
   </PropertyGroup>

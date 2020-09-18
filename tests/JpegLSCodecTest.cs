@@ -276,7 +276,7 @@ namespace CharLS.Native.Test
         {
             get
             {
-                var assemblyLocation = new Uri(Assembly.GetExecutingAssembly().CodeBase!);
+                var assemblyLocation = new Uri(Assembly.GetExecutingAssembly().Location);
                 return Path.GetDirectoryName(assemblyLocation.LocalPath) + @"\DataFiles\";
             }
         }
