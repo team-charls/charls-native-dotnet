@@ -1,21 +1,32 @@
+# Copyright (c) Team CharLS.
+# SPDX-License-Identifier: BSD-3-Clause
+
 # .NET 5.0
 # Build and test .NET 5.0 projects.
-# Add steps that publish symbols, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
-
-trigger:
-- master
 
 pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/*.sln'
+  solution: '*.sln'
   buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+
+strategy:
+  matrix:
+    Debug:
+      buildConfiguration: 'Debug'
+    Release:
+      buildConfiguration: 'Release'
 
 steps:
 - task: NuGetToolInstaller@1
+
+- task: UseDotNet@2
+  displayName: 'Install .NET 5.0 SDK'
+  inputs:
+    version: 5.0.x
+    performMultiLevelLookup: true
+    includePreviewVersions: true # Required for preview versions
 
 - task: NuGetCommand@2
   inputs:
