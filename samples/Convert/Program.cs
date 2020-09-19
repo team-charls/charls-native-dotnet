@@ -57,7 +57,7 @@ namespace Convert
 
                 return Success;
             }
-            catch (FileNotFoundException e)
+            catch (IOException e)
             {
                 Console.WriteLine("Error: " + e.Message);
             }
