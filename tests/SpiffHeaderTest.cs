@@ -42,6 +42,20 @@ namespace CharLS.Native.Test
         }
 
         [Test]
+        public void ToStringIsNotDefault()
+        {
+            var header = new SpiffHeader {
+                ComponentCount = 3,
+                Width = 512,
+                Height = 1024,
+                ColorSpace = SpiffColorSpace.Rgb
+            };
+
+            var usefulText = header.ToString();
+            Assert.IsFalse(string.IsNullOrWhiteSpace(usefulText));
+        }
+
+        [Test]
         public void EquatableSameObjects()
         {
             var a = new SpiffHeader();

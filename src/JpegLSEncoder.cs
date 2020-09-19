@@ -16,6 +16,7 @@ namespace CharLS.Native
         private FrameInfo? _frameInfo;
         private int _nearLossless;
         private JpegLSInterleaveMode _interleaveMode;
+        private JpegLSPresetCodingParameters? _presetCodingParameters;
         private Memory<byte> _destination;
         private MemoryHandle _destinationPin;
 
@@ -107,6 +108,37 @@ namespace CharLS.Native
             {
                 JpegLSCodec.HandleResult(SafeNativeMethods.CharLSSetInterleaveMode(_encoder, value));
                 _interleaveMode = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the preset coding parameters.
+        /// </summary>
+        /// <value>
+        /// The preset coding parameters.
+        /// </value>
+        /// <exception cref="ArgumentNullException">value.</exception>
+        public JpegLSPresetCodingParameters? PresetCodingParameters
+        {
+            get => _presetCodingParameters;
+
+            set
+            {
+                if (value is null)
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
+
+                JpegLSPresetCodingParametersNative native = default;
+
+                native.MaximumSampleValue = value.MaximumSampleValue;
+                native.Threshold1 = value.Threshold1;
+                native.Threshold2 = value.Threshold2;
+                native.Threshold3 = value.Threshold3;
+                native.ResetValue = value.ResetValue;
+
+                JpegLSCodec.HandleResult(SafeNativeMethods.CharLSSetPresetCodingParameters(_encoder, ref native));
+                _presetCodingParameters = value;
             }
         }
 

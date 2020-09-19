@@ -97,6 +97,22 @@ namespace CharLS.Native
         }
 
         /// <summary>
+        /// Gets the preset coding parameters.
+        /// </summary>
+        /// <value>
+        /// The preset coding parameters.
+        /// </value>
+        public JpegLSPresetCodingParameters PresetCodingParameters
+        {
+            get
+            {
+                JpegLSPresetCodingParametersNative native;
+                JpegLSCodec.HandleResult(SafeNativeMethods.CharLSGetPresetCodingParameters(_decoder, 0, out native));
+                return new JpegLSPresetCodingParameters(native);
+            }
+        }
+
+        /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()

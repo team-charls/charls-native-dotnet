@@ -89,6 +89,31 @@ namespace CharLS.Native.Test
         }
 
         [Test]
+        public void EncodeWithPresetCodingParameters()
+        {
+            var info = new FrameInfo(256, 256, 8, 3);
+
+            var uncompressedOriginal = ReadAllBytes("TEST8.PPM", 15);
+            uncompressedOriginal = TripletToPlanar(uncompressedOriginal, info.Width, info.Height);
+
+            var presetCodingParameters = new JpegLSPresetCodingParameters(255, 9, 10, 11, 31);
+            using var encoder = new JpegLSEncoder { FrameInfo = info, PresetCodingParameters = presetCodingParameters };
+
+            encoder.Destination = new byte[encoder.EstimatedDestinationSize];
+            encoder.Encode(uncompressedOriginal);
+
+            using var decoder = new JpegLSDecoder(encoder.Destination.Slice(0, encoder.BytesWritten));
+            decoder.ReadHeader();
+            var pcp = decoder.PresetCodingParameters;
+
+            Assert.AreEqual(presetCodingParameters, pcp);
+
+            var uncompressed = decoder.Decode();
+            Assert.AreEqual(uncompressedOriginal.Length, uncompressed.Length);
+            Assert.AreEqual(uncompressedOriginal, uncompressed);
+        }
+
+        [Test]
         public void CompressPartOfInputBuffer()
         {
             ////var info = new JpegLSMetadataInfo(256, 256, 8, 3);
