@@ -4,6 +4,7 @@
 using System;
 using System.Buffers;
 using System.Runtime.InteropServices;
+using static CharLS.Native.SafeNativeMethods;
 
 namespace CharLS.Native
 {
@@ -40,10 +41,7 @@ namespace CharLS.Native
                 if (_frameInfo is null)
                 {
                     FrameInfoNative frameInfoNative;
-
-                    JpegLSError error = SafeNativeMethods.CharLSGetFrameInfo(_decoder, out frameInfoNative);
-                    JpegLSCodec.HandleResult(error);
-
+                    HandleJpegLSError(CharLSGetFrameInfo(_decoder, out frameInfoNative));
                     _frameInfo = new FrameInfo(frameInfoNative);
                 }
 
@@ -63,9 +61,7 @@ namespace CharLS.Native
             {
                 if (!_nearLossless.HasValue)
                 {
-                    JpegLSError error = SafeNativeMethods.CharLSGetNearLossless(_decoder, 0, out var nearLossless);
-                    JpegLSCodec.HandleResult(error);
-
+                    HandleJpegLSError(CharLSGetNearLossless(_decoder, 0, out var nearLossless));
                     _nearLossless = nearLossless;
                 }
 
@@ -86,9 +82,7 @@ namespace CharLS.Native
             {
                 if (!_interleaveMode.HasValue)
                 {
-                    JpegLSError error = SafeNativeMethods.CharLSGetInterleaveMode(_decoder, out var interleaveMode);
-                    JpegLSCodec.HandleResult(error);
-
+                    HandleJpegLSError(CharLSGetInterleaveMode(_decoder, out var interleaveMode));
                     _interleaveMode = interleaveMode;
                 }
 
@@ -107,7 +101,7 @@ namespace CharLS.Native
             get
             {
                 JpegLSPresetCodingParametersNative native;
-                JpegLSCodec.HandleResult(SafeNativeMethods.CharLSGetPresetCodingParameters(_decoder, 0, out native));
+                HandleJpegLSError(CharLSGetPresetCodingParameters(_decoder, 0, out native));
                 return new JpegLSPresetCodingParameters(native);
             }
         }
@@ -145,8 +139,7 @@ namespace CharLS.Native
             {
                 unsafe
                 {
-                    JpegLSError error = SafeNativeMethods.CharLSSetSourceBuffer(_decoder, (byte*)_sourcePin.Pointer, (UIntPtr)source.Length);
-                    JpegLSCodec.HandleResult(error);
+                    HandleJpegLSError(CharLSSetSourceBuffer(_decoder, (byte*)_sourcePin.Pointer, (UIntPtr)source.Length));
                 }
             }
             catch
@@ -163,9 +156,7 @@ namespace CharLS.Native
         /// <returns>The size of the destination buffer in bytes.</returns>
         public long GetDestinationSize(int stride = 0)
         {
-            JpegLSError error = SafeNativeMethods.CharLSGetDestinationSize(_decoder, (uint)stride, out var destinationSize);
-            JpegLSCodec.HandleResult(error);
-
+            HandleJpegLSError(CharLSGetDestinationSize(_decoder, (uint)stride, out var destinationSize));
             return (long)destinationSize;
         }
 
@@ -176,9 +167,7 @@ namespace CharLS.Native
         /// <returns>true if a SPIFF header was present and could be read.</returns>
         public bool TryReadSpiffHeader(out SpiffHeader? spiffHeader)
         {
-            JpegLSError error = SafeNativeMethods.CharLSReadSpiffHeader(_decoder, out SpiffHeaderNative headerNative, out int headerFound);
-            JpegLSCodec.HandleResult(error);
-
+            HandleJpegLSError(CharLSReadSpiffHeader(_decoder, out SpiffHeaderNative headerNative, out int headerFound));
             bool found = headerFound != 0;
             if (found)
             {
@@ -197,8 +186,7 @@ namespace CharLS.Native
         /// </summary>
         public void ReadHeader()
         {
-            JpegLSError error = SafeNativeMethods.JpegLSDecoderReadHeader(_decoder);
-            JpegLSCodec.HandleResult(error);
+            HandleJpegLSError(JpegLSDecoderReadHeader(_decoder));
         }
 
         /// <summary>
@@ -208,13 +196,12 @@ namespace CharLS.Native
         /// <param name="stride">The stride.</param>
         public void DecodeToBuffer(Span<byte> destination, int stride = 0)
         {
-            JpegLSError error = SafeNativeMethods.CharLSDecodeToBuffer(_decoder, ref MemoryMarshal.GetReference(destination), (UIntPtr)destination.Length, (uint)stride);
-            JpegLSCodec.HandleResult(error);
+            HandleJpegLSError(CharLSDecodeToBuffer(_decoder, ref MemoryMarshal.GetReference(destination), (UIntPtr)destination.Length, (uint)stride));
         }
 
         private static SafeHandleJpegLSDecoder CreateDecoder()
         {
-            SafeHandleJpegLSDecoder encoder = SafeNativeMethods.CharLSCreateDecoder();
+            SafeHandleJpegLSDecoder encoder = CharLSCreateDecoder();
             return encoder.IsInvalid ? throw new OutOfMemoryException() : encoder;
         }
     }
