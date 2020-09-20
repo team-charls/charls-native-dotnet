@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -76,11 +77,11 @@ namespace Convert
             output.Write(encodedData);
         }
 
-        private static bool TryParseArguments(string[] args, out string inputPath)
+        private static bool TryParseArguments(IReadOnlyList<string> args, out string inputPath)
         {
             inputPath = string.Empty;
 
-            if (args.Length != 1)
+            if (args.Count != 1)
                 return false;
 
             inputPath = args[0];

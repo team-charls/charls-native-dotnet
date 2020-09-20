@@ -9,3 +9,4 @@ using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Usage", "CA2201:Do not raise reserved exception types", Justification = "OutOfMemoryException is the best exception to throw", Scope = "member", Target = "~M:CharLS.Native.JpegLSEncoder.CreateEncoder~CharLS.Native.SafeHandleJpegLSEncoder")]
 [assembly: SuppressMessage("Usage", "CA2201:Do not raise reserved exception types", Justification = "OutOfMemoryException is the best exception to throw", Scope = "member", Target = "~M:CharLS.Native.JpegLSDecoder.CreateDecoder~CharLS.Native.SafeHandleJpegLSDecoder")]
+[assembly: SuppressMessage("Design", "CA1065:Do not raise exceptions in unexpected locations", Justification = "Type is unusable if native DLL doesn't match", Scope = "member", Target = "~M:CharLS.Native.SafeNativeMethods.#cctor")]

@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 using System;
-using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -18,7 +17,16 @@ namespace CharLS.Native
         static SafeNativeMethods()
         {
             NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), DllImportResolver);
+
+            CharLSGetVersionNumber(out int major, out int minor, out int _);
+            if (major != 2 || minor < 1)
+            {
+                throw new DllNotFoundException("Native DLL version mismatch");
+            }
         }
+
+        [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_get_version_number")]
+        internal static extern void CharLSGetVersionNumber(out int major, out int minor, out int patch);
 
         [DllImport(NativeLibraryName, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
             ThrowOnUnmappableChar = true, EntryPoint = "charls_get_error_message")]
@@ -95,11 +103,11 @@ namespace CharLS.Native
         [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_decode_to_buffer")]
         internal static extern JpegLSError CharLSDecodeToBuffer(SafeHandleJpegLSDecoder decoder, ref byte destination, size_t destinationSize, uint stride);
 
-        internal static void HandleJpegLSError(JpegLSError result)
+        internal static void HandleJpegLSError(JpegLSError error)
         {
             Exception exception;
 
-            switch (result)
+            switch (error)
             {
                 case JpegLSError.None:
                     return;
@@ -130,7 +138,7 @@ namespace CharLS.Native
                 case JpegLSError.InvalidParameterInterleaveMode:
                 case JpegLSError.UnexpectedFailure:
                 case JpegLSError.NotEnoughMemory:
-                    exception = new InvalidDataException(GetErrorMessage(result));
+                    exception = new InvalidDataException(GetErrorMessage(error));
                     break;
 
                 case JpegLSError.InvalidArgument:
@@ -144,31 +152,28 @@ namespace CharLS.Native
                 case JpegLSError.InvalidArgumentPresetCodingParameters:
                 case JpegLSError.InvalidArgumentSpiffEntrySize:
                 case JpegLSError.InvalidArgumentColorTransformation:
-                    exception = new ArgumentException(GetErrorMessage(result));
+                    exception = new ArgumentException(GetErrorMessage(error));
                     break;
 
                 case JpegLSError.InvalidOperation:
-                    exception = new InvalidOperationException(GetErrorMessage(result));
+                    exception = new InvalidOperationException(GetErrorMessage(error));
                     break;
 
                 default:
                     Debug.Assert(false, "C# and native implementation mismatch");
 
                     // ReSharper disable once HeuristicUnreachableCode
-                    exception = new InvalidOperationException(GetErrorMessage(result));
+                    exception = new InvalidOperationException(GetErrorMessage(error));
                     break;
             }
 
-            IDictionary? data = exception.Data;
-
-            // ReSharper disable once PossibleNullReferenceException
-            data.Add(nameof(JpegLSError), result);
+            exception.Data.Add(nameof(JpegLSError), error);
             throw exception;
         }
 
-        private static string GetErrorMessage(JpegLSError result)
+        private static string GetErrorMessage(JpegLSError error)
         {
-            IntPtr message = CharLSGetErrorMessage((int)result);
+            IntPtr message = CharLSGetErrorMessage((int)error);
 
             return Marshal.PtrToStringAnsi(message) ?? string.Empty;
         }

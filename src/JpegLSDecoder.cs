@@ -40,8 +40,7 @@ namespace CharLS.Native
             {
                 if (_frameInfo is null)
                 {
-                    FrameInfoNative frameInfoNative;
-                    HandleJpegLSError(CharLSGetFrameInfo(_decoder, out frameInfoNative));
+                    HandleJpegLSError(CharLSGetFrameInfo(_decoder, out var frameInfoNative));
                     _frameInfo = new FrameInfo(frameInfoNative);
                 }
 
@@ -100,8 +99,7 @@ namespace CharLS.Native
         {
             get
             {
-                JpegLSPresetCodingParametersNative native;
-                HandleJpegLSError(CharLSGetPresetCodingParameters(_decoder, 0, out native));
+                HandleJpegLSError(CharLSGetPresetCodingParameters(_decoder, 0, out var native));
                 return new JpegLSPresetCodingParameters(native);
             }
         }
