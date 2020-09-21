@@ -80,8 +80,7 @@ namespace CharLS.Native.Test
 
             using var decoder = new JpegLSDecoder(encoder.Destination.Slice(0, encoder.BytesWritten));
             decoder.ReadHeader();
-            ////var compressedInfo = JpegLSCodec.GetMetadataInfo(compressed);
-            ////Assert.AreEqual(info, compressedInfo);
+            Assert.AreEqual(info, decoder.FrameInfo);
 
             var uncompressed = decoder.Decode();
             Assert.AreEqual(uncompressedOriginal.Length, uncompressed.Length);
@@ -111,26 +110,6 @@ namespace CharLS.Native.Test
             var uncompressed = decoder.Decode();
             Assert.AreEqual(uncompressedOriginal.Length, uncompressed.Length);
             Assert.AreEqual(uncompressedOriginal, uncompressed);
-        }
-
-        [Test]
-        public void CompressPartOfInputBuffer()
-        {
-            ////var info = new JpegLSMetadataInfo(256, 256, 8, 3);
-
-            ////var uncompressedOriginal = ReadAllBytes("TEST8.PPM", 15);
-            ////uncompressedOriginal = TripletToPlanar(uncompressedOriginal, info.Width, info.Height);
-
-            ////var compressedSegment = JpegLSCodec.Compress(info, uncompressedOriginal, uncompressedOriginal.Length);
-            ////var compressed = new byte[compressedSegment.Count];
-            ////Array.Copy(compressedSegment.Array, compressed, compressed.Length);
-
-            ////var compressedInfo = JpegLSCodec.GetMetadataInfo(compressed);
-            ////Assert.AreEqual(info, compressedInfo);
-
-            ////var uncompressed = JpegLSCodec.Decompress(compressed);
-            ////Assert.AreEqual(info.UncompressedSize, uncompressed.Length);
-            ////Assert.AreEqual(uncompressedOriginal, uncompressed);
         }
 
         [Test]
@@ -305,6 +284,7 @@ namespace CharLS.Native.Test
                 return Path.GetDirectoryName(assemblyLocation.LocalPath) + @"\DataFiles\";
             }
         }
+
         private static byte[] Decode(byte[] source)
         {
             using var decoder = new JpegLSDecoder(source);

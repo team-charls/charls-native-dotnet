@@ -28,6 +28,39 @@ namespace CharLS.Native.Test
             Assert.AreEqual(31, presetCodingParameters.ResetValue);
         }
 
+        [Test]
+        public void SetSourceWithEmptyBuffer()
+        {
+            using var decoder = new JpegLSDecoder();
+            _ = Assert.Throws<ArgumentException>(() => {
+                decoder.SetSource(Memory<byte>.Empty);
+            });
+        }
+
+        [Test]
+        public void SetSourceTwice()
+        {
+            using var decoder = new JpegLSDecoder();
+
+            decoder.SetSource(new byte[10]);
+
+            _ = Assert.Throws<InvalidOperationException>(() => {
+                decoder.SetSource(new byte[20]);
+            });
+        }
+
+        [Test]
+        public void TryReadSpiffHeaderWhenNotPresent()
+        {
+            byte[] source = ReadAllBytes("T8NDE0.JLS");
+
+            using var decoder = new JpegLSDecoder(source);
+            bool result = decoder.TryReadSpiffHeader(out var header);
+
+            Assert.IsFalse(result);
+            Assert.IsNull(header);
+        }
+
         private static byte[] ReadAllBytes(string path, int bytesToSkip = 0)
         {
             var fullPath = DataFileDirectory + path;

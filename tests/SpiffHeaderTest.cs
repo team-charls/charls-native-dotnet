@@ -1,6 +1,7 @@
 // Copyright (c) Team CharLS.
 // SPDX-License-Identifier: BSD-3-Clause
 
+using System;
 using NUnit.Framework;
 
 namespace CharLS.Native.Test
@@ -39,6 +40,19 @@ namespace CharLS.Native.Test
             Assert.AreEqual(512, header.Width);
             Assert.AreEqual(1024, header.Height);
             Assert.AreEqual(SpiffColorSpace.Rgb, header.ColorSpace);
+        }
+
+        [Test]
+        public void ConstructFromUnsupportedNative()
+        {
+            var native = new SpiffHeaderNative {
+                Height = uint.MaxValue,
+                ColorSpace = SpiffColorSpace.Rgb
+            };
+
+            bool result = SpiffHeader.TryCreate(native, out var header);
+            Assert.IsFalse(result);
+            Assert.IsNull(header);
         }
 
         [Test]

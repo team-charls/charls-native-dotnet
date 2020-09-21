@@ -36,12 +36,21 @@ namespace CharLS.Native
         /// <param name="bitsPerSample">The bits per sample.</param>
         /// <param name="componentCount">The component count.</param>
         /// <param name="allocateDestination">Flag to control if destination buffer should be allocated or not.</param>
+        /// <exception cref="ArgumentException">Thrown when one of the arguments is invalid.</exception>
         public JpegLSEncoder(int width, int height, int bitsPerSample, int componentCount, bool allocateDestination = true)
         {
-            FrameInfo = new FrameInfo(width, height, bitsPerSample, componentCount);
-            if (allocateDestination)
+            try
             {
-                Destination = new byte[EstimatedDestinationSize];
+                FrameInfo = new FrameInfo(width, height, bitsPerSample, componentCount);
+                if (allocateDestination)
+                {
+                    Destination = new byte[EstimatedDestinationSize];
+                }
+            }
+            catch
+            {
+                _encoder.Dispose();
+                throw;
             }
         }
 
@@ -51,6 +60,7 @@ namespace CharLS.Native
         /// <value>
         /// The frame information.
         /// </value>
+        /// <exception cref="ArgumentException">Thrown when the passed FrameInfo is invalid.</exception>
         public FrameInfo? FrameInfo
         {
             get => _frameInfo;
@@ -162,6 +172,7 @@ namespace CharLS.Native
         /// <value>
         /// The destination.
         /// </value>
+        /// <exception cref="ArgumentException">Thrown when the passed value is an empty buffer.</exception>
         public Memory<byte> Destination
         {
             get => _destination;

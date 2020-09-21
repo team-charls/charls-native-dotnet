@@ -1,6 +1,7 @@
 // Copyright (c) Team CharLS.
 // SPDX-License-Identifier: BSD-3-Clause
 
+using System.IO;
 using NUnit.Framework;
 
 namespace CharLS.Native.Test
@@ -51,6 +52,31 @@ namespace CharLS.Native.Test
 
             Assert.IsFalse(a.Equals(null!));
             Assert.IsFalse(a!.Equals((object)null!));
+        }
+
+        [Test]
+        public void NativeWidthTooLarge()
+        {
+            var frameInfoNative = new FrameInfoNative
+            {
+                Width = uint.MaxValue
+            };
+
+            _ = Assert.Throws<InvalidDataException>(() => {
+                var _ = new FrameInfo(frameInfoNative);
+            });
+        }
+
+        [Test]
+        public void NativeHeightTooLarge()
+        {
+            var frameInfoNative = new FrameInfoNative {
+                Height = uint.MaxValue
+            };
+
+            _ = Assert.Throws<InvalidDataException>(() => {
+                var _ = new FrameInfo(frameInfoNative);
+            });
         }
     }
 }

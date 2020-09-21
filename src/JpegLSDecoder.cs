@@ -22,6 +22,13 @@ namespace CharLS.Native
         /// <summary>
         /// Initializes a new instance of the <see cref="JpegLSDecoder"/> class.
         /// </summary>
+        public JpegLSDecoder()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JpegLSDecoder"/> class.
+        /// </summary>
         /// <param name="source">The source buffer.</param>
         public JpegLSDecoder(ReadOnlyMemory<byte> source)
         {
@@ -131,6 +138,7 @@ namespace CharLS.Native
         /// <param name="source">The source buffer.</param>
         public void SetSource(ReadOnlyMemory<byte> source)
         {
+            _sourcePin.Dispose();
             _sourcePin = source.Pin();
 
             try
