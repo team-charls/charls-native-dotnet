@@ -17,6 +17,7 @@ namespace CharLS.Native
         private FrameInfo? _frameInfo;
         private int? _nearLossless;
         private JpegLSInterleaveMode? _interleaveMode;
+        private ReadOnlyMemory<byte> _source;
         private MemoryHandle _sourcePin;
 
         /// <summary>
@@ -32,7 +33,48 @@ namespace CharLS.Native
         /// <param name="source">The source buffer.</param>
         public JpegLSDecoder(ReadOnlyMemory<byte> source)
         {
-            SetSource(source);
+            try
+            {
+                Source = source;
+            }
+            catch
+            {
+                _decoder.Dispose();
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the the source buffer that contains the encoded JPEG-LS bytes.
+        /// </summary>
+        /// <value>
+        /// The source.
+        /// </value>
+        public ReadOnlyMemory<byte> Source
+        {
+            get => _source;
+
+            set
+            {
+                _sourcePin.Dispose();
+                _sourcePin = value.Pin();
+
+                try
+                {
+                    unsafe
+                    {
+                        HandleJpegLSError(CharLSSetSourceBuffer(_decoder, (byte*)_sourcePin.Pointer,
+                            (UIntPtr)value.Length));
+                    }
+
+                    _source = value;
+                }
+                catch
+                {
+                    _sourcePin.Dispose();
+                    throw;
+                }
+            }
         }
 
         /// <summary>
@@ -130,29 +172,6 @@ namespace CharLS.Native
             DecodeToBuffer(destination);
 
             return destination;
-        }
-
-        /// <summary>
-        /// Sets the source buffer that contains the encoded JPEG-LS bytes.
-        /// </summary>
-        /// <param name="source">The source buffer.</param>
-        public void SetSource(ReadOnlyMemory<byte> source)
-        {
-            _sourcePin.Dispose();
-            _sourcePin = source.Pin();
-
-            try
-            {
-                unsafe
-                {
-                    HandleJpegLSError(CharLSSetSourceBuffer(_decoder, (byte*)_sourcePin.Pointer, (UIntPtr)source.Length));
-                }
-            }
-            catch
-            {
-                _sourcePin.Dispose();
-                throw;
-            }
         }
 
         /// <summary>

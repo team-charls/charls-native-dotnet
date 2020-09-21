@@ -1,7 +1,6 @@
 // Copyright (c) Team CharLS.
 // SPDX-License-Identifier: BSD-3-Clause
 
-using System;
 using NUnit.Framework;
 
 namespace CharLS.Native.Test

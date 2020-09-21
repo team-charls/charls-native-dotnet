@@ -29,23 +29,32 @@ namespace CharLS.Native.Test
         }
 
         [Test]
+        public void CreateWithEmptyBuffer()
+        {
+            _ = Assert.Throws<ArgumentException>(() => {
+                using var _ = new JpegLSDecoder(Memory<byte>.Empty);
+            });
+        }
+
+        [Test]
         public void SetSourceWithEmptyBuffer()
         {
             using var decoder = new JpegLSDecoder();
             _ = Assert.Throws<ArgumentException>(() => {
-                decoder.SetSource(Memory<byte>.Empty);
+                decoder.Source = Memory<byte>.Empty;
             });
         }
 
         [Test]
         public void SetSourceTwice()
         {
-            using var decoder = new JpegLSDecoder();
-
-            decoder.SetSource(new byte[10]);
+            using var decoder = new JpegLSDecoder
+            {
+                Source = new byte[10]
+            };
 
             _ = Assert.Throws<InvalidOperationException>(() => {
-                decoder.SetSource(new byte[20]);
+                decoder.Source = new byte[20];
             });
         }
 
