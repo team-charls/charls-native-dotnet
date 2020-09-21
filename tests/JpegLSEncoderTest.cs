@@ -83,7 +83,7 @@ namespace CharLS.Native.Test
         {
             using var encoder = new JpegLSEncoder();
             _ = Assert.Throws<ArgumentException>(() => {
-                encoder.Destination = Memory<byte>.Empty; ;
+                encoder.Destination = Memory<byte>.Empty;
             });
         }
     }
