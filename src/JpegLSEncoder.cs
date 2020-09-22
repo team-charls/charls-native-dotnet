@@ -68,9 +68,7 @@ namespace CharLS.Native
             set
             {
                 if (value is null)
-                {
                     throw new ArgumentNullException(nameof(value));
-                }
 
                 var infoNative = new FrameInfoNative
                 {
@@ -133,9 +131,7 @@ namespace CharLS.Native
             set
             {
                 if (value is null)
-                {
                     throw new ArgumentNullException(nameof(value));
-                }
 
                 var native = new JpegLSPresetCodingParametersNative
                 {
