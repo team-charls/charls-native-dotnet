@@ -16,8 +16,7 @@ namespace CharLS.Native.Test
         {
             byte[] source = ReadAllBytes("T8NDE0.JLS");
 
-            using var decoder = new JpegLSDecoder(source);
-            decoder.ReadHeader();
+            using var decoder = new JpegLSDecoder(source, true);
 
             var presetCodingParameters = decoder.PresetCodingParameters;
 
@@ -32,7 +31,7 @@ namespace CharLS.Native.Test
         public void CreateWithEmptyBuffer()
         {
             _ = Assert.Throws<ArgumentException>(() => {
-                using var _ = new JpegLSDecoder(Memory<byte>.Empty);
+                using var _ = new JpegLSDecoder(Memory<byte>.Empty, false);
             });
         }
 
@@ -63,11 +62,55 @@ namespace CharLS.Native.Test
         {
             byte[] source = ReadAllBytes("T8NDE0.JLS");
 
-            using var decoder = new JpegLSDecoder(source);
+            using var decoder = new JpegLSDecoder(source, false);
             bool result = decoder.TryReadSpiffHeader(out var header);
 
             Assert.IsFalse(result);
             Assert.IsNull(header);
+        }
+
+        [Test]
+        public void GetDestinationSizeWithNegativeStride()
+        {
+            byte[] source = ReadAllBytes("T8NDE0.JLS");
+
+            using var decoder = new JpegLSDecoder(source, true);
+            _ = Assert.Throws<ArgumentException>(() => {
+                var _ = decoder.GetDestinationSize(-1);
+            });
+        }
+
+        [Test]
+        public void DecodeToBufferWithNegativeStride()
+        {
+            byte[] source = ReadAllBytes("T8NDE0.JLS");
+
+            using var decoder = new JpegLSDecoder(source, true);
+            var buffer = new byte[decoder.GetDestinationSize()];
+            _ = Assert.Throws<ArgumentException>(() => {
+                decoder.DecodeToBuffer(buffer, -1);
+            });
+        }
+
+        [Test]
+        public void DecodeToBufferWithNull()
+        {
+            byte[] source = ReadAllBytes("T8NDE0.JLS");
+
+            using var decoder = new JpegLSDecoder(source, true);
+            _ = Assert.Throws<ArgumentException>(() => {
+                decoder.DecodeToBuffer(null);
+            });
+        }
+
+        [Test]
+        public void GetTheSource()
+        {
+            byte[] source = ReadAllBytes("T8NDE0.JLS");
+
+            using var decoder = new JpegLSDecoder(source, true);
+
+            Assert.IsNotNull(decoder.Source);
         }
 
         private static byte[] ReadAllBytes(string path, int bytesToSkip = 0)

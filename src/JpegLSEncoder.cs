@@ -157,12 +157,13 @@ namespace CharLS.Native
         /// <value>
         /// The size of the estimated destination.
         /// </value>
-        public long EstimatedDestinationSize
+        /// <exception cref="OverflowException">When the required size doesn't fit in an int.</exception>
+        public int EstimatedDestinationSize
         {
             get
             {
                 HandleJpegLSError(CharLSGetEstimatedDestinationSize(_encoder, out UIntPtr sizeInBytes));
-                return (long)sizeInBytes;
+                return Convert.ToInt32(sizeInBytes.ToUInt64());
             }
         }
 
@@ -207,12 +208,13 @@ namespace CharLS.Native
         /// <value>
         /// The bytes written.
         /// </value>
+        /// <exception cref="OverflowException">When the required size doesn't fit in an int.</exception>
         public int BytesWritten
         {
             get
             {
                 HandleJpegLSError(CharLSGetBytesWritten(_encoder, out UIntPtr bytesWritten));
-                return (int)bytesWritten;
+                return Convert.ToInt32(bytesWritten.ToUInt64());
             }
         }
 

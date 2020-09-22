@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 using System;
-using System.IO;
 
 namespace CharLS.Native
 {
@@ -28,13 +27,8 @@ namespace CharLS.Native
 
         internal FrameInfo(in FrameInfoNative native)
         {
-            if (native.Width > int.MaxValue || native.Height > int.MaxValue)
-            {
-                throw new InvalidDataException("Size out of range");
-            }
-
-            Width = (int)native.Width;
-            Height = (int)native.Height;
+            Width = Convert.ToInt32(native.Width);
+            Height = Convert.ToInt32(native.Height);
             BitsPerSample = native.BitsPerSample;
             ComponentCount = native.ComponentCount;
         }

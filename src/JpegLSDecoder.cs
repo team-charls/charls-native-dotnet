@@ -3,6 +3,7 @@
 
 using System;
 using System.Buffers;
+using System.IO;
 using System.Runtime.InteropServices;
 using static CharLS.Native.SafeNativeMethods;
 
@@ -31,11 +32,17 @@ namespace CharLS.Native
         /// Initializes a new instance of the <see cref="JpegLSDecoder"/> class.
         /// </summary>
         /// <param name="source">The source buffer.</param>
-        public JpegLSDecoder(ReadOnlyMemory<byte> source)
+        /// <param name="readHeader">When true the header from the JPEG-LS stream is parsed.</param>
+        /// <exception cref="InvalidDataException">Thrown when the JPEG-LS stream is not valid.</exception>
+        public JpegLSDecoder(ReadOnlyMemory<byte> source, bool readHeader)
         {
             try
             {
                 Source = source;
+                if (readHeader)
+                {
+                    ReadHeader();
+                }
             }
             catch
             {
@@ -83,6 +90,7 @@ namespace CharLS.Native
         /// <value>
         /// The frame information.
         /// </value>
+        /// <exception cref="OverflowException">Thrown when the native result doesn't fit in an Int32.</exception>
         public FrameInfo FrameInfo
         {
             get
@@ -179,10 +187,14 @@ namespace CharLS.Native
         /// </summary>
         /// <param name="stride">The stride.</param>
         /// <returns>The size of the destination buffer in bytes.</returns>
-        public long GetDestinationSize(int stride = 0)
+        /// <exception cref="OverflowException">When the required destination size doesn't fit in an int.</exception>
+        public int GetDestinationSize(int stride = 0)
         {
-            HandleJpegLSError(CharLSGetDestinationSize(_decoder, (uint)stride, out var destinationSize));
-            return (long)destinationSize;
+            if (stride < 0)
+                throw new ArgumentException("Stride needs to be >= 0", nameof(stride));
+
+            HandleJpegLSError(CharLSGetDestinationSize(_decoder, (uint)stride, out UIntPtr destinationSize));
+            return Convert.ToInt32(destinationSize.ToUInt64());
         }
 
         /// <summary>
@@ -209,6 +221,7 @@ namespace CharLS.Native
         /// <summary>
         /// Reads the header.
         /// </summary>
+        /// <exception cref="InvalidDataException">Thrown when the JPEG-LS stream is not valid.</exception>
         public void ReadHeader()
         {
             HandleJpegLSError(JpegLSDecoderReadHeader(_decoder));
@@ -221,6 +234,9 @@ namespace CharLS.Native
         /// <param name="stride">The stride.</param>
         public void DecodeToBuffer(Span<byte> destination, int stride = 0)
         {
+            if (stride < 0)
+                throw new ArgumentException("Stride needs to be >= 0", nameof(stride));
+
             HandleJpegLSError(CharLSDecodeToBuffer(_decoder, ref MemoryMarshal.GetReference(destination), (UIntPtr)destination.Length, (uint)stride));
         }
 
