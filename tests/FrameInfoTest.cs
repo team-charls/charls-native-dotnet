@@ -21,6 +21,23 @@ namespace CharLS.Native.Test
         }
 
         [Test]
+        public void ConstructWithProperties()
+        {
+            FrameInfo frameInfo = new()
+            {
+                Width = 256,
+                Height = 1024,
+                BitsPerSample = 8,
+                ComponentCount = 3
+            };
+
+            Assert.AreEqual(256, frameInfo.Width);
+            Assert.AreEqual(1024, frameInfo.Height);
+            Assert.AreEqual(8, frameInfo.BitsPerSample);
+            Assert.AreEqual(3, frameInfo.ComponentCount);
+        }
+
+        [Test]
         public void EquatableSameObjects()
         {
             FrameInfo a = new(256, 1024, 8, 3);

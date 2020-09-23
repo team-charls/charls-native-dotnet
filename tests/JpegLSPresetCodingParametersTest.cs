@@ -21,6 +21,25 @@ namespace CharLS.Native.Test
         }
 
         [Test]
+        public void ConstructWithProperties()
+        {
+            JpegLSPresetCodingParameters presetCodingParameters = new()
+            {
+                MaximumSampleValue = 255,
+                Threshold1 = 9,
+                Threshold2 = 10,
+                Threshold3 = 11,
+                ResetValue =  31
+            };
+
+            Assert.AreEqual(255, presetCodingParameters.MaximumSampleValue);
+            Assert.AreEqual(9, presetCodingParameters.Threshold1);
+            Assert.AreEqual(10, presetCodingParameters.Threshold2);
+            Assert.AreEqual(11, presetCodingParameters.Threshold3);
+            Assert.AreEqual(31, presetCodingParameters.ResetValue);
+        }
+
+        [Test]
         public void EquatableSameObjects()
         {
             JpegLSPresetCodingParameters a = new(255, 9, 10, 11, 31);

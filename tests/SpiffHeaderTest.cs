@@ -14,11 +14,11 @@ namespace CharLS.Native.Test
             SpiffHeader header = new();
 
             Assert.AreEqual(SpiffProfileId.None, header.ProfileId);
-            Assert.AreEqual(1, header.ComponentCount);
-            Assert.AreEqual(1, header.Width);
-            Assert.AreEqual(1, header.Height);
+            Assert.AreEqual(0, header.ComponentCount);
+            Assert.AreEqual(0, header.Width);
+            Assert.AreEqual(0, header.Height);
             Assert.AreEqual(SpiffColorSpace.None, header.ColorSpace);
-            Assert.AreEqual(8, header.BitsPerSample);
+            Assert.AreEqual(0, header.BitsPerSample);
             Assert.AreEqual(SpiffCompressionType.JpegLS, header.CompressionType);
             Assert.AreEqual(SpiffResolutionUnit.AspectRatio, header.ResolutionUnit);
             Assert.AreEqual(1, header.VerticalResolution);
