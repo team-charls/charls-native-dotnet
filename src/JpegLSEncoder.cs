@@ -41,7 +41,7 @@ namespace CharLS.Native
         {
             try
             {
-                FrameInfo = new FrameInfo(width, height, bitsPerSample, componentCount);
+                FrameInfo = new(width, height, bitsPerSample, componentCount);
                 if (allocateDestination)
                 {
                     Destination = new byte[EstimatedDestinationSize];
@@ -70,7 +70,7 @@ namespace CharLS.Native
                 if (value is null)
                     throw new ArgumentNullException(nameof(value));
 
-                var infoNative = new FrameInfoNative
+                FrameInfoNative infoNative = new()
                 {
                     Height = (uint)value.Height,
                     Width = (uint)value.Width,
@@ -133,7 +133,7 @@ namespace CharLS.Native
                 if (value is null)
                     throw new ArgumentNullException(nameof(value));
 
-                var native = new JpegLSPresetCodingParametersNative
+                JpegLSPresetCodingParametersNative native = new()
                 {
                     MaximumSampleValue = value.MaximumSampleValue,
                     Threshold1 = value.Threshold1,
@@ -158,8 +158,8 @@ namespace CharLS.Native
         {
             get
             {
-                HandleJpegLSError(CharLSGetEstimatedDestinationSize(_encoder, out UIntPtr sizeInBytes));
-                return Convert.ToInt32(sizeInBytes.ToUInt64());
+                HandleJpegLSError(CharLSGetEstimatedDestinationSize(_encoder, out nuint sizeInBytes));
+                return Convert.ToInt32(sizeInBytes);
             }
         }
 
@@ -184,7 +184,7 @@ namespace CharLS.Native
                     unsafe
                     {
                         HandleJpegLSError(CharLSSetDestinationBuffer(_encoder,
-                            (byte*)_destinationPin.Pointer, (UIntPtr)value.Length));
+                            (byte*)_destinationPin.Pointer, (nuint)value.Length));
                     }
 
                     _destination = value;
@@ -209,8 +209,8 @@ namespace CharLS.Native
         {
             get
             {
-                HandleJpegLSError(CharLSGetBytesWritten(_encoder, out UIntPtr bytesWritten));
-                return Convert.ToInt32(bytesWritten.ToUInt64());
+                HandleJpegLSError(CharLSGetBytesWritten(_encoder, out nuint bytesWritten));
+                return Convert.ToInt32(bytesWritten);
             }
         }
 
@@ -230,7 +230,7 @@ namespace CharLS.Native
         /// <param name="stride">The stride.</param>
         public void Encode(ReadOnlySpan<byte> source, int stride = 0)
         {
-            HandleJpegLSError(CharLSEncodeFromBuffer(_encoder, ref MemoryMarshal.GetReference(source), (UIntPtr)source.Length, (uint)stride));
+            HandleJpegLSError(CharLSEncodeFromBuffer(_encoder, ref MemoryMarshal.GetReference(source), (nuint)source.Length, (uint)stride));
         }
 
         /// <summary>
@@ -253,7 +253,7 @@ namespace CharLS.Native
         /// <param name="spiffHeader">Reference to a SPIFF header that will be written to the destination.</param>
         public void WriteSpiffHeader(SpiffHeader spiffHeader)
         {
-            var headerNative = new SpiffHeaderNative(spiffHeader);
+            SpiffHeaderNative headerNative = new(spiffHeader);
             HandleJpegLSError(CharLSWriteSpiffHeader(_encoder, ref headerNative));
         }
 

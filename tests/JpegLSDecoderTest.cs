@@ -16,7 +16,7 @@ namespace CharLS.Native.Test
         {
             byte[] source = ReadAllBytes("T8NDE0.JLS");
 
-            using var decoder = new JpegLSDecoder(source, true);
+            using JpegLSDecoder decoder = new(source, true);
 
             var presetCodingParameters = decoder.PresetCodingParameters;
 
@@ -31,14 +31,14 @@ namespace CharLS.Native.Test
         public void CreateWithEmptyBuffer()
         {
             _ = Assert.Throws<ArgumentException>(() => {
-                using var _ = new JpegLSDecoder(Memory<byte>.Empty, false);
+                using JpegLSDecoder _ = new(Memory<byte>.Empty, false);
             });
         }
 
         [Test]
         public void SetSourceWithEmptyBuffer()
         {
-            using var decoder = new JpegLSDecoder();
+            using JpegLSDecoder decoder = new();
             _ = Assert.Throws<ArgumentException>(() => {
                 decoder.Source = Memory<byte>.Empty;
             });
@@ -47,10 +47,7 @@ namespace CharLS.Native.Test
         [Test]
         public void SetSourceTwice()
         {
-            using var decoder = new JpegLSDecoder
-            {
-                Source = new byte[10]
-            };
+            using JpegLSDecoder decoder = new() { Source = new byte[10] };
 
             _ = Assert.Throws<InvalidOperationException>(() => {
                 decoder.Source = new byte[20];
@@ -62,7 +59,7 @@ namespace CharLS.Native.Test
         {
             byte[] source = ReadAllBytes("T8NDE0.JLS");
 
-            using var decoder = new JpegLSDecoder(source, false);
+            using JpegLSDecoder decoder = new(source, false);
             bool result = decoder.TryReadSpiffHeader(out var header);
 
             Assert.IsFalse(result);
@@ -74,7 +71,7 @@ namespace CharLS.Native.Test
         {
             byte[] source = ReadAllBytes("T8NDE0.JLS");
 
-            using var decoder = new JpegLSDecoder(source, true);
+            using JpegLSDecoder decoder = new(source, true);
             _ = Assert.Throws<ArgumentException>(() => {
                 var _ = decoder.GetDestinationSize(-1);
             });
@@ -85,7 +82,7 @@ namespace CharLS.Native.Test
         {
             byte[] source = ReadAllBytes("T8NDE0.JLS");
 
-            using var decoder = new JpegLSDecoder(source, true);
+            using JpegLSDecoder decoder = new(source, true);
             var buffer = new byte[decoder.GetDestinationSize()];
             _ = Assert.Throws<ArgumentException>(() => {
                 decoder.DecodeToBuffer(buffer, -1);
@@ -97,7 +94,7 @@ namespace CharLS.Native.Test
         {
             byte[] source = ReadAllBytes("T8NDE0.JLS");
 
-            using var decoder = new JpegLSDecoder(source, true);
+            using JpegLSDecoder decoder = new(source, true);
             _ = Assert.Throws<ArgumentException>(() => {
                 decoder.DecodeToBuffer(null);
             });
@@ -108,7 +105,7 @@ namespace CharLS.Native.Test
         {
             byte[] source = ReadAllBytes("T8NDE0.JLS");
 
-            using var decoder = new JpegLSDecoder(source, true);
+            using JpegLSDecoder decoder = new(source, true);
 
             Assert.IsNotNull(decoder.Source);
         }
@@ -132,7 +129,7 @@ namespace CharLS.Native.Test
         {
             get
             {
-                var assemblyLocation = new Uri(Assembly.GetExecutingAssembly().Location);
+                Uri assemblyLocation = new(Assembly.GetExecutingAssembly().Location);
                 return Path.GetDirectoryName(assemblyLocation.LocalPath) + @"\DataFiles\";
             }
         }

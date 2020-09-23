@@ -186,7 +186,7 @@ namespace CharLS.Native
                 return false;
             }
 
-            spiffHeader = new SpiffHeader
+            spiffHeader = new()
             {
                 ProfileId = headerNative.ProfileId,
                 ComponentCount = headerNative.ComponentCount,

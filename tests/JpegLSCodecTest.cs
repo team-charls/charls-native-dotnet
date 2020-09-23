@@ -17,7 +17,7 @@ namespace CharLS.Native.Test
         {
             byte[] source = ReadAllBytes("T8C0E0.JLS");
 
-            using var decoder = new JpegLSDecoder(source, true);
+            using JpegLSDecoder decoder = new(source, true);
 
             var frameInfo = decoder.FrameInfo;
 
@@ -33,7 +33,7 @@ namespace CharLS.Native.Test
         {
             var source = ReadAllBytes("T8C0E3.JLS");
 
-            using var decoder = new JpegLSDecoder(source, true);
+            using JpegLSDecoder decoder = new(source, true);
 
             var frameInfo = decoder.FrameInfo;
 
@@ -51,7 +51,7 @@ namespace CharLS.Native.Test
             var expected = ReadAllBytes("TEST8.PPM", 15);
             var uncompressed = Decode(source);
 
-            using var decoder = new JpegLSDecoder(source, true);
+            using JpegLSDecoder decoder = new(source, true);
 
             var frameInfo = decoder.FrameInfo;
             if (decoder.InterleaveMode == JpegLSInterleaveMode.None && frameInfo.ComponentCount == 3)
@@ -65,17 +65,17 @@ namespace CharLS.Native.Test
         [Test]
         public void Encode()
         {
-            var info = new FrameInfo(256, 256, 8, 3);
+            FrameInfo info = new(256, 256, 8, 3);
 
             var uncompressedOriginal = ReadAllBytes("TEST8.PPM", 15);
             uncompressedOriginal = TripletToPlanar(uncompressedOriginal, info.Width, info.Height);
 
-            using var encoder = new JpegLSEncoder { FrameInfo = info };
+            using JpegLSEncoder encoder = new() { FrameInfo = info };
 
             encoder.Destination = new byte[encoder.EstimatedDestinationSize];
             encoder.Encode(uncompressedOriginal);
 
-            using var decoder = new JpegLSDecoder(encoder.Destination.Slice(0, encoder.BytesWritten), true);
+            using JpegLSDecoder decoder = new(encoder.Destination.Slice(0, encoder.BytesWritten), true);
             Assert.AreEqual(info, decoder.FrameInfo);
 
             var uncompressed = decoder.Decode();
@@ -86,18 +86,18 @@ namespace CharLS.Native.Test
         [Test]
         public void EncodeWithPresetCodingParameters()
         {
-            var info = new FrameInfo(256, 256, 8, 3);
+            FrameInfo info = new(256, 256, 8, 3);
 
             var uncompressedOriginal = ReadAllBytes("TEST8.PPM", 15);
             uncompressedOriginal = TripletToPlanar(uncompressedOriginal, info.Width, info.Height);
 
-            var presetCodingParameters = new JpegLSPresetCodingParameters(255, 9, 10, 11, 31);
-            using var encoder = new JpegLSEncoder { FrameInfo = info, PresetCodingParameters = presetCodingParameters };
+            JpegLSPresetCodingParameters presetCodingParameters = new(255, 9, 10, 11, 31);
+            using JpegLSEncoder encoder = new() { FrameInfo = info, PresetCodingParameters = presetCodingParameters };
 
             encoder.Destination = new byte[encoder.EstimatedDestinationSize];
             encoder.Encode(uncompressedOriginal);
 
-            using var decoder = new JpegLSDecoder(encoder.Destination.Slice(0, encoder.BytesWritten), true);
+            using JpegLSDecoder decoder = new(encoder.Destination.Slice(0, encoder.BytesWritten), true);
             var pcp = decoder.PresetCodingParameters;
 
             Assert.AreEqual(presetCodingParameters, pcp);
@@ -111,12 +111,12 @@ namespace CharLS.Native.Test
         public void EncodeOneByOneColor()
         {
             var uncompressedOriginal = new byte[] { 77, 33, 255 };
-            using var encoder = new JpegLSEncoder { FrameInfo = new FrameInfo(1, 1, 8, 3) };
+            using JpegLSEncoder encoder = new() { FrameInfo = new(1, 1, 8, 3) };
 
             encoder.Destination = new byte[encoder.EstimatedDestinationSize];
             encoder.Encode(uncompressedOriginal);
 
-            using var decoder = new JpegLSDecoder(encoder.Destination, true);
+            using JpegLSDecoder decoder = new(encoder.Destination, true);
 
             var uncompressed = decoder.Decode();
             Assert.AreEqual(uncompressedOriginal.Length, uncompressed.Length);
@@ -127,12 +127,12 @@ namespace CharLS.Native.Test
         public void Encode2BitMonochrome()
         {
             var uncompressedOriginal = new byte[] { 1 };
-            using var encoder = new JpegLSEncoder { FrameInfo = new FrameInfo(1, 1, 2, 1) };
+            using JpegLSEncoder encoder = new() { FrameInfo = new(1, 1, 2, 1) };
 
             encoder.Destination = new byte[encoder.EstimatedDestinationSize];
             encoder.Encode(uncompressedOriginal);
 
-            using var decoder = new JpegLSDecoder(encoder.Destination, true);
+            using JpegLSDecoder decoder = new(encoder.Destination, true);
 
             var uncompressed = decoder.Decode();
             Assert.AreEqual(uncompressedOriginal.Length, uncompressed.Length);
@@ -143,13 +143,13 @@ namespace CharLS.Native.Test
         public void WriteStandardSpiffHeader()
         {
             var uncompressedOriginal = new byte[] { 1 };
-            using var encoder = new JpegLSEncoder { FrameInfo = new FrameInfo(1, 1, 2, 1) };
+            using JpegLSEncoder encoder = new() { FrameInfo = new(1, 1, 2, 1) };
 
             encoder.Destination = new byte[encoder.EstimatedDestinationSize];
             encoder.WriteStandardSpiffHeader(SpiffColorSpace.Grayscale);
             encoder.Encode(uncompressedOriginal);
 
-            using var decoder = new JpegLSDecoder(encoder.Destination, false);
+            using JpegLSDecoder decoder = new(encoder.Destination, false);
             bool spiffHeaderPresent = decoder.TryReadSpiffHeader(out var spiffHeader);
 
             Assert.IsTrue(spiffHeaderPresent);
@@ -170,11 +170,11 @@ namespace CharLS.Native.Test
         public void WriteSpiffHeader()
         {
             var uncompressedOriginal = new byte[] { 1 };
-            using var encoder = new JpegLSEncoder { FrameInfo = new FrameInfo(1, 1, 2, 1) };
+            using JpegLSEncoder encoder = new() { FrameInfo = new(1, 1, 2, 1) };
 
             encoder.Destination = new byte[encoder.EstimatedDestinationSize];
 
-            var originalSpiffHeader = new SpiffHeader
+            SpiffHeader originalSpiffHeader = new()
             {
                 ColorSpace = SpiffColorSpace.Grayscale,
                 Height = 1,
@@ -186,7 +186,7 @@ namespace CharLS.Native.Test
             encoder.WriteSpiffHeader(originalSpiffHeader);
             encoder.Encode(uncompressedOriginal);
 
-            using var decoder = new JpegLSDecoder(encoder.Destination, false);
+            using JpegLSDecoder decoder = new(encoder.Destination, false);
             bool spiffHeaderPresent = decoder.TryReadSpiffHeader(out var spiffHeader);
 
             Assert.IsTrue(spiffHeaderPresent);
@@ -280,7 +280,7 @@ namespace CharLS.Native.Test
 
         private static byte[] Decode(byte[] source)
         {
-            using var decoder = new JpegLSDecoder(source, true);
+            using JpegLSDecoder decoder = new(source, true);
             return decoder.Decode();
         }
     }

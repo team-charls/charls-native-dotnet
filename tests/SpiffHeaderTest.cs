@@ -11,7 +11,7 @@ namespace CharLS.Native.Test
         [Test]
         public void ConstructDefault()
         {
-            var header = new SpiffHeader();
+            SpiffHeader header = new();
 
             Assert.AreEqual(SpiffProfileId.None, header.ProfileId);
             Assert.AreEqual(1, header.ComponentCount);
@@ -28,7 +28,7 @@ namespace CharLS.Native.Test
         [Test]
         public void ConstructAndModify()
         {
-            var header = new SpiffHeader {
+            SpiffHeader header = new() {
                 ComponentCount = 3,
                 Width = 512,
                 Height = 1024,
@@ -44,7 +44,7 @@ namespace CharLS.Native.Test
         [Test]
         public void ConstructFromUnsupportedNative()
         {
-            var native = new SpiffHeaderNative {
+            SpiffHeaderNative native = new() {
                 Height = uint.MaxValue,
                 ColorSpace = SpiffColorSpace.Rgb
             };
@@ -57,7 +57,7 @@ namespace CharLS.Native.Test
         [Test]
         public void ToStringIsNotDefault()
         {
-            var header = new SpiffHeader {
+            SpiffHeader header = new() {
                 ComponentCount = 3,
                 Width = 512,
                 Height = 1024,
@@ -71,8 +71,8 @@ namespace CharLS.Native.Test
         [Test]
         public void EquatableSameObjects()
         {
-            var a = new SpiffHeader();
-            var b = new SpiffHeader();
+            SpiffHeader a = new();
+            SpiffHeader b = new();
 
             Assert.IsTrue(a.Equals(b));
             Assert.IsTrue(a.Equals((object)b));
@@ -84,8 +84,8 @@ namespace CharLS.Native.Test
         [Test]
         public void EquatableDifferentObjects()
         {
-            var a = new SpiffHeader();
-            var b = new SpiffHeader { Height = 2 };
+            SpiffHeader a = new();
+            SpiffHeader b = new() { Height = 2 };
 
             Assert.IsFalse(a.Equals(b));
             Assert.IsFalse(a.Equals((object)b));
@@ -94,7 +94,7 @@ namespace CharLS.Native.Test
         [Test]
         public void EquatableWithNull()
         {
-            var a = new SpiffHeader();
+            SpiffHeader a = new();
 
             Assert.IsFalse(a.Equals(null));
             Assert.IsFalse(a!.Equals((object)null!));

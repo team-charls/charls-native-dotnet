@@ -12,7 +12,7 @@ namespace CharLS.Native.Test
         [Test]
         public void ConstructDefault()
         {
-            var frameInfo = new FrameInfo(256, 1024, 8, 3);
+            FrameInfo frameInfo = new(256, 1024, 8, 3);
 
             Assert.AreEqual(256, frameInfo.Width);
             Assert.AreEqual(1024, frameInfo.Height);
@@ -23,8 +23,8 @@ namespace CharLS.Native.Test
         [Test]
         public void EquatableSameObjects()
         {
-            var a = new FrameInfo(256, 1024, 8, 3);
-            var b = new FrameInfo(256, 1024, 8, 3);
+            FrameInfo a = new(256, 1024, 8, 3);
+            FrameInfo b = new(256, 1024, 8, 3);
 
             Assert.IsTrue(a.Equals(b));
             Assert.IsTrue(a.Equals((object)b));
@@ -37,8 +37,8 @@ namespace CharLS.Native.Test
         [Test]
         public void EquatableDifferentObjects()
         {
-            var a = new FrameInfo(256, 1024, 8, 3);
-            var b = new FrameInfo(256, 1024, 8, 4);
+            FrameInfo a = new(256, 1024, 8, 3);
+            FrameInfo b = new(256, 1024, 8, 4);
 
             Assert.IsFalse(a.Equals(b));
             Assert.IsFalse(a.Equals((object)b));
@@ -48,7 +48,7 @@ namespace CharLS.Native.Test
         [Test]
         public void EquatableWithNull()
         {
-            var a = new FrameInfo(256, 1024, 8, 3);
+            FrameInfo a = new(256, 1024, 8, 3);
 
             Assert.IsFalse(a.Equals(null!));
             Assert.IsFalse(a!.Equals((object)null!));
@@ -57,25 +57,26 @@ namespace CharLS.Native.Test
         [Test]
         public void NativeWidthTooLarge()
         {
-            var frameInfoNative = new FrameInfoNative
+            FrameInfoNative frameInfoNative = new()
             {
                 Width = uint.MaxValue
             };
 
             _ = Assert.Throws<OverflowException>(() => {
-                var _ = new FrameInfo(frameInfoNative);
+                FrameInfo _ = new(frameInfoNative);
             });
         }
 
         [Test]
         public void NativeHeightTooLarge()
         {
-            var frameInfoNative = new FrameInfoNative {
+            FrameInfoNative frameInfoNative = new()
+            {
                 Height = uint.MaxValue
             };
 
             _ = Assert.Throws<OverflowException>(() => {
-                var _ = new FrameInfo(frameInfoNative);
+                FrameInfo _ = new(frameInfoNative);
             });
         }
     }

@@ -13,15 +13,15 @@ namespace CharLS.Native.Test
         public void CreateEncoderWithBadWidth()
         {
             _ = Assert.Throws<ArgumentException>(() => {
-                using var _ = new JpegLSEncoder(0, 1, 2, 1);
+                using JpegLSEncoder _ = new(0, 1, 2, 1);
             });
         }
 
         [Test]
         public void CreateWithExtendedConstructor()
         {
-            var expected = new FrameInfo(256, 500, 8, 3);
-            using var encoder = new JpegLSEncoder(256, 500, 8, 3);
+            FrameInfo expected = new(256, 500, 8, 3);
+            using JpegLSEncoder encoder = new(256, 500, 8, 3);
 
             Assert.AreEqual(expected, encoder.FrameInfo);
         }
@@ -29,7 +29,7 @@ namespace CharLS.Native.Test
         [Test]
         public void InitializeFrameInfoWithNull()
         {
-            using var encoder = new JpegLSEncoder();
+            using JpegLSEncoder encoder = new();
             _ = Assert.Throws<ArgumentNullException>(() => {
                 encoder.FrameInfo = null;
             });
@@ -38,7 +38,7 @@ namespace CharLS.Native.Test
         [Test]
         public void GetAndSetNearLossless()
         {
-            using var encoder = new JpegLSEncoder();
+            using JpegLSEncoder encoder = new();
 
             Assert.AreEqual(0, encoder.NearLossless);
 
@@ -49,7 +49,7 @@ namespace CharLS.Native.Test
         [Test]
         public void GetAndSetInterleaveMode()
         {
-            using var encoder = new JpegLSEncoder();
+            using JpegLSEncoder encoder = new();
 
             Assert.AreEqual(JpegLSInterleaveMode.None, encoder.InterleaveMode);
 
@@ -60,7 +60,7 @@ namespace CharLS.Native.Test
         [Test]
         public void GetAndSetPresetCodingParameters()
         {
-            using var encoder = new JpegLSEncoder();
+            using JpegLSEncoder encoder = new();
 
             Assert.IsNull(encoder.PresetCodingParameters);
 
@@ -72,7 +72,7 @@ namespace CharLS.Native.Test
         [Test]
         public void InitializePresetCodingParametersWithNull()
         {
-            using var encoder = new JpegLSEncoder();
+            using JpegLSEncoder encoder = new();
             _ = Assert.Throws<ArgumentNullException>(() => {
                 encoder.PresetCodingParameters = null;
             });
@@ -81,7 +81,7 @@ namespace CharLS.Native.Test
         [Test]
         public void SetDestinationWithEmptyBuffer()
         {
-            using var encoder = new JpegLSEncoder();
+            using JpegLSEncoder encoder = new();
             _ = Assert.Throws<ArgumentException>(() => {
                 encoder.Destination = Memory<byte>.Empty;
             });

@@ -11,7 +11,7 @@ namespace CharLS.Native.Test
         [Test]
         public void ConstructDefault()
         {
-            var presetCodingParameters = new JpegLSPresetCodingParameters(255, 9, 10, 11, 31);
+            JpegLSPresetCodingParameters presetCodingParameters = new(255, 9, 10, 11, 31);
 
             Assert.AreEqual(255, presetCodingParameters.MaximumSampleValue);
             Assert.AreEqual(9, presetCodingParameters.Threshold1);
@@ -23,8 +23,8 @@ namespace CharLS.Native.Test
         [Test]
         public void EquatableSameObjects()
         {
-            var a = new JpegLSPresetCodingParameters(255, 9, 10, 11, 31);
-            var b = new JpegLSPresetCodingParameters(255, 9, 10, 11, 31);
+            JpegLSPresetCodingParameters a = new(255, 9, 10, 11, 31);
+            JpegLSPresetCodingParameters b = new(255, 9, 10, 11, 31);
 
             Assert.IsTrue(a.Equals(b));
             Assert.IsTrue(a.Equals((object)b));
@@ -37,8 +37,8 @@ namespace CharLS.Native.Test
         [Test]
         public void EquatableDifferentObjects()
         {
-            var a = new JpegLSPresetCodingParameters(255, 9, 10, 11, 31);
-            var b = new JpegLSPresetCodingParameters(255, 9, 10, 11, 32);
+            JpegLSPresetCodingParameters a = new(255, 9, 10, 11, 31);
+            JpegLSPresetCodingParameters b = new(255, 9, 10, 11, 32);
 
             Assert.IsFalse(a.Equals(b));
             Assert.IsFalse(a.Equals((object)b));
@@ -48,7 +48,7 @@ namespace CharLS.Native.Test
         [Test]
         public void EquatableWithNull()
         {
-            var a = new JpegLSPresetCodingParameters(2556, 9, 10, 11, 31);
+            JpegLSPresetCodingParameters a = new(2556, 9, 10, 11, 31);
 
             Assert.IsFalse(a.Equals(null!));
             Assert.IsFalse(a!.Equals((object)null!));

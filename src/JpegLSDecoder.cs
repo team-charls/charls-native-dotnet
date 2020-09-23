@@ -71,7 +71,7 @@ namespace CharLS.Native
                     unsafe
                     {
                         HandleJpegLSError(CharLSSetSourceBuffer(_decoder, (byte*)_sourcePin.Pointer,
-                            (UIntPtr)value.Length));
+                            (nuint)value.Length));
                     }
 
                     _source = value;
@@ -98,7 +98,7 @@ namespace CharLS.Native
                 if (_frameInfo is null)
                 {
                     HandleJpegLSError(CharLSGetFrameInfo(_decoder, out var frameInfoNative));
-                    _frameInfo = new FrameInfo(frameInfoNative);
+                    _frameInfo = new(frameInfoNative);
                 }
 
                 return _frameInfo;
@@ -157,7 +157,7 @@ namespace CharLS.Native
             get
             {
                 HandleJpegLSError(CharLSGetPresetCodingParameters(_decoder, 0, out var native));
-                return new JpegLSPresetCodingParameters(native);
+                return new(native);
             }
         }
 
@@ -193,8 +193,8 @@ namespace CharLS.Native
             if (stride < 0)
                 throw new ArgumentException("Stride needs to be >= 0", nameof(stride));
 
-            HandleJpegLSError(CharLSGetDestinationSize(_decoder, (uint)stride, out UIntPtr destinationSize));
-            return Convert.ToInt32(destinationSize.ToUInt64());
+            HandleJpegLSError(CharLSGetDestinationSize(_decoder, (uint)stride, out nuint destinationSize));
+            return Convert.ToInt32(destinationSize);
         }
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace CharLS.Native
             if (stride < 0)
                 throw new ArgumentException("Stride needs to be >= 0", nameof(stride));
 
-            HandleJpegLSError(CharLSDecodeToBuffer(_decoder, ref MemoryMarshal.GetReference(destination), (UIntPtr)destination.Length, (uint)stride));
+            HandleJpegLSError(CharLSDecodeToBuffer(_decoder, ref MemoryMarshal.GetReference(destination), (nuint)destination.Length, (uint)stride));
         }
 
         private static SafeHandleJpegLSDecoder CreateDecoder()
