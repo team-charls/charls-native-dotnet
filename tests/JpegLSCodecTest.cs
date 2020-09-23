@@ -75,7 +75,7 @@ namespace CharLS.Native.Test
             encoder.Destination = new byte[encoder.EstimatedDestinationSize];
             encoder.Encode(uncompressedOriginal);
 
-            using JpegLSDecoder decoder = new(encoder.Destination.Slice(0, encoder.BytesWritten), true);
+            using JpegLSDecoder decoder = new(encoder.EncodedData, true);
             Assert.AreEqual(info, decoder.FrameInfo);
 
             var uncompressed = decoder.Decode();
@@ -97,7 +97,7 @@ namespace CharLS.Native.Test
             encoder.Destination = new byte[encoder.EstimatedDestinationSize];
             encoder.Encode(uncompressedOriginal);
 
-            using JpegLSDecoder decoder = new(encoder.Destination.Slice(0, encoder.BytesWritten), true);
+            using JpegLSDecoder decoder = new(encoder.EncodedData, true);
             var pcp = decoder.PresetCodingParameters;
 
             Assert.AreEqual(presetCodingParameters, pcp);

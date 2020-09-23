@@ -52,7 +52,7 @@ internal class Program
             jpeglsEncoder.WriteStandardSpiffHeader(SpiffColorSpace.Rgb);
             jpeglsEncoder.Encode(pixels, bitmapData.Stride);
 
-            Save(GetOutputPath(inputPath), jpeglsEncoder.Destination.Slice(0, jpeglsEncoder.BytesWritten).Span);
+            Save(GetOutputPath(inputPath), jpeglsEncoder.EncodedData.Span);
 
             return Success;
         }

@@ -199,6 +199,14 @@ namespace CharLS.Native
         }
 
         /// <summary>
+        /// Gets the encoded data.
+        /// </summary>
+        /// <value>
+        /// The encoded data.
+        /// </value>
+        public ReadOnlyMemory<byte> EncodedData => _destination.Slice(0, BytesWritten);
+
+        /// <summary>
         /// Gets the bytes written.
         /// </summary>
         /// <value>
