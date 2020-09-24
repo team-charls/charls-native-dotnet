@@ -8,7 +8,7 @@
     <Platforms>AnyCPU</Platforms>
 
     <Configurations>Debug;Release</Configurations>
-    <CodeAnalysisRuleSet>CharLSNetTest.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>CharLSNativeTest.ruleset</CodeAnalysisRuleSet>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -109,7 +109,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\CharLSNet.csproj">
+    <ProjectReference Include="..\src\CharLSNative.csproj">
       <Project>{6f9955c1-a285-4de0-b3e6-f69eb08bbd7b}</Project>
       <Name>CharLSNet</Name>
     </ProjectReference>

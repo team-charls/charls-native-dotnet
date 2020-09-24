@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\CharLSNet.csproj" />
+    <ProjectReference Include="..\..\src\CharLSNative.csproj" />
   </ItemGroup>
 
 </Project>

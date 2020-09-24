@@ -12,4 +12,4 @@ using System.Runtime.InteropServices;
 [assembly: CLSCompliant(true)]
 [assembly: ComVisible(false)]
 
-[assembly: InternalsVisibleTo("CharLSNetTest")]
+[assembly: InternalsVisibleTo("CharLSNativeTest")]

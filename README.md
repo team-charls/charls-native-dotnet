@@ -1,11 +1,11 @@
 
 <img src="doc/jpeg_ls_logo.png" alt="JPEG-LS Logo" width="100"/>
 
-# CharLS .NET
+# CharLS.Native .NET
 
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://raw.githubusercontent.com/team-charls/charls-dotnet/master/LICENSE.md)
 
-CharLS .NET is a .NET adapter assembly that provides access to the native CharLS JPEG-LS C++ implementation for .NET based applications.
+CharLS.Native .NET is a .NET adapter assembly that provides access to the native CharLS JPEG-LS C++ implementation for .NET based applications.
 
 ## Features
 
