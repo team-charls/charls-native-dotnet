@@ -1,9 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-
-    <TargetFramework>net5.0</TargetFramework>
-
     <Description>".NET interop layer for the CharLS JPEG-LS codec"</Description>
     <Company>Team-CharLS</Company>
     <Authors>Team-CharLS</Authors>
@@ -11,10 +8,7 @@
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
     <Copyright>Copyright 2020 Team CharLS</Copyright>
-    <Platforms>AnyCPU</Platforms>
-    <Configurations>Debug;Release</Configurations>
     <DocumentationFile>$(OutDir)CharLSNet.xml</DocumentationFile>
-    <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 

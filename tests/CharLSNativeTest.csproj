@@ -1,15 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-
     <IsPackable>false</IsPackable>
-
-    <Platforms>AnyCPU</Platforms>
-
-    <Configurations>Debug;Release</Configurations>
     <CodeAnalysisRuleSet>CharLSNativeTest.ruleset</CodeAnalysisRuleSet>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
