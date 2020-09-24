@@ -2,8 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <!-- Build to a folder outside the source folders, making it easier to clean. -->
-    <OutDir>$(MSBuildThisFileDirectory)bin\$(Configuration)\$(Platform)\</OutDir>
-    <OutDir Condition="'$(Platform)'=='Win32'">$(MSBuildThisFileDirectory)bin\$(Configuration)\x86\</OutDir>
+    <OutDir>$(MSBuildThisFileDirectory)bin\$(Configuration)\</OutDir>
 
     <!-- C# Projects require the legagy OutputPath variable. -->
     <OutputPath>$(OutDir)</OutputPath>
