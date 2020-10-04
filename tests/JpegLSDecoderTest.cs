@@ -85,7 +85,7 @@ namespace CharLS.Native.Test
             using JpegLSDecoder decoder = new(source, true);
             var buffer = new byte[decoder.GetDestinationSize()];
             _ = Assert.Throws<ArgumentException>(() => {
-                decoder.DecodeToBuffer(buffer, -1);
+                decoder.Decode(buffer, -1);
             });
         }
 
@@ -96,7 +96,7 @@ namespace CharLS.Native.Test
 
             using JpegLSDecoder decoder = new(source, true);
             _ = Assert.Throws<ArgumentException>(() => {
-                decoder.DecodeToBuffer(null);
+                decoder.Decode(null);
             });
         }
 

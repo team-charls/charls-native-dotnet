@@ -9,7 +9,7 @@ namespace CharLS.Native
     public enum JpegLSInterleaveMode
     {
         /// <summary>
-        /// The encoded pixel data is not interleaved but stored as component for component: RRRGGGBBB.
+        /// The encoded pixel data is not interleaved but stored as component for component, for example: RRRGGGBBB.
         /// Also default option for pixel data with only 1 component.
         /// </summary>
         None = 0,
@@ -21,7 +21,7 @@ namespace CharLS.Native
         Line = 1,
 
         /// <summary>
-        /// The data is stored by sample (pixel). For color image this is the format like RGBRGBRGB.
+        /// The data is stored by sample (pixel). For RGB color image this is the format like RGBRGBRGB.
         /// </summary>
         Sample = 2
     }

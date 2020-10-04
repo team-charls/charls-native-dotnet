@@ -24,12 +24,12 @@ namespace CharLS.Native
         None = 2,
 
         /// <summary>
-        /// The color space is based on recommendation ITU-R BT.601-1. (RGB).
+        /// The color space is based on recommendation ITU-R BT.601-1 (RGB).
         /// </summary>
         YcbcrItuBT6011Rgb = 3,
 
         /// <summary>
-        /// The color space is based on recommendation ITU-R BT.601-1. (video).
+        /// The color space is based on recommendation ITU-R BT.601-1 (video).
         /// </summary>
         YcbcrItuBT6011Video = 4,
 

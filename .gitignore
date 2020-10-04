@@ -24,9 +24,14 @@ TestResults/
 *.sqlite
 **/Properties/launchSettings.json
 
+# Ignore files created by MSBuild
+*.binlog
+
 # NuGet Packages
 *.nupkg
+
 # The packages folder can be ignored because of Package Restore
 **/packages/*
+
 # except build/, which is used as an MSBuild target.
 !**/packages/build/

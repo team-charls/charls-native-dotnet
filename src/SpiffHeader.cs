@@ -4,7 +4,7 @@
 namespace CharLS.Native
 {
     /// <summary>
-    /// Holds the information for a SPIFF header.
+    /// Holds the information for a SPIFF (Still Picture Interchange File Format) header.
     /// </summary>
     public sealed record SpiffHeader
     {

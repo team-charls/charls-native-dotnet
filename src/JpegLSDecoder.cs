@@ -10,7 +10,7 @@ using static CharLS.Native.SafeNativeMethods;
 namespace CharLS.Native
 {
     /// <summary>
-    /// JPEG-LS Decoder.
+    /// JPEG-LS Decoder that uses the native CharLS implementation to decode JPEG-LS images.
     /// </summary>
     public sealed class JpegLSDecoder : IDisposable
     {
@@ -31,7 +31,7 @@ namespace CharLS.Native
         /// <summary>
         /// Initializes a new instance of the <see cref="JpegLSDecoder"/> class.
         /// </summary>
-        /// <param name="source">The source buffer.</param>
+        /// <param name="source">The buffer containing the encoded data.</param>
         /// <param name="readHeader">When true the header from the JPEG-LS stream is parsed.</param>
         /// <exception cref="InvalidDataException">Thrown when the JPEG-LS stream is not valid.</exception>
         public JpegLSDecoder(ReadOnlyMemory<byte> source, bool readHeader)
@@ -55,7 +55,7 @@ namespace CharLS.Native
         /// Gets or sets the the source buffer that contains the encoded JPEG-LS bytes.
         /// </summary>
         /// <value>
-        /// The source.
+        /// A region of memory that contains an encoded JPEG-LS image.
         /// </value>
         public ReadOnlyMemory<byte> Source
         {
@@ -85,10 +85,13 @@ namespace CharLS.Native
         }
 
         /// <summary>
-        /// Gets the frame information.
+        /// Gets the frame information of the image contained in the JPEG-LS stream.
         /// </summary>
+        /// <remarks>
+        /// Property should be obtained after calling <see cref="ReadHeader"/>".
+        /// </remarks>
         /// <value>
-        /// The frame information.
+        /// The frame information of the parsed JPEG-LS image.
         /// </value>
         /// <exception cref="OverflowException">Thrown when the native result doesn't fit in an Int32.</exception>
         public FrameInfo FrameInfo
@@ -108,8 +111,11 @@ namespace CharLS.Native
         /// <summary>
         /// Gets the near lossless parameter used to encode the JPEG-LS stream.
         /// </summary>
+        /// <remarks>
+        /// Property should be obtained after calling <see cref="ReadHeader"/>".
+        /// </remarks>
         /// <value>
-        /// The near lossless.
+        /// The near lossless paramter. A value of 0 means that the image is lossless encoded.
         /// </value>
         public int NearLossless
         {
@@ -129,7 +135,7 @@ namespace CharLS.Native
         /// Gets the interleave mode that was used to encode the scan(s).
         /// </summary>
         /// <remarks>
-        /// Function should be called after the JpegLS header is read.
+        /// Property should be obtained after calling <see cref="ReadHeader"/>".
         /// </remarks>
         /// <returns>The result of the operation: success or a failure code.</returns>
         public JpegLSInterleaveMode InterleaveMode
@@ -162,7 +168,7 @@ namespace CharLS.Native
         }
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// Releases the unmanaged resources used by the <see cref="JpegLSDecoder"/>.
         /// </summary>
         public void Dispose()
         {
@@ -171,21 +177,9 @@ namespace CharLS.Native
         }
 
         /// <summary>
-        /// Decodes this instance.
-        /// </summary>
-        /// <returns>A byte array with the pixel data.</returns>
-        public byte[] Decode()
-        {
-            var destination = new byte[GetDestinationSize()];
-            DecodeToBuffer(destination);
-
-            return destination;
-        }
-
-        /// <summary>
         /// Gets the required size of the destination buffer.
         /// </summary>
-        /// <param name="stride">The stride.</param>
+        /// <param name="stride">The stride to use; byte count to the next pixel row. Pass 0 for the default.</param>
         /// <returns>The size of the destination buffer in bytes.</returns>
         /// <exception cref="OverflowException">When the required destination size doesn't fit in an int.</exception>
         public int GetDestinationSize(int stride = 0)
@@ -198,9 +192,9 @@ namespace CharLS.Native
         }
 
         /// <summary>
-        /// Reads the SPIFF header.
+        /// Reads the SPIFF (Still Picture Interchange File Format) header.
         /// </summary>
-        /// <param name="spiffHeader">The header.</param>
+        /// <param name="spiffHeader">The header or null when no valid header was found.</param>
         /// <returns>true if a SPIFF header was present and could be read.</returns>
         public bool TryReadSpiffHeader(out SpiffHeader? spiffHeader)
         {
@@ -219,7 +213,8 @@ namespace CharLS.Native
         }
 
         /// <summary>
-        /// Reads the header.
+        /// Reads the header of the JPEG-LS stream.
+        /// After calling this method, the informational properties can be obtained.
         /// </summary>
         /// <exception cref="InvalidDataException">Thrown when the JPEG-LS stream is not valid.</exception>
         public void ReadHeader()
@@ -228,11 +223,26 @@ namespace CharLS.Native
         }
 
         /// <summary>
-        /// Decodes the encoded JPEG-LS source to a byte buffer.
+        /// Decodes the encoded JPEG-LS data and returns the created byte buffer.
         /// </summary>
-        /// <param name="destination">The destination.</param>
-        /// <param name="stride">The stride.</param>
-        public void DecodeToBuffer(Span<byte> destination, int stride = 0)
+        /// <param name="stride">The stride to use, or 0 for the default.</param>
+        /// <returns>A byte array with the decoded JPEG-LS data.</returns>
+        /// <exception cref="InvalidDataException">Thrown when the JPEG-LS stream is not valid.</exception>
+        public byte[] Decode(int stride = 0)
+        {
+            var destination = new byte[GetDestinationSize()];
+            Decode(destination, stride);
+
+            return destination;
+        }
+
+        /// <summary>
+        /// Decodes the encoded JPEG-LS data to the passed byte buffer.
+        /// </summary>
+        /// <param name="destination">The memory region that is the destination for the decoded data.</param>
+        /// <param name="stride">The stride to use, or 0 for the default.</param>
+        /// <exception cref="InvalidDataException">Thrown when the JPEG-LS stream is not valid.</exception>
+        public void Decode(Span<byte> destination, int stride = 0)
         {
             if (stride < 0)
                 throw new ArgumentException("Stride needs to be >= 0", nameof(stride));

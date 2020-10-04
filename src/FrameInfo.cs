@@ -6,19 +6,19 @@ using System;
 namespace CharLS.Native
 {
     /// <summary>
-    /// Hold information about the frame.
+    /// Hold information about an image frame.
     /// </summary>
     public sealed record FrameInfo
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="FrameInfo"/> class.
+        /// Initializes a new instance of the <see cref="FrameInfo"/> record.
         /// </summary>
         public FrameInfo()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FrameInfo"/> class.
+        /// Initializes a new instance of the <see cref="FrameInfo"/> record.
         /// </summary>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
@@ -41,22 +41,22 @@ namespace CharLS.Native
         }
 
         /// <summary>
-        /// Gets the width of the image, range [1, 65535].
+        /// Gets the width of the image, valid range is [1, 65535].
         /// </summary>
         public int Width { get; init; }
 
         /// <summary>
-        /// Gets the height of the image, range [1, 65535].
+        /// Gets the height of the image, valid range is [1, 65535].
         /// </summary>
         public int Height { get; init; }
 
         /// <summary>
-        /// Gets the number of bits per sample, range [2, 16].
+        /// Gets the number of bits per sample, valid range is [2, 16].
         /// </summary>
         public int BitsPerSample { get; init; }
 
         /// <summary>
-        /// Gets the number of components contained in the frame, range [1, 255].
+        /// Gets the number of components contained in the frame, valid range is [1, 255].
         /// </summary>
         public int ComponentCount { get; init; }
     }

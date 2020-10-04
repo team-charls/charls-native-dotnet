@@ -9,7 +9,7 @@ using static CharLS.Native.SafeNativeMethods;
 namespace CharLS.Native
 {
     /// <summary>
-    /// JPEG-LS Encoder.
+    /// JPEG-LS Encoder that uses the native CharLS implementation to encode JPEG-LS images.
     /// </summary>
     public sealed class JpegLSEncoder : IDisposable
     {
@@ -31,10 +31,10 @@ namespace CharLS.Native
         /// <summary>
         /// Initializes a new instance of the <see cref="JpegLSEncoder"/> class.
         /// </summary>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <param name="bitsPerSample">The bits per sample.</param>
-        /// <param name="componentCount">The component count.</param>
+        /// <param name="width">The width of the image to encode.</param>
+        /// <param name="height">The height of the image to encode.</param>
+        /// <param name="bitsPerSample">The bits per sample of the image to encode.</param>
+        /// <param name="componentCount">The component count of the image to encode.</param>
         /// <param name="allocateDestination">Flag to control if destination buffer should be allocated or not.</param>
         /// <exception cref="ArgumentException">Thrown when one of the arguments is invalid.</exception>
         public JpegLSEncoder(int width, int height, int bitsPerSample, int componentCount, bool allocateDestination = true)
@@ -55,12 +55,13 @@ namespace CharLS.Native
         }
 
         /// <summary>
-        /// Gets or sets the frame information.
+        /// Gets or sets the frame information of the image.
         /// </summary>
         /// <value>
-        /// The frame information.
+        /// The frame information of the image.
         /// </value>
         /// <exception cref="ArgumentException">Thrown when the passed FrameInfo is invalid.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when the passed FrameInfo is null.</exception>
         public FrameInfo? FrameInfo
         {
             get => _frameInfo;
@@ -89,6 +90,7 @@ namespace CharLS.Native
         /// <value>
         /// The near lossless parameter value.
         /// </value>
+        /// <exception cref="ArgumentException">Thrown when the passed value is invalid.</exception>
         public int NearLossless
         {
             get => _nearLossless;
@@ -104,8 +106,9 @@ namespace CharLS.Native
         /// Gets or sets the interleave mode.
         /// </summary>
         /// <value>
-        /// The interleave mode.
+        /// The interleave mode that should be used to encode the image. Default is None.
         /// </value>
+        /// <exception cref="ArgumentException">Thrown when the passed value is invalid for the defined image.</exception>
         public JpegLSInterleaveMode InterleaveMode
         {
             get => _interleaveMode;
@@ -118,10 +121,10 @@ namespace CharLS.Native
         }
 
         /// <summary>
-        /// Gets or sets the preset coding parameters.
+        /// Gets or sets the JPEG-LS preset coding parameters.
         /// </summary>
         /// <value>
-        /// The preset coding parameters.
+        /// The JPEG-LS preset coding parameters that should be used to encode the image.
         /// </value>
         /// <exception cref="ArgumentNullException">value.</exception>
         public JpegLSPresetCodingParameters? PresetCodingParameters
@@ -148,10 +151,10 @@ namespace CharLS.Native
         }
 
         /// <summary>
-        /// Gets the size of the estimated destination.
+        /// Gets the estimated size in bytes of the memory buffer that should used as output destination.
         /// </summary>
         /// <value>
-        /// The size of the estimated destination.
+        /// The size in bytes of the memory buffer.
         /// </value>
         /// <exception cref="OverflowException">When the required size doesn't fit in an int.</exception>
         public int EstimatedDestinationSize
@@ -164,10 +167,10 @@ namespace CharLS.Native
         }
 
         /// <summary>
-        /// Gets or sets the destination.
+        /// Gets or sets the memory region that will be destination for the encoded JPEG-LS data.
         /// </summary>
         /// <value>
-        /// The destination.
+        /// The memory buffer to be used as the destination.
         /// </value>
         /// <exception cref="ArgumentException">Thrown when the passed value is an empty buffer.</exception>
         public Memory<byte> Destination
@@ -199,18 +202,18 @@ namespace CharLS.Native
         }
 
         /// <summary>
-        /// Gets the encoded data.
+        /// Gets the memory region with the encoded JPEG-LS data.
         /// </summary>
         /// <value>
-        /// The encoded data.
+        /// The memory region with the encoded data.
         /// </value>
         public ReadOnlyMemory<byte> EncodedData => _destination.Slice(0, BytesWritten);
 
         /// <summary>
-        /// Gets the bytes written.
+        /// Gets the bytes written to the destination buffer.
         /// </summary>
         /// <value>
-        /// The bytes written.
+        /// The bytes written to the destination buffer.
         /// </value>
         /// <exception cref="OverflowException">When the required size doesn't fit in an int.</exception>
         public int BytesWritten
@@ -223,7 +226,7 @@ namespace CharLS.Native
         }
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// Releases the unmanaged resources used by the <see cref="JpegLSEncoder"/>.
         /// </summary>
         public void Dispose()
         {
@@ -232,10 +235,10 @@ namespace CharLS.Native
         }
 
         /// <summary>
-        /// Encodes the specified source.
+        /// Encodes the passed image data into encoded JPEG-LS data.
         /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="stride">The stride.</param>
+        /// <param name="source">The memory region that is the source input to the encoding process.</param>
+        /// <param name="stride">The stride of the image pixel of the source input.</param>
         public void Encode(ReadOnlySpan<byte> source, int stride = 0)
         {
             HandleJpegLSError(CharLSEncodeFromBuffer(_encoder, ref MemoryMarshal.GetReference(source), (nuint)source.Length, (uint)stride));
@@ -256,9 +259,9 @@ namespace CharLS.Native
         }
 
         /// <summary>
-        /// Writes a SPIFF header to the destination.
+        /// Writes a SPIFF header to the destination memory buffer.
         /// </summary>
-        /// <param name="spiffHeader">Reference to a SPIFF header that will be written to the destination.</param>
+        /// <param name="spiffHeader">Reference to a SPIFF header that will be written to the destination buffer.</param>
         public void WriteSpiffHeader(SpiffHeader spiffHeader)
         {
             SpiffHeaderNative headerNative = new(spiffHeader);
