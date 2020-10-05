@@ -140,6 +140,9 @@ namespace CharLS.Native
 
                 case JpegLSError.InvalidArgument:
                 case JpegLSError.DestinationBufferTooSmall:
+                    exception = new ArgumentException(GetErrorMessage(error));
+                    break;
+
                 case JpegLSError.InvalidArgumentWidth:
                 case JpegLSError.InvalidArgumentHeight:
                 case JpegLSError.InvalidArgumentComponentCount:
@@ -149,7 +152,7 @@ namespace CharLS.Native
                 case JpegLSError.InvalidArgumentPresetCodingParameters:
                 case JpegLSError.InvalidArgumentSpiffEntrySize:
                 case JpegLSError.InvalidArgumentColorTransformation:
-                    exception = new ArgumentException(GetErrorMessage(error));
+                    exception = new ArgumentOutOfRangeException(GetErrorMessage(error));
                     break;
 
                 case JpegLSError.InvalidOperation:

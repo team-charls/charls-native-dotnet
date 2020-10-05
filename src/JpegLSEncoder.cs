@@ -36,7 +36,8 @@ namespace CharLS.Native
         /// <param name="bitsPerSample">The bits per sample of the image to encode.</param>
         /// <param name="componentCount">The component count of the image to encode.</param>
         /// <param name="allocateDestination">Flag to control if destination buffer should be allocated or not.</param>
-        /// <exception cref="ArgumentException">Thrown when one of the arguments is invalid.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when one of the arguments is invalid.</exception>
+        /// <exception cref="OutOfMemoryException">Thrown when memory allocation for the destination buffer fails.</exception>
         public JpegLSEncoder(int width, int height, int bitsPerSample, int componentCount, bool allocateDestination = true)
         {
             try

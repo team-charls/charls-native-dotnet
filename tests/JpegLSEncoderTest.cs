@@ -12,7 +12,7 @@ namespace CharLS.Native.Test
         [Test]
         public void CreateEncoderWithBadWidth()
         {
-            _ = Assert.Throws<ArgumentException>(() => {
+            _ = Assert.Throws<ArgumentOutOfRangeException>(() => {
                 using JpegLSEncoder _ = new(0, 1, 2, 1);
             });
         }
