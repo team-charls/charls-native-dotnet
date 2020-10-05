@@ -86,5 +86,20 @@ namespace CharLS.Native.Test
                 encoder.Destination = Memory<byte>.Empty;
             });
         }
+
+        [Test]
+        public void UseAfterDispose()
+        {
+            JpegLSEncoder encoder = new();
+            encoder.Dispose();
+
+            _ = Assert.Throws<ObjectDisposedException>(() => {
+                encoder.NearLossless = 0;
+            });
+
+            _ = Assert.Throws<ObjectDisposedException>(() => {
+                encoder.Encode(new byte[10]);
+            });
+        }
     }
 }

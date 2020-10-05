@@ -34,7 +34,7 @@ namespace CharLS.Native
         /// <param name="source">The buffer containing the encoded data.</param>
         /// <param name="readHeader">When true the header from the JPEG-LS stream is parsed.</param>
         /// <exception cref="InvalidDataException">Thrown when the JPEG-LS stream is not valid.</exception>
-        public JpegLSDecoder(ReadOnlyMemory<byte> source, bool readHeader)
+        public JpegLSDecoder(ReadOnlyMemory<byte> source, bool readHeader = true)
         {
             try
             {
@@ -57,6 +57,7 @@ namespace CharLS.Native
         /// <value>
         /// A region of memory that contains an encoded JPEG-LS image.
         /// </value>
+        /// <exception cref="ObjectDisposedException">Thrown when the instance is used after being disposed.</exception>
         public ReadOnlyMemory<byte> Source
         {
             get => _source;
@@ -85,6 +86,14 @@ namespace CharLS.Native
         }
 
         /// <summary>
+        /// Gets the SPIFF header that was found during reading the header.
+        /// </summary>
+        /// <value>
+        /// The SPIFF header or null when no valid SPIFF header could be found.
+        /// </value>
+        public SpiffHeader? SpiffHeader { get; private set; }
+
+        /// <summary>
         /// Gets the frame information of the image contained in the JPEG-LS stream.
         /// </summary>
         /// <remarks>
@@ -94,6 +103,8 @@ namespace CharLS.Native
         /// The frame information of the parsed JPEG-LS image.
         /// </value>
         /// <exception cref="OverflowException">Thrown when the native result doesn't fit in an Int32.</exception>
+        /// <exception cref="ObjectDisposedException">Thrown when the instance is used after being disposed.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when this property is used before <see cref="ReadHeader(bool)"/>.</exception>
         public FrameInfo FrameInfo
         {
             get
@@ -115,8 +126,10 @@ namespace CharLS.Native
         /// Property should be obtained after calling <see cref="ReadHeader"/>".
         /// </remarks>
         /// <value>
-        /// The near lossless paramter. A value of 0 means that the image is lossless encoded.
+        /// The near lossless parameter. A value of 0 means that the image is lossless encoded.
         /// </value>
+        /// <exception cref="ObjectDisposedException">Thrown when the instance is used after being disposed.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when this property is used before <see cref="ReadHeader(bool)"/>.</exception>
         public int NearLossless
         {
             get
@@ -138,6 +151,8 @@ namespace CharLS.Native
         /// Property should be obtained after calling <see cref="ReadHeader"/>".
         /// </remarks>
         /// <returns>The result of the operation: success or a failure code.</returns>
+        /// <exception cref="ObjectDisposedException">Thrown when the instance is used after being disposed.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when this property is used before <see cref="ReadHeader(bool)"/>.</exception>
         public JpegLSInterleaveMode InterleaveMode
         {
             get
@@ -158,6 +173,8 @@ namespace CharLS.Native
         /// <value>
         /// The preset coding parameters.
         /// </value>
+        /// <exception cref="ObjectDisposedException">Thrown when the instance is used after being disposed.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when this property is used before <see cref="ReadHeader(bool)"/>.</exception>
         public JpegLSPresetCodingParameters PresetCodingParameters
         {
             get
@@ -168,7 +185,7 @@ namespace CharLS.Native
         }
 
         /// <summary>
-        /// Releases the unmanaged resources used by the <see cref="JpegLSDecoder"/>.
+        /// Releases the unmanaged resources used by the <see cref="JpegLSDecoder"/> instance.
         /// </summary>
         public void Dispose()
         {
@@ -182,12 +199,11 @@ namespace CharLS.Native
         /// <param name="stride">The stride to use; byte count to the next pixel row. Pass 0 for the default.</param>
         /// <returns>The size of the destination buffer in bytes.</returns>
         /// <exception cref="OverflowException">When the required destination size doesn't fit in an int.</exception>
+        /// <exception cref="ObjectDisposedException">Thrown when the instance is used after being disposed.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when this method is called before <see cref="ReadHeader(bool)"/>.</exception>
         public int GetDestinationSize(int stride = 0)
         {
-            if (stride < 0)
-                throw new ArgumentException("Stride needs to be >= 0", nameof(stride));
-
-            HandleJpegLSError(CharLSGetDestinationSize(_decoder, (uint)stride, out nuint destinationSize));
+            HandleJpegLSError(CharLSGetDestinationSize(_decoder, ConvertStrideToUint32(stride), out nuint destinationSize));
             return Convert.ToInt32(destinationSize);
         }
 
@@ -196,6 +212,7 @@ namespace CharLS.Native
         /// </summary>
         /// <param name="spiffHeader">The header or null when no valid header was found.</param>
         /// <returns>true if a SPIFF header was present and could be read.</returns>
+        /// <exception cref="ObjectDisposedException">Thrown when the instance is used after being disposed.</exception>
         public bool TryReadSpiffHeader(out SpiffHeader? spiffHeader)
         {
             HandleJpegLSError(CharLSReadSpiffHeader(_decoder, out SpiffHeaderNative headerNative, out int headerFound));
@@ -216,9 +233,16 @@ namespace CharLS.Native
         /// Reads the header of the JPEG-LS stream.
         /// After calling this method, the informational properties can be obtained.
         /// </summary>
+        /// <param name="tryReadSpiffHeader">if set to <c>true</c> try to read the SPIFF header first.</param>
         /// <exception cref="InvalidDataException">Thrown when the JPEG-LS stream is not valid.</exception>
-        public void ReadHeader()
+        /// <exception cref="ObjectDisposedException">Thrown when the instance is used after being disposed.</exception>
+        public void ReadHeader(bool tryReadSpiffHeader = true)
         {
+            if (tryReadSpiffHeader && TryReadSpiffHeader(out SpiffHeader? spiffHeader))
+            {
+                SpiffHeader = spiffHeader;
+            }
+
             HandleJpegLSError(JpegLSDecoderReadHeader(_decoder));
         }
 
@@ -228,11 +252,12 @@ namespace CharLS.Native
         /// <param name="stride">The stride to use, or 0 for the default.</param>
         /// <returns>A byte array with the decoded JPEG-LS data.</returns>
         /// <exception cref="InvalidDataException">Thrown when the JPEG-LS stream is not valid.</exception>
+        /// <exception cref="ObjectDisposedException">Thrown when the instance is used after being disposed.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when this method is called before <see cref="ReadHeader(bool)"/>.</exception>
         public byte[] Decode(int stride = 0)
         {
             var destination = new byte[GetDestinationSize()];
             Decode(destination, stride);
-
             return destination;
         }
 
@@ -242,18 +267,22 @@ namespace CharLS.Native
         /// <param name="destination">The memory region that is the destination for the decoded data.</param>
         /// <param name="stride">The stride to use, or 0 for the default.</param>
         /// <exception cref="InvalidDataException">Thrown when the JPEG-LS stream is not valid.</exception>
+        /// <exception cref="ObjectDisposedException">Thrown when the instance is used after being disposed.</exception>
         public void Decode(Span<byte> destination, int stride = 0)
         {
-            if (stride < 0)
-                throw new ArgumentException("Stride needs to be >= 0", nameof(stride));
-
-            HandleJpegLSError(CharLSDecodeToBuffer(_decoder, ref MemoryMarshal.GetReference(destination), (nuint)destination.Length, (uint)stride));
+            HandleJpegLSError(CharLSDecodeToBuffer(_decoder, ref MemoryMarshal.GetReference(destination),
+                (nuint)destination.Length, ConvertStrideToUint32(stride)));
         }
 
         private static SafeHandleJpegLSDecoder CreateDecoder()
         {
             SafeHandleJpegLSDecoder encoder = CharLSCreateDecoder();
             return encoder.IsInvalid ? throw new OutOfMemoryException() : encoder;
+        }
+
+        private static uint ConvertStrideToUint32(int stride)
+        {
+            return stride < 0 ? throw new ArgumentOutOfRangeException(nameof(stride), "Stride needs to be >= 0") : (uint)stride;
         }
     }
 }

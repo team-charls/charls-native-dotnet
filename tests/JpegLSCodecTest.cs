@@ -167,6 +167,35 @@ namespace CharLS.Native.Test
         }
 
         [Test]
+        public void WriteStandardSpiffHeaderReadWithProperty()
+        {
+            var uncompressedOriginal = new byte[] { 1 };
+            using JpegLSEncoder encoder = new() { FrameInfo = new(1, 1, 2, 1) };
+
+            encoder.Destination = new byte[encoder.EstimatedDestinationSize];
+            encoder.WriteStandardSpiffHeader(SpiffColorSpace.Grayscale);
+            encoder.Encode(uncompressedOriginal);
+
+            using JpegLSDecoder decoder = new(encoder.Destination, true);
+
+            var spiffHeader = decoder.SpiffHeader;
+            Assert.IsNotNull(spiffHeader);
+            if (decoder.SpiffHeader != null)
+            {
+                Assert.AreEqual(SpiffProfileId.None, spiffHeader!.ProfileId);
+                Assert.AreEqual(1, decoder.SpiffHeader.ComponentCount);
+                Assert.AreEqual(1, spiffHeader.Height);
+                Assert.AreEqual(1, spiffHeader.Width);
+                Assert.AreEqual(SpiffColorSpace.Grayscale, spiffHeader.ColorSpace);
+                Assert.AreEqual(2, spiffHeader.BitsPerSample);
+                Assert.AreEqual(SpiffCompressionType.JpegLS, spiffHeader.CompressionType);
+                Assert.AreEqual(SpiffResolutionUnit.AspectRatio, spiffHeader.ResolutionUnit);
+                Assert.AreEqual(1, spiffHeader.VerticalResolution);
+                Assert.AreEqual(1, spiffHeader.HorizontalResolution);
+            }
+        }
+
+        [Test]
         public void WriteSpiffHeader()
         {
             var uncompressedOriginal = new byte[] { 1 };

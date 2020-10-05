@@ -15,9 +15,7 @@ namespace CharLS.Native.Test
         public void ReadPresetCodingParameters()
         {
             byte[] source = ReadAllBytes("T8NDE0.JLS");
-
-            using JpegLSDecoder decoder = new(source, true);
-
+            using JpegLSDecoder decoder = new(source);
             var presetCodingParameters = decoder.PresetCodingParameters;
 
             Assert.AreEqual(255, presetCodingParameters.MaximumSampleValue);
@@ -67,12 +65,22 @@ namespace CharLS.Native.Test
         }
 
         [Test]
+        public void TryReadSpiffHeaderWhenNotPresentUsingReadDirectConstructor()
+        {
+            byte[] source = ReadAllBytes("T8NDE0.JLS");
+
+            using JpegLSDecoder decoder = new(source);
+
+            Assert.IsNull(decoder.SpiffHeader);
+        }
+
+        [Test]
         public void GetDestinationSizeWithNegativeStride()
         {
             byte[] source = ReadAllBytes("T8NDE0.JLS");
 
-            using JpegLSDecoder decoder = new(source, true);
-            _ = Assert.Throws<ArgumentException>(() => {
+            using JpegLSDecoder decoder = new(source);
+            _ = Assert.Throws<ArgumentOutOfRangeException>(() => {
                 var _ = decoder.GetDestinationSize(-1);
             });
         }
@@ -82,9 +90,9 @@ namespace CharLS.Native.Test
         {
             byte[] source = ReadAllBytes("T8NDE0.JLS");
 
-            using JpegLSDecoder decoder = new(source, true);
+            using JpegLSDecoder decoder = new(source);
             var buffer = new byte[decoder.GetDestinationSize()];
-            _ = Assert.Throws<ArgumentException>(() => {
+            _ = Assert.Throws<ArgumentOutOfRangeException>(() => {
                 decoder.Decode(buffer, -1);
             });
         }
@@ -94,7 +102,7 @@ namespace CharLS.Native.Test
         {
             byte[] source = ReadAllBytes("T8NDE0.JLS");
 
-            using JpegLSDecoder decoder = new(source, true);
+            using JpegLSDecoder decoder = new(source);
             _ = Assert.Throws<ArgumentException>(() => {
                 decoder.Decode(null);
             });
@@ -105,9 +113,40 @@ namespace CharLS.Native.Test
         {
             byte[] source = ReadAllBytes("T8NDE0.JLS");
 
-            using JpegLSDecoder decoder = new(source, true);
+            using JpegLSDecoder decoder = new(source);
 
             Assert.IsNotNull(decoder.Source);
+        }
+
+        [Test]
+        public void UseAfterDispose()
+        {
+            JpegLSDecoder decoder = new();
+            decoder.Dispose();
+
+            _ = Assert.Throws<ObjectDisposedException>(() => {
+                var _ = decoder.TryReadSpiffHeader(out var _);
+            });
+
+            Assert.IsNotNull(decoder.Source);
+
+            _ = Assert.Throws<ObjectDisposedException>(() => {
+                var _ = decoder.GetDestinationSize();
+            });
+
+            _ = Assert.Throws<ObjectDisposedException>(() => {
+                var _ = decoder.Decode();
+            });
+        }
+
+        [Test]
+        public void UseBeforeReadHeader()
+        {
+            using JpegLSDecoder decoder = new();
+
+            _ = Assert.Throws<InvalidOperationException>(() => {
+                var _ = decoder.GetDestinationSize();
+            });
         }
 
         private static byte[] ReadAllBytes(string path, int bytesToSkip = 0)
