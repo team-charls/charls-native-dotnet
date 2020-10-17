@@ -33,6 +33,8 @@ namespace CharLS.Native
         /// </summary>
         YcbcrItuBT6011Video = 4,
 
+        // Note: values 5,6 and 7 are reserved by  ISO/IEC 10918-3 and not used at the moment.
+
         /// <summary>
         /// Grayscale – This is a single component sample with interpretation as grayscale value, 0 is minimum, 2bps -1 is maximum.
         /// </summary>
