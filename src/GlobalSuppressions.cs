@@ -7,7 +7,7 @@
 // a specific target and scoped to a namespace, type, member, etc.
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Usage", "CA2201:Do not raise reserved exception types", Justification = "OutOfMemoryException is the best exception to throw", Scope = "member", Target = "~M:CharLS.Native.JpegLSEncoder.CreateEncoder~CharLS.Native.SafeHandleJpegLSEncoder")]
-[assembly: SuppressMessage("Usage", "CA2201:Do not raise reserved exception types", Justification = "OutOfMemoryException is the best exception to throw", Scope = "member", Target = "~M:CharLS.Native.JpegLSDecoder.CreateDecoder~CharLS.Native.SafeHandleJpegLSDecoder")]
-[assembly: SuppressMessage("Design", "CA1065:Do not raise exceptions in unexpected locations", Justification = "Type is unusable if native DLL doesn't match", Scope = "member", Target = "~M:CharLS.Native.SafeNativeMethods.#cctor")]
+// The purpose of this file is to suppress false warnings, this to keep the code clean.
+// Warnings that are suppressed by a design choice are suppressed in the source code.
+
 [assembly: SuppressMessage("Design", "CA1027:Mark enums with FlagsAttribute", Justification = "False warnings (triggered by missing values), enum values cannot be combined", Scope = "type", Target = "~T:CharLS.Native.SpiffColorSpace")]

@@ -3,6 +3,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -13,13 +14,17 @@ namespace CharLS.Native
     {
         private const string NativeLibraryName = "charls-2";
 
+        [SuppressMessage("Design", "CA1065:Do not raise exceptions in unexpected locations", Justification = "Type is unusable if native DLL doesn't match")]
         static SafeNativeMethods()
         {
             NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), DllImportResolver);
 
             CharLSGetVersionNumber(out int major, out int minor, out int _);
             if (major != 2 || minor < 1)
+            {
+
                 throw new DllNotFoundException("Native DLL version mismatch");
+            }
         }
 
         [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_get_version_number")]
