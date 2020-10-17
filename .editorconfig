@@ -56,21 +56,27 @@ dotnet_style_qualification_for_property = false:suggestion
 
 # Default severity for analyzer diagnostics - Requires **VS2019 16.5** or later
 dotnet_analyzer_diagnostic.severity = error
-dotnet_diagnostic.CA1026.severity = none
-dotnet_diagnostic.CA1062.severity = none
-dotnet_diagnostic.CA1303.severity = none
-dotnet_diagnostic.CS1591.severity = none
-dotnet_diagnostic.CS3003.severity = none
-dotnet_diagnostic.IDE0018.severity = none
-dotnet_diagnostic.SA1101.severity = none
-dotnet_diagnostic.SA1116.severity = none
-dotnet_diagnostic.SA1117.severity = none
-dotnet_diagnostic.SA1120.severity = none
-dotnet_diagnostic.SA1309.severity = none
-dotnet_diagnostic.SA1413.severity = none
-dotnet_diagnostic.SA1503.severity = none
-dotnet_diagnostic.SA1600.severity = none
-dotnet_diagnostic.SA1633.severity = none
-dotnet_diagnostic.SX1101.severity = warning
-dotnet_diagnostic.IDE0055.severity = none
+
+# SA1000: The keyword 'new' should be followed by a space.
+# Rational: false warning, not updated for C# 9.0
 dotnet_diagnostic.SA1000.severity = none
+
+# SA1413: Use trailing comma in multi-line initializers
+# Rational: by style guide don't use trailing comma when not needed.
+dotnet_diagnostic.SA1413.severity = none
+
+# SA1503: Braces should not be omitted
+# Rational: no braces are allowed for if + throw (no aut checking possible)
+dotnet_diagnostic.SA1503.severity = none
+
+# IDE0055: Fix formatting
+# Rational: Formatting rule is incompatible with StyleCop
+dotnet_diagnostic.IDE0055.severity = none
+
+# CA1303: literal string used instead of string from resource
+# Rational: Only English is used, no support for other languages by design.
+dotnet_diagnostic.CA1303.severity = none
+
+# CA1062: In externally visible method '', validate parameter '' is non-null before usage
+# Rational: non-null is already covered by Nullable
+dotnet_diagnostic.CA1062.severity = none

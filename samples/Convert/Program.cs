@@ -27,8 +27,10 @@ internal class Program
         {
             using Bitmap image = new(inputPath);
 
-            var bitmapData = image.LockBits(new(0, 0, image.Width, image.Height),
-                ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
+            var bitmapData = image.LockBits(
+                new(0, 0, image.Width, image.Height),
+                ImageLockMode.ReadWrite,
+                PixelFormat.Format24bppRgb);
             if (bitmapData.Stride < 0)
             {
                 Console.WriteLine("Image {inputPath} is not top down.");
