@@ -15,7 +15,7 @@ namespace CharLS.Native.Test
         [Test]
         public void GetMetadataInfoFromLosslessEncodedColorImage()
         {
-            byte[] source = ReadAllBytes("T8C0E0.JLS");
+            byte[] source = ReadAllBytes("t8c0e0.jls");
 
             using JpegLSDecoder decoder = new(source, true);
 
@@ -31,7 +31,7 @@ namespace CharLS.Native.Test
         [Test]
         public void GetMetadataInfoFromNearLosslessEncodedColorImage()
         {
-            var source = ReadAllBytes("T8C0E3.JLS");
+            var source = ReadAllBytes("t8c0e3.jls");
 
             using JpegLSDecoder decoder = new(source, true);
 
@@ -47,8 +47,8 @@ namespace CharLS.Native.Test
         [Test]
         public void Decode()
         {
-            var source = ReadAllBytes("T8C0E0.JLS");
-            var expected = ReadAllBytes("TEST8.PPM", 15);
+            var source = ReadAllBytes("t8c0e0.jls");
+            var expected = ReadAllBytes("test8.ppm", 15);
             var uncompressed = Decode(source);
 
             using JpegLSDecoder decoder = new(source, true);
@@ -67,7 +67,7 @@ namespace CharLS.Native.Test
         {
             FrameInfo info = new(256, 256, 8, 3);
 
-            var uncompressedOriginal = ReadAllBytes("TEST8.PPM", 15);
+            var uncompressedOriginal = ReadAllBytes("test8.ppm", 15);
             uncompressedOriginal = TripletToPlanar(uncompressedOriginal, info.Width, info.Height);
 
             using JpegLSEncoder encoder = new() { FrameInfo = info };
@@ -88,7 +88,7 @@ namespace CharLS.Native.Test
         {
             FrameInfo info = new(256, 256, 8, 3);
 
-            var uncompressedOriginal = ReadAllBytes("TEST8.PPM", 15);
+            var uncompressedOriginal = ReadAllBytes("test8.ppm", 15);
             uncompressedOriginal = TripletToPlanar(uncompressedOriginal, info.Width, info.Height);
 
             JpegLSPresetCodingParameters presetCodingParameters = new(255, 9, 10, 11, 31);

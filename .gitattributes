@@ -6,7 +6,6 @@
 
 # Explicit exclude binary files from the line ending normalization.
 *.png binary
-*.JLS binary
 *.jls binary
 *.bmp binary
 *.raw binary
