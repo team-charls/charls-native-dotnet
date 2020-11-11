@@ -69,6 +69,10 @@ dotnet_diagnostic.SA1413.severity = none
 # Rational: no braces are allowed for if + throw (no aut checking possible)
 dotnet_diagnostic.SA1503.severity = none
 
+# SA1516 Elements should be separated by blank line
+# Rational: Cannot handle top level C# 9.0 apps.
+dotnet_diagnostic.SA1516.severity = none
+
 # IDE0055: Fix formatting
 # Rational: Formatting rule is incompatible with StyleCop
 dotnet_diagnostic.IDE0055.severity = none
