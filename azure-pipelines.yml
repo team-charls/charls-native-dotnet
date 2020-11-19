@@ -43,3 +43,10 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
     otherConsoleOptions: --Framework:".NETCoreApp,Version=v5.0"
+    testAssemblyVer2: |
+     **\CharLSNativeTest.dll
+     !**\*TestAdapter.dll
+     !**\obj\**
+     !**\ref\**
+    runInParallel: true
+    codeCoverageEnabled: true
