@@ -75,10 +75,11 @@ void Save(string path, ReadOnlySpan<byte> encodedData)
 
 bool TryParseArguments(IReadOnlyList<string> args, out string inputPath)
 {
-    inputPath = string.Empty;
-
     if (args.Count != 1)
+    {
+        inputPath = string.Empty;
         return false;
+    }
 
     inputPath = args[0];
     return true;

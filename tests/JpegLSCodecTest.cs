@@ -15,28 +15,21 @@ namespace CharLS.Native.Test
         [Test]
         public void GetMetadataInfoFromLosslessEncodedColorImage()
         {
-            byte[] source = ReadAllBytes("t8c0e0.jls");
+            using JpegLSDecoder decoder = new(ReadAllBytes("t8c0e0.jls"));
 
-            using JpegLSDecoder decoder = new(source, true);
-
-            var frameInfo = decoder.FrameInfo;
-
-            Assert.AreEqual(frameInfo.Height, 256);
-            Assert.AreEqual(frameInfo.Width, 256);
-            Assert.AreEqual(frameInfo.BitsPerSample, 8);
-            Assert.AreEqual(frameInfo.ComponentCount, 3);
+            Assert.AreEqual(decoder.FrameInfo.Height, 256);
+            Assert.AreEqual(decoder.FrameInfo.Width, 256);
+            Assert.AreEqual(decoder.FrameInfo.BitsPerSample, 8);
+            Assert.AreEqual(decoder.FrameInfo.ComponentCount, 3);
             Assert.AreEqual(decoder.NearLossless, 0);
         }
 
         [Test]
         public void GetMetadataInfoFromNearLosslessEncodedColorImage()
         {
-            var source = ReadAllBytes("t8c0e3.jls");
-
-            using JpegLSDecoder decoder = new(source, true);
+            using JpegLSDecoder decoder = new(ReadAllBytes("t8c0e3.jls"));
 
             var frameInfo = decoder.FrameInfo;
-
             Assert.AreEqual(frameInfo.Height, 256);
             Assert.AreEqual(frameInfo.Width, 256);
             Assert.AreEqual(frameInfo.BitsPerSample, 8);
@@ -51,7 +44,7 @@ namespace CharLS.Native.Test
             var expected = ReadAllBytes("test8.ppm", 15);
             var uncompressed = Decode(source);
 
-            using JpegLSDecoder decoder = new(source, true);
+            using JpegLSDecoder decoder = new(source);
 
             var frameInfo = decoder.FrameInfo;
             if (decoder.InterleaveMode == JpegLSInterleaveMode.None && frameInfo.ComponentCount == 3)
@@ -75,7 +68,7 @@ namespace CharLS.Native.Test
             encoder.Destination = new byte[encoder.EstimatedDestinationSize];
             encoder.Encode(uncompressedOriginal);
 
-            using JpegLSDecoder decoder = new(encoder.EncodedData, true);
+            using JpegLSDecoder decoder = new(encoder.EncodedData);
             Assert.AreEqual(info, decoder.FrameInfo);
 
             var uncompressed = decoder.Decode();
@@ -97,7 +90,7 @@ namespace CharLS.Native.Test
             encoder.Destination = new byte[encoder.EstimatedDestinationSize];
             encoder.Encode(uncompressedOriginal);
 
-            using JpegLSDecoder decoder = new(encoder.EncodedData, true);
+            using JpegLSDecoder decoder = new(encoder.EncodedData);
             var pcp = decoder.PresetCodingParameters;
 
             Assert.AreEqual(presetCodingParameters, pcp);
@@ -116,7 +109,7 @@ namespace CharLS.Native.Test
             encoder.Destination = new byte[encoder.EstimatedDestinationSize];
             encoder.Encode(uncompressedOriginal);
 
-            using JpegLSDecoder decoder = new(encoder.Destination, true);
+            using JpegLSDecoder decoder = new(encoder.Destination);
 
             var uncompressed = decoder.Decode();
             Assert.AreEqual(uncompressedOriginal.Length, uncompressed.Length);
@@ -132,7 +125,7 @@ namespace CharLS.Native.Test
             encoder.Destination = new byte[encoder.EstimatedDestinationSize];
             encoder.Encode(uncompressedOriginal);
 
-            using JpegLSDecoder decoder = new(encoder.Destination, true);
+            using JpegLSDecoder decoder = new(encoder.Destination);
 
             var uncompressed = decoder.Decode();
             Assert.AreEqual(uncompressedOriginal.Length, uncompressed.Length);
@@ -176,7 +169,7 @@ namespace CharLS.Native.Test
             encoder.WriteStandardSpiffHeader(SpiffColorSpace.Grayscale);
             encoder.Encode(uncompressedOriginal);
 
-            using JpegLSDecoder decoder = new(encoder.Destination, true);
+            using JpegLSDecoder decoder = new(encoder.Destination);
 
             var spiffHeader = decoder.SpiffHeader;
             Assert.IsNotNull(spiffHeader);
@@ -309,7 +302,7 @@ namespace CharLS.Native.Test
 
         private static byte[] Decode(byte[] source)
         {
-            using JpegLSDecoder decoder = new(source, true);
+            using JpegLSDecoder decoder = new(source);
             return decoder.Decode();
         }
     }
