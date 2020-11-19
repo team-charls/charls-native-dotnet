@@ -1,9 +1,6 @@
 # Copyright (c) Team CharLS.
 # SPDX-License-Identifier: BSD-3-Clause
 
-# .NET 5.0
-# Build and test .NET 5.0 projects.
-
 pool:
   vmImage: 'windows-latest'
 
@@ -19,6 +16,9 @@ strategy:
       buildConfiguration: 'Release'
 
 steps:
+- checkout: self
+  submodules: true
+
 - task: NuGetToolInstaller@1
 
 - task: UseDotNet@2
