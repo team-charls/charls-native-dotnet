@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
 
 namespace CharLS.Native.Test
@@ -63,6 +64,7 @@ namespace CharLS.Native.Test
         }
 
         [Test]
+        [SuppressMessage("Maintainability", "CA1508:Avoid dead conditional code", Justification = "Unit test code")]
         public void EquatableWithNull()
         {
             FrameInfo a = new(256, 1024, 8, 3);

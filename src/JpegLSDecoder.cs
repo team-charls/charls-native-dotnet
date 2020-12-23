@@ -3,6 +3,7 @@
 
 using System;
 using System.Buffers;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 using static CharLS.Native.SafeNativeMethods;
@@ -274,6 +275,7 @@ namespace CharLS.Native
                 (nuint)destination.Length, ConvertStrideToUint32(stride)));
         }
 
+        [SuppressMessage("Usage", "CA2201:Do not raise reserved exception types", Justification = "CharLSCreateDecoder will only fail in an out of memory condition")]
         private static SafeHandleJpegLSDecoder CreateDecoder()
         {
             SafeHandleJpegLSDecoder encoder = CharLSCreateDecoder();

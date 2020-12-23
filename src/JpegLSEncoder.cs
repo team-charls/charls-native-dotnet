@@ -3,6 +3,7 @@
 
 using System;
 using System.Buffers;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using static CharLS.Native.SafeNativeMethods;
 
@@ -269,6 +270,7 @@ namespace CharLS.Native
             HandleJpegLSError(CharLSWriteSpiffHeader(_encoder, ref headerNative));
         }
 
+        [SuppressMessage("Usage", "CA2201:Do not raise reserved exception types", Justification = "CharLSCreateEncoder will only fail in an out of memory condition")]
         private static SafeHandleJpegLSEncoder CreateEncoder()
         {
             SafeHandleJpegLSEncoder encoder = CharLSCreateEncoder();

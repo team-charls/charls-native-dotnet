@@ -8,14 +8,16 @@ using System.Drawing.Imaging;
 using System.IO;
 using CharLS.Native;
 
+[assembly: CLSCompliant(true)]
+
 const int Success = 0;
 const int Failure = 1;
 
 // This sample demonstrates how to convert another encoded image to a JPEG-LS encoded image.
-// The input path should be an absolute path to a file format .NET can read (.bmp, .png, etc).
+// The input path should be an absolute path to a file format .NET can read (.bmp, .png, etc.).
 if (!TryParseArguments(args, out string inputPath))
 {
-    Console.WriteLine("Usage: Convert <path to image file>");
+    Console.WriteLine("Usage: Convert input-image-filename");
     return Failure;
 }
 
@@ -58,9 +60,8 @@ try
 catch (IOException e)
 {
     Console.WriteLine("Error: " + e.Message);
+    return Failure;
 }
-
-return Failure;
 
 string GetOutputPath(string inputPath)
 {

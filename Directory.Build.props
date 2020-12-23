@@ -18,9 +18,9 @@
 
     <!-- Enable all CAxxx code quality rules -->
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
 
     <!-- Define treat warnings as errors for C# projects -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>

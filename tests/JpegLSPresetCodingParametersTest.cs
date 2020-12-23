@@ -1,6 +1,7 @@
 // Copyright (c) Team CharLS.
 // SPDX-License-Identifier: BSD-3-Clause
 
+using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
 
 namespace CharLS.Native.Test
@@ -65,6 +66,7 @@ namespace CharLS.Native.Test
         }
 
         [Test]
+        [SuppressMessage("Maintainability", "CA1508:Avoid dead conditional code", Justification = "Unit test code")]
         public void EquatableWithNull()
         {
             JpegLSPresetCodingParameters a = new(2556, 9, 10, 11, 31);
