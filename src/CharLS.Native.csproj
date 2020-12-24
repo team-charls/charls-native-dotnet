@@ -2,14 +2,17 @@
 
   <PropertyGroup>
     <Description>".NET interop layer for the CharLS JPEG-LS codec"</Description>
-    <Company>Team-CharLS</Company>
-    <Authors>Team-CharLS</Authors>
-    <Version>1.0.0</Version>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
+    <Company>Team CharLS</Company>
+    <Authors>Team CharLS</Authors>
+    <Version>0.7.0</Version>
+    <AssemblyVersion>0.7.0.0</AssemblyVersion>
+    <FileVersion>0.7.0.0</FileVersion>
     <Copyright>Copyright 2020 Team CharLS</Copyright>
-    <DocumentationFile>$(OutDir)CharLSNet.xml</DocumentationFile>
+    <DocumentationFile>$(OutDir)CharLS.Native.xml</DocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>CharLS.Native.KeyPair.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <Target Name="BuildNativeCharLS" BeforeTargets="CopyNativeCharLSFiles">
@@ -22,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-        <MySourceFiles Include="..\extern\charls\bin\Release\x86\charls-2-x86.dll;&#xD;&#xA;                                ..\extern\charls\bin\Release\x86\charls-2-x86.pdb;&#xD;&#xA;                                ..\extern\charls\bin\Release\x64\charls-2-x64.dll;&#xD;&#xA;                                ..\extern\charls\bin\Release\x64\charls-2-x64.pdb" />
+    <MySourceFiles Include="..\extern\charls\bin\Release\x86\charls-2-x86.dll;&#xD;&#xA;..\extern\charls\bin\Release\x86\charls-2-x86.pdb;&#xD;&#xA;                                ..\extern\charls\bin\Release\x64\charls-2-x64.dll;&#xD;&#xA;..\extern\charls\bin\Release\x64\charls-2-x64.pdb" />
   </ItemGroup>
 
   <Target Name="CopyNativeCharLSFiles" BeforeTargets="Build">

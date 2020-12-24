@@ -63,7 +63,7 @@ namespace CharLS.Native
         /// The frame information of the image.
         /// </value>
         /// <exception cref="ArgumentException">Thrown when the passed FrameInfo is invalid.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when the passed FrameInfo is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when the passed FrameInfo instance is null.</exception>
         public FrameInfo? FrameInfo
         {
             get => _frameInfo;
@@ -87,10 +87,10 @@ namespace CharLS.Native
         }
 
         /// <summary>
-        /// Gets or sets the near lossless parameter used to encode the JPEG-LS stream.
+        /// Gets or sets the near lossless parameter to be used to encode the JPEG-LS stream.
         /// </summary>
         /// <value>
-        /// The near lossless parameter value.
+        /// The near lossless parameter value, 0 means lossless.
         /// </value>
         /// <exception cref="ArgumentException">Thrown when the passed value is invalid.</exception>
         public int NearLossless
@@ -169,7 +169,7 @@ namespace CharLS.Native
         }
 
         /// <summary>
-        /// Gets or sets the memory region that will be destination for the encoded JPEG-LS data.
+        /// Gets or sets the memory region that will be the destination for the encoded JPEG-LS data.
         /// </summary>
         /// <value>
         /// The memory buffer to be used as the destination.
@@ -249,6 +249,7 @@ namespace CharLS.Native
         /// <summary>
         /// Writes a standard SPIFF header to the destination. The additional values are computed from the current encoder settings.
         /// A SPIFF header is optional, but recommended for standalone JPEG-LS files.
+        /// It should not be used when embedding a JPEG-LS image in a DICOM file.
         /// </summary>
         /// <param name="colorSpace">The color space of the image.</param>
         /// <param name="resolutionUnit">The resolution units of the next 2 parameters.</param>
@@ -262,6 +263,8 @@ namespace CharLS.Native
 
         /// <summary>
         /// Writes a SPIFF header to the destination memory buffer.
+        /// A SPIFF header is optional, but recommended for standalone JPEG-LS files.
+        /// It should not be used when embedding a JPEG-LS image in a DICOM file.
         /// </summary>
         /// <param name="spiffHeader">Reference to a SPIFF header that will be written to the destination buffer.</param>
         public void WriteSpiffHeader(SpiffHeader spiffHeader)

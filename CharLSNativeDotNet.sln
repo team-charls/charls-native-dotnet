@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30028.174
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CharLSNative", "src\CharLSNative.csproj", "{24A8A591-72B8-4B9A-94A3-F23921B58D51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CharLS.Native", "src\CharLS.Native.csproj", "{24A8A591-72B8-4B9A-94A3-F23921B58D51}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CharLSNativeTest", "tests\CharLSNativeTest.csproj", "{A1F75980-3704-45B5-AEA6-38A4D9541425}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CharLS.Native.Test", "tests\CharLS.Native.Test.csproj", "{A1F75980-3704-45B5-AEA6-38A4D9541425}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5C259DB9-1AAF-4C8F-A083-47DCDF9924DF}"
 	ProjectSection(SolutionItems) = preProject

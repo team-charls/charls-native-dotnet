@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\CharLSNative.csproj" />
+    <ProjectReference Include="..\..\src\CharLS.Native.csproj" />
   </ItemGroup>
 
 </Project>

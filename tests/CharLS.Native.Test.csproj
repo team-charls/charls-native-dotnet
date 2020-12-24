@@ -3,6 +3,8 @@
   <PropertyGroup>
     <IsPackable>false</IsPackable>
     <CodeAnalysisRuleSet>CharLSNativeTest.ruleset</CodeAnalysisRuleSet>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\src\CharLS.Native.KeyPair.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -98,10 +100,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\CharLSNative.csproj">
-      <Project>{6f9955c1-a285-4de0-b3e6-f69eb08bbd7b}</Project>
-      <Name>CharLSNet</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\src\CharLS.Native.csproj" />
   </ItemGroup>
 
 </Project>
