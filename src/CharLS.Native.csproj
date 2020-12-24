@@ -1,35 +1,95 @@
+<!--
+  Copyright (c) Team CharLS.
+  SPDX-License-Identifier: BSD-3-Clause
+-->
+
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>".NET interop layer for the CharLS JPEG-LS codec"</Description>
-    <Company>Team CharLS</Company>
-    <Authors>Team CharLS</Authors>
-    <Version>0.7.0</Version>
-    <AssemblyVersion>0.7.0.0</AssemblyVersion>
-    <FileVersion>0.7.0.0</FileVersion>
+    <Version>1.0.0-beta.1</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
     <Copyright>Copyright 2020 Team CharLS</Copyright>
-    <DocumentationFile>$(OutDir)CharLS.Native.xml</DocumentationFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+
+    <!-- Use strong naming -->
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>CharLS.Native.KeyPair.snk</AssemblyOriginatorKeyFile>
+
+    <!-- Configure NuGet package settings  -->
+    <Company>Team CharLS</Company>
+    <Authors>Team CharLS</Authors>
+    <Description>CharLS.Native is a .NET adapter assembly that provides access to the native CharLS JPEG-LS C++ implementation for .NET based applications.</Description>
+    <PackageTags>jpeg-ls;compression;codec</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/team-charls/charls-native-dotnet.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+
+    <!-- Configure NuGet symbol package -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    <!-- Source Link settings -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+    <CertificateThumbprint Condition="'$(CertificateThumbprint)' == ''">6e78b103da0729369e44004121fb6bf685fec5d8</CertificateThumbprint>
+    <TimestampUrl Condition="'$(TimestampUrl)' == ''">http://time.certum.pl/</TimestampUrl>
   </PropertyGroup>
 
-  <Target Name="BuildNativeCharLS" BeforeTargets="CopyNativeCharLSFiles">
-      <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=Release;Platform=Win32" />
-      <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=Release;Platform=x64" />
-  </Target>
+  <ItemGroup>
+    <Content Include="$(OutDir)\charls-2-x64.dll">
+      <Pack>true</Pack>
+      <PackagePath>runtimes\win\native\</PackagePath>
+    </Content>
+    <Content Include="$(OutDir)\charls-2-x86.dll">
+      <Pack>true</Pack>
+      <PackagePath>runtimes\win\native\</PackagePath>
+    </Content>
+  </ItemGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <MySourceFiles Include="..\extern\charls\bin\Release\x86\charls-2-x86.dll;&#xD;&#xA;..\extern\charls\bin\Release\x86\charls-2-x86.pdb;&#xD;&#xA;                                ..\extern\charls\bin\Release\x64\charls-2-x64.dll;&#xD;&#xA;..\extern\charls\bin\Release\x64\charls-2-x64.pdb" />
+    <None Include="..\doc\jpeg_ls_logo.png" Pack="true" PackagePath="\icon.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+
+  <Target Name="BuildNativeCharLS" BeforeTargets="CopyNativeCharLSFiles">
+    <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=Release;Platform=Win32" />
+    <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=Release;Platform=x64" />
+  </Target>
+
   <Target Name="CopyNativeCharLSFiles" BeforeTargets="Build">
+    <ItemGroup>
+      <MySourceFiles Include="..\extern\charls\bin\Release\x86\charls-2-x86.dll;..\extern\charls\bin\Release\x86\charls-2-x86.pdb;..\extern\charls\bin\Release\x64\charls-2-x64.dll;..\extern\charls\bin\Release\x64\charls-2-x64.pdb" />
+    </ItemGroup>
+
     <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="SignDlls" BeforeTargets="GenerateNuspec">
+    <!-- Use TargetFrameworkVersion=v4.5 to sign with SHA256 -->
+    <Message Text="Signing CharLS.Native.dll" />
+    <SignFile CertificateThumbprint="$(CertificateThumbprint)" TimestampUrl="$(TimestampUrl)" SigningTarget="$(OutDir)\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
+
+    <Message Text="Signing charls-2-x64.dll" />
+    <SignFile CertificateThumbprint="$(CertificateThumbprint)" TimestampUrl="$(TimestampUrl)" SigningTarget="$(OutDir)\charls-2-x64.dll" TargetFrameworkVersion="v4.5" />
+
+    <Message Text="Signing charls-2-x86.dll" />
+    <SignFile CertificateThumbprint="$(CertificateThumbprint)" TimestampUrl="$(TimestampUrl)" SigningTarget="$(OutDir)\charls-2-x86.dll" TargetFrameworkVersion="v4.5" />
+  </Target>
+
+  <Target Name="SignPackage" AfterTargets="Pack">
+    <Exec Command="nuget sign $(OutDir)$(PackageId).$(Version).nupkg -Timestamper $(TimestampUrl) -CertificateFingerprint $(CertificateThumbprint)" />
+    <Exec Command="nuget sign $(OutDir)$(PackageId).$(Version).snupkg -Timestamper $(TimestampUrl) -CertificateFingerprint $(CertificateThumbprint)" />
   </Target>
 
 </Project>
