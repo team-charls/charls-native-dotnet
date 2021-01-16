@@ -69,7 +69,7 @@
 
   <Target Name="CopyNativeCharLSFiles" BeforeTargets="Build">
     <ItemGroup>
-      <MySourceFiles Include="..\extern\charls\bin\Release\x86\charls-2-x86.dll;..\extern\charls\bin\Release\x86\charls-2-x86.pdb;..\extern\charls\bin\Release\x64\charls-2-x64.dll;..\extern\charls\bin\Release\x64\charls-2-x64.pdb" />
+      <MySourceFiles Include="..\extern\charls\bin\x86\Release\charls-2-x86.dll;..\extern\charls\bin\x86\Release\charls-2-x86.pdb;..\extern\charls\bin\x64\Release\charls-2-x64.dll;..\extern\charls\bin\x64\Release\charls-2-x64.pdb" />
     </ItemGroup>
 
     <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
