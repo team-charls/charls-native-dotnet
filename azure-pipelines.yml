@@ -44,7 +44,7 @@ steps:
     configuration: '$(buildConfiguration)'
     otherConsoleOptions: --Framework:".NETCoreApp,Version=v5.0"
     testAssemblyVer2: |
-     **\CharLSNativeTest.dll
+     **\CharLS.Native.Test.dll
      !**\*TestAdapter.dll
      !**\obj\**
      !**\ref\**
