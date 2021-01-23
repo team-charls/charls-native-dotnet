@@ -1,0 +1,2 @@
+1.0.0.
+ - Initial release. Includes native CharLS library version 2.2.0.

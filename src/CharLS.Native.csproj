@@ -6,10 +6,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>1.0.0-beta.1</Version>
+    <Version>1.0.0</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <Copyright>Copyright 2020 Team CharLS</Copyright>
+    <Copyright>Copyright 2021 Team CharLS</Copyright>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
@@ -20,10 +20,11 @@
     <!-- Configure NuGet package settings  -->
     <Company>Team CharLS</Company>
     <Authors>Team CharLS</Authors>
-    <Description>CharLS.Native is a .NET adapter assembly that provides access to the native CharLS JPEG-LS C++ implementation for .NET based applications.</Description>
+    <Description>CharLS.Native is a .NET adapter assembly that provides access to the native CharLS JPEG-LS C++ implementation for .NET based applications. JPEG-LS (ISO-14495-1) is a lossless/near-lossless compression standard for continuous-tone images.</Description>
     <PackageTags>jpeg-ls;compression;codec</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
     <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
+    <PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/nuget-release-notes.txt"))</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/team-charls/charls-native-dotnet.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
 
@@ -35,8 +36,10 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
 
-    <CertificateThumbprint Condition="'$(CertificateThumbprint)' == ''">6e78b103da0729369e44004121fb6bf685fec5d8</CertificateThumbprint>
-    <TimestampUrl Condition="'$(TimestampUrl)' == ''">http://time.certum.pl/</TimestampUrl>
+    <_CertificateThumbprint>$(CertificateThumbprint)</_CertificateThumbprint>
+    <_CertificateThumbprint Condition="'$(_CertificateThumbprint)' == ''">6e78b103da0729369e44004121fb6bf685fec5d8</_CertificateThumbprint>
+    <_TimestampUrl>$(TimestampUrl)</_TimestampUrl>
+    <_TimestampUrl Condition="'$(_TimestampUrl)' == ''">http://time.certum.pl/</_TimestampUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -78,18 +81,18 @@
   <Target Name="SignDlls" BeforeTargets="GenerateNuspec">
     <!-- Use TargetFrameworkVersion=v4.5 to sign with SHA256 -->
     <Message Text="Signing CharLS.Native.dll" />
-    <SignFile CertificateThumbprint="$(CertificateThumbprint)" TimestampUrl="$(TimestampUrl)" SigningTarget="$(OutDir)\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
+    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutDir)\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
 
     <Message Text="Signing charls-2-x64.dll" />
-    <SignFile CertificateThumbprint="$(CertificateThumbprint)" TimestampUrl="$(TimestampUrl)" SigningTarget="$(OutDir)\charls-2-x64.dll" TargetFrameworkVersion="v4.5" />
+    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutDir)\charls-2-x64.dll" TargetFrameworkVersion="v4.5" />
 
     <Message Text="Signing charls-2-x86.dll" />
-    <SignFile CertificateThumbprint="$(CertificateThumbprint)" TimestampUrl="$(TimestampUrl)" SigningTarget="$(OutDir)\charls-2-x86.dll" TargetFrameworkVersion="v4.5" />
+    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutDir)\charls-2-x86.dll" TargetFrameworkVersion="v4.5" />
   </Target>
 
   <Target Name="SignPackage" AfterTargets="Pack">
-    <Exec Command="nuget sign $(OutDir)$(PackageId).$(Version).nupkg -Timestamper $(TimestampUrl) -CertificateFingerprint $(CertificateThumbprint)" />
-    <Exec Command="nuget sign $(OutDir)$(PackageId).$(Version).snupkg -Timestamper $(TimestampUrl) -CertificateFingerprint $(CertificateThumbprint)" />
+    <Exec Command="nuget sign $(OutDir)$(PackageId).$(Version).nupkg -Timestamper $(_TimestampUrl) -CertificateFingerprint $(_CertificateThumbprint)" />
+    <Exec Command="nuget sign $(OutDir)$(PackageId).$(Version).snupkg -Timestamper $(_TimestampUrl) -CertificateFingerprint $(_CertificateThumbprint)" />
   </Target>
 
 </Project>
