@@ -188,7 +188,8 @@ namespace CharLS.Native
             if (libraryName != NativeLibraryName)
                 return IntPtr.Zero;
 
-            string library = Environment.Is64BitProcess ? "charls-2-x64.dll" : "charls-2-x86.dll";
+            string library = OperatingSystem.IsWindows() ?
+              (Environment.Is64BitProcess ? "charls-2-x64.dll" : "charls-2-x86.dll") : "charls.so.2";
             return NativeLibrary.Load(library, assembly, DllImportSearchPath.AssemblyDirectory);
         }
     }
