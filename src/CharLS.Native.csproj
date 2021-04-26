@@ -42,7 +42,9 @@
     <_TimestampUrl Condition="'$(_TimestampUrl)' == ''">http://time.certum.pl/</_TimestampUrl>
   </PropertyGroup>
 
-  <ItemGroup>
+  <!-- Only when building build and include the native Windows DLLs
+       On other platform build a NuGet package without native binaries. -->
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
     <Content Include="$(OutDir)\charls-2-x64.dll">
       <Pack>true</Pack>
       <PackagePath>runtimes\win\native\</PackagePath>
@@ -65,12 +67,12 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
   </ItemGroup>
 
-  <Target Name="BuildNativeCharLS" BeforeTargets="CopyNativeCharLSFiles">
+  <Target Name="BuildNativeWindowsCharLS" BeforeTargets="CopyNativeWindowsCharLSFiles" Condition="$([MSBuild]::IsOSPlatform('Windows'))">
     <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=Release;Platform=Win32" />
     <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=Release;Platform=x64" />
   </Target>
 
-  <Target Name="CopyNativeCharLSFiles" BeforeTargets="Build">
+  <Target Name="CopyNativeWindowsCharLSFiles" BeforeTargets="Build" Condition="$([MSBuild]::IsOSPlatform('Windows'))">
     <ItemGroup>
       <MySourceFiles Include="..\extern\charls\bin\x86\Release\charls-2-x86.dll;..\extern\charls\bin\x86\Release\charls-2-x86.pdb;..\extern\charls\bin\x64\Release\charls-2-x64.dll;..\extern\charls\bin\x64\Release\charls-2-x64.pdb" />
     </ItemGroup>
@@ -78,7 +80,7 @@
     <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
   </Target>
 
-  <Target Name="SignDlls" BeforeTargets="GenerateNuspec">
+  <Target Name="SignWindowsDlls" BeforeTargets="GenerateNuspec" Condition="$([MSBuild]::IsOSPlatform('Windows'))">
     <!-- Use TargetFrameworkVersion=v4.5 to sign with SHA256 -->
     <Message Text="Signing CharLS.Native.dll" />
     <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutDir)\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
@@ -90,7 +92,7 @@
     <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutDir)\charls-2-x86.dll" TargetFrameworkVersion="v4.5" />
   </Target>
 
-  <Target Name="SignPackage" AfterTargets="Pack">
+  <Target Name="SignPackage" AfterTargets="Pack" Condition="$([MSBuild]::IsOSPlatform('Windows'))">
     <Exec Command="nuget sign $(OutDir)$(PackageId).$(Version).nupkg -Timestamper $(_TimestampUrl) -CertificateFingerprint $(_CertificateThumbprint)" />
     <Exec Command="nuget sign $(OutDir)$(PackageId).$(Version).snupkg -Timestamper $(_TimestampUrl) -CertificateFingerprint $(_CertificateThumbprint)" />
   </Target>
