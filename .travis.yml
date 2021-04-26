@@ -1,0 +1,14 @@
+dist: focal
+
+language: csharp
+mono: none
+dotnet: 5.0
+script:
+  - dotnet restore
+  - dotnet build
+  - dotnet test
+
+addons:
+  apt:
+    packages:
+      - libcharls2
