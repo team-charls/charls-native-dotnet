@@ -278,7 +278,7 @@ namespace CharLS.Native.Test
 
         private static byte[] ReadAllBytes(string path, int bytesToSkip = 0)
         {
-            var fullPath = DataFileDirectory + path;
+            var fullPath = Path.Join(DataFileDirectory, path);
 
             if (bytesToSkip == 0)
                 return File.ReadAllBytes(fullPath);
@@ -296,7 +296,7 @@ namespace CharLS.Native.Test
             get
             {
                 var assemblyLocation = new Uri(Assembly.GetExecutingAssembly().Location);
-                return Path.GetDirectoryName(assemblyLocation.LocalPath) + @"\DataFiles\";
+                return Path.Join(Path.GetDirectoryName(assemblyLocation.LocalPath), "DataFiles");
             }
         }
 
