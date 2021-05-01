@@ -1,52 +1,184 @@
 # Copyright (c) Team CharLS.
 # SPDX-License-Identifier: BSD-3-Clause
 
-pool:
-  vmImage: 'windows-latest'
-
 variables:
   solution: '*.sln'
   buildPlatform: 'Any CPU'
 
-strategy:
-  matrix:
-    Debug:
-      buildConfiguration: 'Debug'
-    Release:
-      buildConfiguration: 'Release'
+jobs:
+- job: 'windows'
+  pool:
+    vmImage: 'windows-latest'
+  displayName: 'Windows - '
 
-steps:
-- checkout: self
-  submodules: true
+  strategy:
+    matrix:
+      Debug:
+        buildConfiguration: 'Debug'
+      Release:
+        buildConfiguration: 'Release'
 
-- task: NuGetToolInstaller@1
+  steps:
+  - checkout: self
+    submodules: true
+    fetchDepth: 1
 
-- task: UseDotNet@2
-  displayName: 'Install .NET 5.0 SDK'
-  inputs:
-    version: 5.0.x
-    performMultiLevelLookup: true
-    includePreviewVersions: true # Required for preview versions
+  - task: NuGetToolInstaller@1
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+  - task: UseDotNet@2
+    displayName: 'Install .NET 5.0 SDK'
+    inputs:
+      version: 5.0.x
 
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+  - task: NuGetCommand@2
+    inputs:
+      restoreSolution: '$(solution)'
 
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-    otherConsoleOptions: --Framework:".NETCoreApp,Version=v5.0"
-    testAssemblyVer2: |
-     **\CharLS.Native.Test.dll
-     !**\*TestAdapter.dll
-     !**\obj\**
-     !**\ref\**
-    runInParallel: true
-    codeCoverageEnabled: true
+  - task: VSBuild@1
+    inputs:
+      solution: '$(solution)'
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+
+  - task: VSTest@2
+    inputs:
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+      otherConsoleOptions: --Framework:".NETCoreApp,Version=v5.0"
+      testAssemblyVer2: |
+        **\CharLS.Native.Test.dll
+        !**\*TestAdapter.dll
+        !**\obj\**
+        !**\ref\**
+      runInParallel: true
+      codeCoverageEnabled: true
+
+
+- job: 'linux'
+  pool:
+    vmImage: ubuntu-latest
+  displayName: 'Linux - '
+
+  strategy:
+    matrix:
+      Debug:
+        buildConfiguration: Debug
+
+      Release:
+        buildConfiguration: Release
+
+  steps:
+  - checkout: self
+    submodules: true
+    fetchDepth: 1
+  - task: NuGetToolInstaller@1
+
+  - script: mkdir $(Build.BinariesDirectory)/build
+    displayName: "Create build folder"
+
+  - task: CMake@1
+    displayName: "Configure CharLS"
+    inputs:
+      workingDirectory: $(Build.BinariesDirectory)/build
+      cmakeArgs:
+        -DCMAKE_BUILD_TYPE=Release
+        -DBUILD_SHARED_LIBS=On
+        -DCHARLS_PEDANTIC_WARNINGS=On
+        -DCHARLS_THREAT_WARNINGS_AS_ERRORS=On
+        -DCHARLS_BUILD_TESTS=Off
+        -DCHARLS_BUILD_FUZZ_TEST=Off
+        -DCHARLS_BUILD_SAMPLES=Off
+        $(Build.SourcesDirectory)/extern/charls
+
+  - task: CMake@1
+    displayName: "Build CharLS"
+    inputs:
+      workingDirectory: $(Build.BinariesDirectory)/build
+      cmakeArgs: --build .
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET 5.0 SDK'
+    inputs:
+      version: 5.0.x
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'restore'
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'build'
+      arguments: '--configuration $(buildConfiguration)'
+      platform: '$(buildPlatform)'
+      displayName: 'dotnet build $(buildConfiguration)'
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'test'
+      projects: '**/*Tests/*.csproj'
+      arguments: '--configuration $(buildConfiguration)'
+
+
+- job: 'macOS'
+  pool:
+    vmImage: macOS-latest
+  displayName: 'macOS - '
+
+  strategy:
+    matrix:
+      Debug:
+        buildConfiguration: Debug
+
+      Release:
+        buildConfiguration: Release
+
+  steps:
+  - checkout: self
+    submodules: true
+    fetchDepth: 1
+  - task: NuGetToolInstaller@1
+
+  - script: mkdir $(Build.BinariesDirectory)/build
+    displayName: "Create build folder"
+
+  - task: CMake@1
+    displayName: "Configure CharLS"
+    inputs:
+      workingDirectory: $(Build.BinariesDirectory)/build
+      cmakeArgs:
+        -DCMAKE_BUILD_TYPE=Release
+        -DBUILD_SHARED_LIBS=On
+        -DCHARLS_PEDANTIC_WARNINGS=On
+        -DCHARLS_THREAT_WARNINGS_AS_ERRORS=On
+        -DCHARLS_BUILD_TESTS=Off
+        -DCHARLS_BUILD_FUZZ_TEST=Off
+        -DCHARLS_BUILD_SAMPLES=Off
+        $(Build.SourcesDirectory)/extern/charls
+
+  - task: CMake@1
+    displayName: "Build CharLS"
+    inputs:
+      workingDirectory: $(Build.BinariesDirectory)/build
+      cmakeArgs: --build .
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET 5.0 SDK'
+    inputs:
+      version: 5.0.x
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'restore'
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'build'
+      arguments: '--configuration $(buildConfiguration)'
+      platform: '$(buildPlatform)'
+      displayName: 'dotnet build $(buildConfiguration)'
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'test'
+      projects: '**/*Tests/*.csproj'
+      arguments: '--configuration $(buildConfiguration)'
