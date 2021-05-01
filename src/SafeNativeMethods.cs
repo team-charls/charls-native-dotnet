@@ -185,12 +185,20 @@ namespace CharLS.Native
 
         private static IntPtr DllImportResolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
         {
-            if (libraryName != NativeLibraryName)
-                return IntPtr.Zero;
+            return libraryName != NativeLibraryName
+                ? IntPtr.Zero
+                : NativeLibrary.Load(GetLibraryName(), assembly, DllImportSearchPath.AssemblyDirectory);
+        }
 
-            string library = OperatingSystem.IsWindows() ?
-              (Environment.Is64BitProcess ? "charls-2-x64.dll" : "charls-2-x86.dll") : "charls.so.2";
-            return NativeLibrary.Load(library, assembly, DllImportSearchPath.AssemblyDirectory);
+        private static string GetLibraryName()
+        {
+            return OperatingSystem.IsWindows()
+                ? Environment.Is64BitProcess ? "charls-2-x64.dll" : "charls-2-x86.dll"
+                : OperatingSystem.IsLinux()
+                ? "charls.so.2"
+                : OperatingSystem.IsMacOS()
+                ? "libcharls.dylib"
+                : throw new NotSupportedException("No native JPEG-LS codec is available for " + Environment.OSVersion);
         }
     }
 }
