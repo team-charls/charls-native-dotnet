@@ -82,7 +82,7 @@ namespace CharLS.Native.Test
         public void SetDestinationWithEmptyBuffer()
         {
             using JpegLSEncoder encoder = new();
-            _ = Assert.Throws<ArgumentException>(() => {
+            Assert.DoesNotThrow(() => {
                 encoder.Destination = Memory<byte>.Empty;
             });
         }

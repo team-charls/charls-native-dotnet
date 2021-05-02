@@ -28,7 +28,7 @@ namespace CharLS.Native.Test
         [Test]
         public void CreateWithEmptyBuffer()
         {
-            _ = Assert.Throws<ArgumentException>(() => {
+            Assert.DoesNotThrow(() => {
                 using JpegLSDecoder _ = new(Memory<byte>.Empty, false);
             });
         }
@@ -37,7 +37,7 @@ namespace CharLS.Native.Test
         public void SetSourceWithEmptyBuffer()
         {
             using JpegLSDecoder decoder = new();
-            _ = Assert.Throws<ArgumentException>(() => {
+            Assert.DoesNotThrow(() => {
                 decoder.Source = Memory<byte>.Empty;
             });
         }
