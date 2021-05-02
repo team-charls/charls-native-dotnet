@@ -13,8 +13,9 @@ JPEG-LS (ISO-14495-1) is a lossless/near-lossless compression standard for conti
 ## Features
 
 * .NET 5.0 class library.
-* Supports the Windows platform in the x86 and x64 architecture.  
+* Supports the Windows platform in the x86 and x64 architecture, as well as Linux and macOS.  
   Note: the Microsoft Visual C++ Redistributable for Visual Studio 2019 needs to be installed on the target system.
+        for Linux and macOS, the charls dynamic library needs to be installed on the target system.
 
 ## Installation
 
