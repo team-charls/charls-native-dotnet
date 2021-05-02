@@ -102,20 +102,26 @@ jobs:
       version: 5.0.x
 
   - task: DotNetCoreCLI@2
+    displayName: 'Restore NuGet packages'
     inputs:
       command: 'restore'
 
   - task: DotNetCoreCLI@2
+    displayName: 'Build Charls.Native'
     inputs:
       command: 'build'
       arguments: '--configuration $(buildConfiguration)'
       platform: '$(buildPlatform)'
       displayName: 'dotnet build $(buildConfiguration)'
 
+  - script: cp $(Build.BinariesDirectory)/build/libcharls.so.2 $(Build.SourcesDirectory)/bin/$(buildConfiguration)/
+    displayName: "Copy shared library to unit test location"
+
   - task: DotNetCoreCLI@2
+    displayName: 'Test Charls.Native'
     inputs:
       command: 'test'
-      projects: '**/*Tests/*.csproj'
+      projects: '**/*tests/*.csproj'
       arguments: '--configuration $(buildConfiguration)'
 
 
@@ -167,18 +173,24 @@ jobs:
       version: 5.0.x
 
   - task: DotNetCoreCLI@2
+    displayName: 'Restore NuGet packages'
     inputs:
       command: 'restore'
 
   - task: DotNetCoreCLI@2
+    displayName: 'Build Charls.Native'
     inputs:
       command: 'build'
       arguments: '--configuration $(buildConfiguration)'
       platform: '$(buildPlatform)'
       displayName: 'dotnet build $(buildConfiguration)'
 
+  - script: cp $(Build.BinariesDirectory)/build/libcharls.dylib $(Build.SourcesDirectory)/bin/$(buildConfiguration)/
+    displayName: "Copy shared library to unit test location"
+
   - task: DotNetCoreCLI@2
+    displayName: 'Test Charls.Native'
     inputs:
       command: 'test'
-      projects: '**/*Tests/*.csproj'
+      projects: '**/*tests/*.csproj'
       arguments: '--configuration $(buildConfiguration)'
