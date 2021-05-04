@@ -81,6 +81,9 @@ namespace CharLS.Native.Test
         [Test]
         public void SetDestinationWithEmptyBuffer()
         {
+            if (!JpegLSDecoderTest.CanHandleEmptyBuffer())
+                return;
+
             using JpegLSEncoder encoder = new();
             Assert.DoesNotThrow(() => {
                 encoder.Destination = Memory<byte>.Empty;

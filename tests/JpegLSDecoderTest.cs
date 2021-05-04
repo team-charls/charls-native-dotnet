@@ -28,6 +28,9 @@ namespace CharLS.Native.Test
         [Test]
         public void CreateWithEmptyBuffer()
         {
+            if (!CanHandleEmptyBuffer())
+                return;
+
             Assert.DoesNotThrow(() => {
                 using JpegLSDecoder _ = new(Memory<byte>.Empty, false);
             });
@@ -36,6 +39,9 @@ namespace CharLS.Native.Test
         [Test]
         public void SetSourceWithEmptyBuffer()
         {
+            if (!CanHandleEmptyBuffer())
+                return;
+
             using JpegLSDecoder decoder = new();
             Assert.DoesNotThrow(() => {
                 decoder.Source = Memory<byte>.Empty;
@@ -147,6 +153,12 @@ namespace CharLS.Native.Test
             _ = Assert.Throws<InvalidOperationException>(() => {
                 var _ = decoder.GetDestinationSize();
             });
+        }
+
+        internal static bool CanHandleEmptyBuffer()
+        {
+            SafeNativeMethods.CharLSGetVersionNumber(out int _, out int minor, out int patch);
+            return minor > 2 || patch > 0;
         }
 
         private static byte[] ReadAllBytes(string path, int bytesToSkip = 0)

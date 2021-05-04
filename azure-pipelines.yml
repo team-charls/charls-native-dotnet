@@ -110,9 +110,8 @@ jobs:
     displayName: 'Build Charls.Native'
     inputs:
       command: 'build'
-      arguments: '--configuration $(buildConfiguration)'
+      arguments: '--configuration $(buildConfiguration) --no-restore'
       platform: '$(buildPlatform)'
-      displayName: 'dotnet build $(buildConfiguration)'
 
   - script: cp $(Build.BinariesDirectory)/build/libcharls.so.2 $(Build.SourcesDirectory)/bin/$(buildConfiguration)/
     displayName: "Copy shared library to unit test location"
@@ -122,7 +121,7 @@ jobs:
     inputs:
       command: 'test'
       projects: '**/*tests/*.csproj'
-      arguments: '--configuration $(buildConfiguration)'
+      arguments: '--configuration $(buildConfiguration) --no-restore'
 
 
 - job: 'macOS'
@@ -181,11 +180,10 @@ jobs:
     displayName: 'Build Charls.Native'
     inputs:
       command: 'build'
-      arguments: '--configuration $(buildConfiguration)'
+      arguments: '--configuration $(buildConfiguration) --no-restore'
       platform: '$(buildPlatform)'
-      displayName: 'dotnet build $(buildConfiguration)'
 
-  - script: cp $(Build.BinariesDirectory)/build/libcharls.dylib $(Build.SourcesDirectory)/bin/$(buildConfiguration)/
+  - script: cp $(Build.BinariesDirectory)/build/libcharls.2.dylib $(Build.SourcesDirectory)/bin/$(buildConfiguration)/
     displayName: "Copy shared library to unit test location"
 
   - task: DotNetCoreCLI@2
@@ -193,4 +191,4 @@ jobs:
     inputs:
       command: 'test'
       projects: '**/*tests/*.csproj'
-      arguments: '--configuration $(buildConfiguration)'
+      arguments: '--configuration $(buildConfiguration) --no-restore'

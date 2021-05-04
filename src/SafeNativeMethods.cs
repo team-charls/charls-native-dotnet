@@ -193,11 +193,11 @@ namespace CharLS.Native
         private static string GetLibraryName()
         {
             return OperatingSystem.IsWindows()
-                ? Environment.Is64BitProcess ? "charls-2-x64.dll" : "charls-2-x86.dll"
+                ? Environment.Is64BitProcess ? "charls-2-x64" : "charls-2-x86"
                 : OperatingSystem.IsLinux()
                 ? "charls.so.2"
                 : OperatingSystem.IsMacOS()
-                ? "libcharls.dylib"
+                ? "charls.2"
                 : throw new NotSupportedException("No native JPEG-LS codec is available for " + Environment.OSVersion);
         }
     }
