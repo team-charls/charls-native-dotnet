@@ -157,8 +157,8 @@ namespace CharLS.Native.Test
 
         internal static bool CanHandleEmptyBuffer()
         {
-            SafeNativeMethods.CharLSGetVersionNumber(out int _, out int minor, out int patch);
-            return minor > 2 || patch > 0;
+            SafeNativeMethods.CharLSGetVersionNumber(out int major, out int minor, out int patch);
+            return major > 2 || (major == 2 && (minor > 2 || patch > 0));
         }
 
         private static byte[] ReadAllBytes(string path, int bytesToSkip = 0)
