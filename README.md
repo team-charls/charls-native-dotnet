@@ -35,6 +35,7 @@ A sample application is included in this repository that demonstrates how to con
 
 * Use git to get a copy of this repository: git clone --recurse-submodules
 * Use Visual Studio 2019 16.8 or newer to build the solution file CharLSNativeDotNet.sln
+* Alternatively on Linux use `dotnet build && dotnet test && dotnet publish` to build the nuget package
 
 ### Building and signing
 
