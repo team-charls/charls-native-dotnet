@@ -6,9 +6,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
+    <FileVersion>1.1.0.0</FileVersion>
     <Copyright>Copyright 2021 Team CharLS</Copyright>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -23,10 +23,12 @@
     <Description>CharLS.Native is a .NET adapter assembly that provides access to the native CharLS JPEG-LS C++ implementation for .NET based applications. JPEG-LS (ISO-14495-1) is a lossless/near-lossless compression standard for continuous-tone images.</Description>
     <PackageTags>jpeg-ls;compression;codec</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/team-charls/charls-native-dotnet</PackageProjectUrl>
     <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
     <PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/nuget-release-notes.txt"))</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/team-charls/charls-native-dotnet.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <!-- Configure NuGet symbol package -->
     <IncludeSymbols>true</IncludeSymbols>
@@ -61,6 +63,7 @@
 
   <ItemGroup>
     <None Include="..\doc\jpeg_ls_logo.png" Pack="true" PackagePath="\icon.png" />
+    <None Include="README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
   <ItemGroup>

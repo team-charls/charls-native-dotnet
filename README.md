@@ -13,43 +13,69 @@ JPEG-LS (ISO-14495-1) is a lossless/near-lossless compression standard for conti
 ## Features
 
 * .NET 5.0 class library.
-* Supports the Windows platform in the x86 and x64 architecture, as well as Linux and macOS.  
-  Note: the Microsoft Visual C++ Redistributable for Visual Studio 2019 needs to be installed on the target system.
-        for Linux and macOS, the charls dynamic library needs to be installed on the target system.
+* Support for the .NET platforms: Windows, Linux and macOS.
 
-## Installation
+## How to use
 
-CharLS.Native can be installed using the NuGet command line or the NuGet Package Manager in Visual Studio.
+CharLS.Native can be added to your C# project using the dotnet command line or the NuGet Package Manager in Visual Studio.
 
-### Install using the command line
+### Install using the dotnet command line
 
 ```bash
-Install-Package CharLS.Native
+dotnet add package CharLS.Native
 ```
 
-### How to use the NuGet package
+### Windows specific installation steps
 
-A sample application is included in this repository that demonstrates how to convert common image types like .bmp, .png and .jpg to .jls (JPEG-LS).
+The NuGet package comes with prebuild CharLS DLLs for the x86 and X64 targets.
+The Microsoft Visual C++ Redistributable for Visual Studio 2015, 2017 and 2019 (v14.28 or newer) needs to be installed on the target system.
 
-## How to build this repository
+### Linux specific installation steps
 
-* Use git to get a copy of this repository: git clone --recurse-submodules
-* Use Visual Studio 2019 16.8 or newer to build the solution file CharLSNativeDotNet.sln
-* Alternatively on Linux use `dotnet build && dotnet test && dotnet publish` to build the nuget package
+A prebuild CharLS shared library can be installed using the Apt package manager:
 
-### Building and signing
+```bash
+sudo apt install libcharls2
+```
 
-To support code signing with a code signing certificate stored on a smart card a Windows command file is available: create-nuget-package.cmd.
+### MacOS specific installation steps
+
+A prebuild CharLS shared library can be installed using the Homebrew package manager:
+
+```bash
+brew install team-charls/tap/charls
+```
+
+### How to use the C# clases in the NuGet package
+
+A sample application is included in the GitHub repository that demonstrates how to convert common image types like .bmp, .png and .jpg to .jls (JPEG-LS).
+
+## General steps to build this repository
+
+* Use Git to get a clone of this repository:  
+
+```bash
+ git clone --recurse-submodules
+```
+
+* Use CMake to build the native C++ shared library, see the CharLS project how to do that. When building with Visual Studio, this step can be skipped.
+* Use the .NET CLI or Visual Studio 2019 (v16.8 or newer) to build the solution file CharLSNativeDotNet.sln. For example: `dotnet build && dotnet test && dotnet publish` to build the nuget package.
+
+### Building Windows DLLs and code signing all components
+
+Building the NuGet package with signed Windows DLLs can only be done on the Window platform with Visual Studio 2019 or with Build tools for Visual Studio 2019.
+To support code signing with a code signing certificate, stored on a smart card, a Windows command file is available: `create-signed-nuget-package.cmd`.
 Instructions:
 
 * Open a Visual Studio Developer Command Prompt
 * Go the root of the cloned repository
 * Ensure the code signing certificate is available
-* Execute the command create-nuget-package.cmd certificate-thumb-print time-stamp-url
- The certificate thumbprint and time stamp URL arguments are depending on the used certificate.
+* Execute the command `create-signed-nuget-package.cmd certificate-thumb-print time-stamp-url`  
+ The certificate thumbprint and time stamp URL arguments are depending on the used code signing certificate.
 
  All DLLs and the NuGet package itself will be signed.
 
 ## About the JPEG-LS image compression standard
 
 More information about JPEG-LS can be found in the [README](https://github.com/team-charls/charls/blob/master/README.md) from the C++ CharLS project.
+This repository also contains instructions how the build the native C++ CharLS shared library from source.
