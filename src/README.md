@@ -40,7 +40,7 @@ A prebuild CharLS shared library can be installed using the Homebrew package man
 brew install team-charls/tap/charls
 ```
 
-### How to use the C# clases in the NuGet package
+### How to use the C# classes in the NuGet package
 
 A sample application is included in the GitHub repository that demonstrates how to convert common image types like .bmp, .png and .jpg to .jls (JPEG-LS).
 
