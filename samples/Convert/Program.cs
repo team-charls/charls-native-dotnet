@@ -99,9 +99,7 @@ void ConvertBgrToRgb(Span<byte> pixels, int width, int height, int stride)
             int a = lineStart + column;
             int b = lineStart + column + 2;
 
-            byte temp = pixels[a];
-            pixels[a] = pixels[b];
-            pixels[b] = temp;
+            (pixels[a], pixels[b]) = (pixels[b], pixels[a]);
         }
     }
 }
