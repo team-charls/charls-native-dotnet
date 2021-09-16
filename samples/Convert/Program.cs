@@ -23,10 +23,10 @@ if (!TryParseArguments(args, out string inputPath))
 
 try
 {
-    using Bitmap image = new(inputPath);
+    using Bitmap image = new (inputPath);
 
     var bitmapData = image.LockBits(
-        new(0, 0, image.Width, image.Height),
+        new (0, 0, image.Width, image.Height),
         ImageLockMode.ReadWrite,
         PixelFormat.Format24bppRgb);
 
@@ -45,7 +45,7 @@ try
     // GDI+ returns bgr pixels, JPEG-LS (Spiff) only knows RGB as color space.
     ConvertBgrToRgb(pixels, image.Width, image.Height, bitmapData.Stride);
 
-    using JpegLSEncoder jpeglsEncoder = new(bitmapData.Width, bitmapData.Height, 8, 3)
+    using JpegLSEncoder jpeglsEncoder = new (bitmapData.Width, bitmapData.Height, 8, 3)
     {
         InterleaveMode = JpegLSInterleaveMode.Sample
     };
@@ -70,7 +70,7 @@ string GetOutputPath(string inputPath)
 
 void Save(string path, ReadOnlySpan<byte> encodedData)
 {
-    using FileStream output = new(path, FileMode.OpenOrCreate);
+    using FileStream output = new (path, FileMode.OpenOrCreate);
     output.Write(encodedData);
 }
 

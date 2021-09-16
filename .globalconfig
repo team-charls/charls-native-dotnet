@@ -1,0 +1,46 @@
+# Copyright (c) Team CharLS.
+# SPDX-License-Identifier: BSD-3-Clause
+
+# The following configuration settings are used to control the build-in .NET analyzer in the C# compiler (Roslyn).
+# All warnings are by default enabled in the projects.
+# Some warnings type are however to noisy and not effective and globally disabled.
+is_global = true
+
+# Default severity for analyzer diagnostics
+dotnet_analyzer_diagnostic.severity = error
+
+# SA1000: The keyword 'new' should be followed by a space.
+# Rational: false warning, not updated for C# 9.0
+dotnet_diagnostic.SA1000.severity = none
+
+# SA1413: Use trailing comma in multi-line initializers
+# Rational: by style guide don't use trailing comma when not needed.
+dotnet_diagnostic.SA1413.severity = none
+
+# SA1503: Braces should not be omitted
+# Rational: no braces are allowed for if + throw (no aut checking possible)
+dotnet_diagnostic.SA1503.severity = none
+
+# SA1516 Elements should be separated by blank line
+# Rational: Cannot handle top level C# 9.0 apps.
+dotnet_diagnostic.SA1516.severity = none
+
+# CA1303: literal string used instead of string from resource
+# Rational: Only English is used, no support for other languages by design.
+dotnet_diagnostic.CA1303.severity = none
+
+# CA1062: In externally visible method '', validate parameter '' is non-null before usage
+# Rational: non-null is already covered by Nullable
+dotnet_diagnostic.CA1062.severity = none
+
+# CA1812 Program is an internal class that is apparently never instantiated.
+# Rational: False warning (cannot handle C# 9.0 constructs)
+dotnet_diagnostic.CA1812.severity = none
+
+# IDE0055: Fix formatting
+# Rational: Formatting rule is incompatible with StyleCop
+dotnet_diagnostic.IDE0055.severity = none
+
+# IDE0130: Namespace "CharLS.Native" does not match folder structure, expected "CharLS.Native."
+# Rational: False warning
+dotnet_diagnostic.IDE0130.severity = none

@@ -22,7 +22,6 @@ namespace CharLS.Native
             CharLSGetVersionNumber(out int major, out int minor, out int _);
             if (major != 2 || minor < 1)
             {
-
                 throw new DllNotFoundException("Native DLL version mismatch");
             }
         }
