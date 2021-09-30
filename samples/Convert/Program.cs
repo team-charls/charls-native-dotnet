@@ -32,7 +32,7 @@ try
 
     if (bitmapData.Stride < 0)
     {
-        Console.WriteLine("Image {inputPath} is not top down.");
+        Console.WriteLine($"Image {inputPath} is not top down.");
         return Failure;
     }
 
