@@ -24,6 +24,17 @@ namespace CharLS.Native.Test
             using JpegLSEncoder encoder = new(256, 500, 8, 3);
 
             Assert.AreEqual(expected, encoder.FrameInfo);
+            Assert.NotNull(encoder.Destination);
+        }
+
+        [Test]
+        public void CreateWithFrameInfoConstructor()
+        {
+            FrameInfo expected = new(256, 500, 8, 3);
+            using JpegLSEncoder encoder = new(expected);
+
+            Assert.AreEqual(expected, encoder.FrameInfo);
+            Assert.NotNull(encoder.Destination);
         }
 
         [Test]
