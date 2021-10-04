@@ -63,7 +63,10 @@ namespace CharLS.Native
         /// <param name="allocateDestination">Flag to control if destination buffer should be allocated or not.</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when one of the arguments is invalid.</exception>
         /// <exception cref="OutOfMemoryException">Thrown when memory allocation for the destination buffer fails.</exception>
-        public JpegLSEncoder(FrameInfo frameInfo, bool allocateDestination = true):this(frameInfo.Width, frameInfo.Height, frameInfo.BitsPerSample, frameInfo.ComponentCount, allocateDestination){}
+        public JpegLSEncoder(FrameInfo frameInfo, bool allocateDestination = true) :
+            this(frameInfo.Width, frameInfo.Height, frameInfo.BitsPerSample, frameInfo.ComponentCount, allocateDestination)
+        {
+        }
 
         /// <summary>
         /// Gets or sets the frame information of the image.
@@ -82,8 +85,7 @@ namespace CharLS.Native
                 if (value is null)
                     throw new ArgumentNullException(nameof(value));
 
-                FrameInfoNative infoNative = new()
-                {
+                FrameInfoNative infoNative = new() {
                     Height = (uint)value.Height,
                     Width = (uint)value.Width,
                     BitsPerSample = value.BitsPerSample,
@@ -147,8 +149,7 @@ namespace CharLS.Native
                 if (value is null)
                     throw new ArgumentNullException(nameof(value));
 
-                JpegLSPresetCodingParametersNative native = new()
-                {
+                JpegLSPresetCodingParametersNative native = new() {
                     MaximumSampleValue = value.MaximumSampleValue,
                     Threshold1 = value.Threshold1,
                     Threshold2 = value.Threshold2,
