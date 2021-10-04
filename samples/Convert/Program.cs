@@ -64,6 +64,12 @@ catch (IOException e)
     Console.WriteLine("Error: " + e.Message);
     return Failure;
 }
+catch(ArgumentException e)
+{
+    Console.WriteLine($"Invalid path: {inputPath}.");
+    Console.WriteLine("Error: " + e.Message);
+    return Failure;
+}
 
 string GetOutputPath(string inputPath)
 {
