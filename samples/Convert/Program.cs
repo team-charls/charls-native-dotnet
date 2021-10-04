@@ -27,7 +27,7 @@ try
 
     var bitmapData = image.LockBits(
         new (0, 0, image.Width, image.Height),
-        ImageLockMode.ReadWrite,
+        ImageLockMode.ReadOnly,
         PixelFormat.Format24bppRgb);
 
     if (bitmapData.Stride < 0)
@@ -52,6 +52,8 @@ try
 
     jpeglsEncoder.WriteStandardSpiffHeader(SpiffColorSpace.Rgb);
     jpeglsEncoder.Encode(pixels, bitmapData.Stride);
+
+    image.UnlockBits(bitmapData);
 
     Save(GetOutputPath(inputPath), jpeglsEncoder.EncodedData.Span);
 
