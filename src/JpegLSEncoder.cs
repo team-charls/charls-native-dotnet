@@ -57,6 +57,15 @@ namespace CharLS.Native
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="JpegLSEncoder"/> class.
+        /// </summary>
+        /// <param name="frameInfo">The frameInfo of the image to encode.</param>
+        /// <param name="allocateDestination">Flag to control if destination buffer should be allocated or not.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when one of the arguments is invalid.</exception>
+        /// <exception cref="OutOfMemoryException">Thrown when memory allocation for the destination buffer fails.</exception>
+        public JpegLSEncoder(FrameInfo frameInfo, bool allocateDestination = true):this(frameInfo.Width, frameInfo.Height, frameInfo.BitsPerSample, frameInfo.ComponentCount, allocateDestination){}
+
+        /// <summary>
         /// Gets or sets the frame information of the image.
         /// </summary>
         /// <value>
