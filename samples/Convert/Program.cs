@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -25,10 +26,16 @@ try
 {
     using Bitmap image = new (inputPath);
 
+    if (!TryGetFrameInfoAndPixelFormat(image, out var frameInfo, out var filePixelFormat))
+    {
+        Console.WriteLine($"Conversion not supported: {image.PixelFormat}");
+        return Failure;
+    }
+
     var bitmapData = image.LockBits(
         new (0, 0, image.Width, image.Height),
         ImageLockMode.ReadOnly,
-        PixelFormat.Format24bppRgb);
+        filePixelFormat);
 
     if (bitmapData.Stride < 0)
     {
@@ -43,14 +50,19 @@ try
     }
 
     // GDI+ returns bgr pixels, JPEG-LS (Spiff) only knows RGB as color space.
-    ConvertBgrToRgb(pixels, image.Width, image.Height, bitmapData.Stride);
+    if (frameInfo.ComponentCount == 3)
+        ConvertBgrToRgb(pixels, image.Width, image.Height, bitmapData.Stride);
 
-    using JpegLSEncoder jpeglsEncoder = new (bitmapData.Width, bitmapData.Height, 8, 3)
+    var interleaveMode = frameInfo.ComponentCount == 1 ? JpegLSInterleaveMode.None : JpegLSInterleaveMode.Sample;
+    using JpegLSEncoder jpeglsEncoder = new (frameInfo)
     {
-        InterleaveMode = JpegLSInterleaveMode.Sample
+        InterleaveMode = interleaveMode
     };
 
-    jpeglsEncoder.WriteStandardSpiffHeader(SpiffColorSpace.Rgb);
+    if (frameInfo.ComponentCount == 1)
+        jpeglsEncoder.WriteStandardSpiffHeader(SpiffColorSpace.Grayscale);
+    else if (frameInfo.ComponentCount == 3)
+        jpeglsEncoder.WriteStandardSpiffHeader(SpiffColorSpace.Rgb);
     jpeglsEncoder.Encode(pixels, bitmapData.Stride);
 
     image.UnlockBits(bitmapData);
@@ -69,6 +81,44 @@ catch(ArgumentException e)
     Console.WriteLine($"Invalid path: {inputPath}.");
     Console.WriteLine("Error: " + e.Message);
     return Failure;
+}
+
+// GetPixelFormat() does not tell anything about the file format, it tells what the image codec
+// chose for the in-memory representation of the bitmap data.
+// PNG 8bits/grayscale is loaded as PixelFormat32bppARGB
+// JPG/TIFF 8bits/grayscale are loaded as PixelFormat8bppIndexed
+bool TryGetFrameInfoAndPixelFormat(Bitmap sourceImage, [NotNullWhen(true)] out FrameInfo? frameInfo, out PixelFormat filePixelFormat)
+{
+    var pixelFormat = sourceImage.PixelFormat;
+    var flags = sourceImage.Flags;
+    var colorSpaceGray = (flags & (int)ImageFlags.ColorSpaceGray) > 0;
+
+    frameInfo = null;
+    filePixelFormat = default;
+    if (pixelFormat is PixelFormat.Format8bppIndexed
+        or PixelFormat.Format24bppRgb)
+    {
+        filePixelFormat = pixelFormat;
+    }
+    else if (pixelFormat == PixelFormat.Format32bppArgb)
+    {
+        // Debug.Assert(image.RawFormat.Equals(ImageFormat.Png), "Only for PNG");
+        filePixelFormat = colorSpaceGray ? PixelFormat.Format8bppIndexed : PixelFormat.Format24bppRgb;
+    }
+
+    if (filePixelFormat != default)
+    {
+        var componentCount = Image.GetPixelFormatSize(filePixelFormat) / 8;
+        frameInfo = new FrameInfo
+        {
+            Width = sourceImage.Width,
+            Height = sourceImage.Height,
+            BitsPerSample = 8,
+            ComponentCount = componentCount
+        };
+    }
+
+    return frameInfo != null && filePixelFormat != default;
 }
 
 string GetOutputPath(string inputPath)
