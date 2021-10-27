@@ -24,50 +24,52 @@ if (!TryParseArguments(args, out string inputPath))
 
 try
 {
-    using Bitmap image = new (inputPath);
+    using Bitmap sourceImage = new(inputPath);
 
-    if (!TryGetFrameInfoAndPixelFormat(image, out var frameInfo, out var filePixelFormat))
+    if (!TryGetFrameInfoAndPixelFormat(sourceImage, out var frameInfo, out var filePixelFormat))
     {
-        Console.WriteLine($"Conversion not supported: {image.PixelFormat}");
+        Console.WriteLine($"Conversion not supported: {sourceImage.PixelFormat}");
         return Failure;
     }
 
-    var bitmapData = image.LockBits(
-        new (0, 0, image.Width, image.Height),
-        ImageLockMode.ReadOnly,
-        filePixelFormat);
-
-    if (bitmapData.Stride < 0)
+    var bitmapData = sourceImage.LockBits(
+            new Rectangle(0, 0, sourceImage.Width, sourceImage.Height),
+            ImageLockMode.ReadOnly,
+            filePixelFormat);
+    try
     {
-        Console.WriteLine($"Image {inputPath} is not top down.");
-        return Failure;
+        if (bitmapData.Stride < 0)
+        {
+            Console.WriteLine($"Image {inputPath} is not top down.");
+            return Failure;
+        }
+
+        Span<byte> pixels;
+        unsafe
+        {
+            pixels = new Span<byte>(bitmapData.Scan0.ToPointer(), bitmapData.Stride * sourceImage.Height);
+        }
+
+        // GDI+ returns BGR pixels, JPEG-LS (Spiff) only knows RGB as color space.
+        if (frameInfo.ComponentCount == 3)
+        {
+            ConvertBgrToRgb(pixels, sourceImage.Width, sourceImage.Height, bitmapData.Stride);
+        }
+
+        using JpegLSEncoder jpeglsEncoder = new(frameInfo)
+        {
+            InterleaveMode = frameInfo.ComponentCount == 1 ? JpegLSInterleaveMode.None : JpegLSInterleaveMode.Sample
+        };
+
+        jpeglsEncoder.WriteStandardSpiffHeader(MapComponentCountToSpiffColorSpace(frameInfo.ComponentCount));
+        jpeglsEncoder.Encode(pixels, bitmapData.Stride);
+
+        Save(GetOutputPath(inputPath), jpeglsEncoder.EncodedData.Span);
     }
-
-    Span<byte> pixels;
-    unsafe
+    finally
     {
-        pixels = new(bitmapData.Scan0.ToPointer(), bitmapData.Stride * image.Height);
+        sourceImage.UnlockBits(bitmapData);
     }
-
-    // GDI+ returns bgr pixels, JPEG-LS (Spiff) only knows RGB as color space.
-    if (frameInfo.ComponentCount == 3)
-        ConvertBgrToRgb(pixels, image.Width, image.Height, bitmapData.Stride);
-
-    var interleaveMode = frameInfo.ComponentCount == 1 ? JpegLSInterleaveMode.None : JpegLSInterleaveMode.Sample;
-    using JpegLSEncoder jpeglsEncoder = new (frameInfo)
-    {
-        InterleaveMode = interleaveMode
-    };
-
-    if (frameInfo.ComponentCount == 1)
-        jpeglsEncoder.WriteStandardSpiffHeader(SpiffColorSpace.Grayscale);
-    else if (frameInfo.ComponentCount == 3)
-        jpeglsEncoder.WriteStandardSpiffHeader(SpiffColorSpace.Rgb);
-    jpeglsEncoder.Encode(pixels, bitmapData.Stride);
-
-    image.UnlockBits(bitmapData);
-
-    Save(GetOutputPath(inputPath), jpeglsEncoder.EncodedData.Span);
 
     return Success;
 }
@@ -76,7 +78,7 @@ catch (IOException e)
     Console.WriteLine("Error: " + e.Message);
     return Failure;
 }
-catch(ArgumentException e)
+catch (ArgumentException e)
 {
     Console.WriteLine($"Invalid path: {inputPath}.");
     Console.WriteLine("Error: " + e.Message);
@@ -87,7 +89,7 @@ catch(ArgumentException e)
 // chose for the in-memory representation of the bitmap data.
 // PNG 8bits/grayscale is loaded as PixelFormat32bppARGB
 // JPG/TIFF 8bits/grayscale are loaded as PixelFormat8bppIndexed
-bool TryGetFrameInfoAndPixelFormat(Bitmap sourceImage, [NotNullWhen(true)] out FrameInfo? frameInfo, out PixelFormat filePixelFormat)
+bool TryGetFrameInfoAndPixelFormat(Image sourceImage, [NotNullWhen(true)] out FrameInfo? frameInfo, out PixelFormat filePixelFormat)
 {
     var pixelFormat = sourceImage.PixelFormat;
     var flags = sourceImage.Flags;
@@ -128,7 +130,7 @@ string GetOutputPath(string inputPath)
 
 void Save(string path, ReadOnlySpan<byte> encodedData)
 {
-    using FileStream output = new (path, FileMode.OpenOrCreate);
+    using FileStream output = new(path, FileMode.OpenOrCreate);
     output.Write(encodedData);
 }
 
@@ -160,4 +162,14 @@ void ConvertBgrToRgb(Span<byte> pixels, int width, int height, int stride)
             (pixels[a], pixels[b]) = (pixels[b], pixels[a]);
         }
     }
+}
+
+SpiffColorSpace MapComponentCountToSpiffColorSpace(int componentCount)
+{
+    return componentCount switch
+    {
+        1 => SpiffColorSpace.Grayscale,
+        3 => SpiffColorSpace.Rgb,
+        _ => SpiffColorSpace.None
+    };
 }
