@@ -48,8 +48,7 @@ jobs:
       testAssemblyVer2: |
         **\CharLS.Native.Test.dll
         !**\*TestAdapter.dll
-        !**\obj\**
-        !**\ref\**
+        !**\intermediates\**
       runInParallel: true
       codeCoverageEnabled: true
 
