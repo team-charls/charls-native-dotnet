@@ -76,7 +76,7 @@ jobs:
     displayName: "Create build folder"
 
   - task: CMake@1
-    displayName: "Configure CharLS"
+    displayName: "Configure C++ CharLS"
     inputs:
       workingDirectory: $(Build.BinariesDirectory)/build
       cmakeArgs:
@@ -90,7 +90,7 @@ jobs:
         $(Build.SourcesDirectory)/extern/charls
 
   - task: CMake@1
-    displayName: "Build CharLS"
+    displayName: "Build C++ CharLS"
     inputs:
       workingDirectory: $(Build.BinariesDirectory)/build
       cmakeArgs: --build .
@@ -112,7 +112,7 @@ jobs:
       arguments: '--configuration $(buildConfiguration) --no-restore'
       platform: '$(buildPlatform)'
 
-  - script: cp $(Build.BinariesDirectory)/build/libcharls.so.2 $(Build.SourcesDirectory)/bin/$(buildConfiguration)/
+  - script: cp $(Build.BinariesDirectory)/build/libcharls.so.2 $(Build.SourcesDirectory)/build/binaries/$(buildConfiguration)/
     displayName: "Copy shared library to unit test location"
 
   - task: DotNetCoreCLI@2
@@ -146,7 +146,7 @@ jobs:
     displayName: "Create build folder"
 
   - task: CMake@1
-    displayName: "Configure CharLS"
+    displayName: "Configure C++ CharLS"
     inputs:
       workingDirectory: $(Build.BinariesDirectory)/build
       cmakeArgs:
@@ -160,7 +160,7 @@ jobs:
         $(Build.SourcesDirectory)/extern/charls
 
   - task: CMake@1
-    displayName: "Build CharLS"
+    displayName: "Build C++ CharLS"
     inputs:
       workingDirectory: $(Build.BinariesDirectory)/build
       cmakeArgs: --build .
@@ -182,7 +182,7 @@ jobs:
       arguments: '--configuration $(buildConfiguration) --no-restore'
       platform: '$(buildPlatform)'
 
-  - script: cp $(Build.BinariesDirectory)/build/libcharls.2.dylib $(Build.SourcesDirectory)/bin/$(buildConfiguration)/
+  - script: cp $(Build.BinariesDirectory)/build/libcharls.2.dylib $(Build.SourcesDirectory)/build/binaries/$(buildConfiguration)/
     displayName: "Copy shared library to unit test location"
 
   - task: DotNetCoreCLI@2
