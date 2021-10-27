@@ -10,6 +10,7 @@
     <CodeAnalysisRuleSet>CharLSNativeTest.ruleset</CodeAnalysisRuleSet>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\src\CharLS.Native.KeyPair.snk</AssemblyOriginatorKeyFile>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
   </PropertyGroup>
 
   <ItemGroup>

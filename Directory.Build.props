@@ -1,35 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<!--
+  Copyright (c) Team CharLS.
+  SPDX-License-Identifier: BSD-3-Clause
+-->
+
+<Project>
   <PropertyGroup>
-    <!-- Build to a folder outside the source folders, making it easier to clean. -->
-    <OutDir>$(MSBuildThisFileDirectory)bin\$(Configuration)\</OutDir>
-
-    <!-- C# Projects require the legagy OutputPath variable. -->
-    <OutputPath>$(OutDir)</OutputPath>
-
-    <!-- C# project files can also be redirected, but this causes rebuilds inside VS2015. -->
-    <IntDir>$(MSBuildThisFileDirectory)intermediate\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</IntDir>
-
-    <!-- Use the latest released C# language version -->
-    <LangVersion>latest</LangVersion>
-
-    <!-- Use the latest analysis leve (.NET 5.0 and newer feature) -->
-    <AnalysisLevel>latest</AnalysisLevel>
-
-    <!-- Enable all CAxxx code quality rules -->
-    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-
-    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-
-    <!-- Define treat warnings as errors for C# projects -->
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-
+    <!-- General -->
     <TargetFramework>net5.0</TargetFramework>
+    <LangVersion>latest</LangVersion><!-- Use the latest released C# language version -->
+    <Features>strict</Features>
     <Platforms>AnyCPU</Platforms>
     <Configurations>Debug;Release</Configurations>
     <Nullable>enable</Nullable>
+
+    <!-- Build -->
+    <!-- Build to a folder outside the source folders, making it easier to clean. -->
+    <OutputPath>$(MSBuildThisFileDirectory)build\binaries\$(Configuration)\</OutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)build\intermediates\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 
+    <!-- Static Analysis -->
+    <AnalysisLevel>latest</AnalysisLevel><!-- Use the latest analysis leve (.NET 5.0 and newer feature) -->
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode><!-- Enable all CAxxx code quality rules -->
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 </Project>
