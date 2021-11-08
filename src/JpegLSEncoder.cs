@@ -219,7 +219,7 @@ namespace CharLS.Native
         /// <value>
         /// The memory region with the encoded data.
         /// </value>
-        public ReadOnlyMemory<byte> EncodedData => _destination.Slice(0, BytesWritten);
+        public ReadOnlyMemory<byte> EncodedData => _destination[..BytesWritten];
 
         /// <summary>
         /// Gets the bytes written to the destination buffer.

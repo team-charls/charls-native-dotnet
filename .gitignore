@@ -1,27 +1,16 @@
-# GIT ignore file for charls-dotnet
+# Copyright (c) Team CharLS.
+# SPDX-License-Identifier: BSD-3-Clause
 
-obj/
-bin/
-Win32/
-x64/
-.vscode/
-.vs/
+# Ignore build output
 build/
-[Dd]ebug/
-[Rr]elease/
-[Cc]hecked/
+bin/
 TestResults/
 *.opensdf
 *.sdf
 
 # Ignore files created by Visual Studio
-*.suo
-*.user
-*.ipch
-*.opendb
-*.db
-*.aps
-*.sqlite
+.vs/
+.vscode/
 **/Properties/launchSettings.json
 
 # Ignore files created by MSBuild
