@@ -28,4 +28,10 @@
     <ProjectReference Include="..\..\src\CharLS.Native.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AssemblyAttribute Include="CLSCompliantAttribute">
+      <_Parameter1>true</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
 </Project>

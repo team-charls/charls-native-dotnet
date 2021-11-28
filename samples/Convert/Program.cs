@@ -1,25 +1,20 @@
 // Copyright (c) Team CharLS.
 // SPDX-License-Identifier: BSD-3-Clause
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
 using CharLS.Native;
 
-[assembly: CLSCompliant(true)]
-
-const int Success = 0;
-const int Failure = 1;
+const int success = 0;
+const int failure = 1;
 
 // This sample demonstrates how to convert another encoded image to a JPEG-LS encoded image.
 // The input path should be an absolute path to a file format .NET can read (.bmp, .png, etc.).
 if (!TryParseArguments(args, out string inputPath))
 {
     Console.WriteLine("Usage: Convert input-image-filename");
-    return Failure;
+    return failure;
 }
 
 try
@@ -29,7 +24,7 @@ try
     if (!TryGetFrameInfoAndPixelFormat(sourceImage, out var frameInfo, out var filePixelFormat))
     {
         Console.WriteLine($"Conversion not supported: {sourceImage.PixelFormat}");
-        return Failure;
+        return failure;
     }
 
     var bitmapData = sourceImage.LockBits(
@@ -41,7 +36,7 @@ try
         if (bitmapData.Stride < 0)
         {
             Console.WriteLine($"Image {inputPath} is not top down.");
-            return Failure;
+            return failure;
         }
 
         Span<byte> pixels;
@@ -71,18 +66,18 @@ try
         sourceImage.UnlockBits(bitmapData);
     }
 
-    return Success;
+    return success;
 }
 catch (IOException e)
 {
     Console.WriteLine("Error: " + e.Message);
-    return Failure;
+    return failure;
 }
 catch (ArgumentException e)
 {
     Console.WriteLine($"Invalid path: {inputPath}.");
     Console.WriteLine("Error: " + e.Message);
-    return Failure;
+    return failure;
 }
 
 // GetPixelFormat() does not tell anything about the file format, it tells what the image codec
@@ -123,9 +118,9 @@ bool TryGetFrameInfoAndPixelFormat(Image sourceImage, [NotNullWhen(true)] out Fr
     return frameInfo != null && filePixelFormat != default;
 }
 
-string GetOutputPath(string inputPath)
+string GetOutputPath(string inputPathArg)
 {
-    return Path.ChangeExtension(inputPath, ".jls");
+    return Path.ChangeExtension(inputPathArg, ".jls");
 }
 
 void Save(string path, ReadOnlySpan<byte> encodedData)
@@ -134,15 +129,15 @@ void Save(string path, ReadOnlySpan<byte> encodedData)
     output.Write(encodedData);
 }
 
-bool TryParseArguments(IReadOnlyList<string> args, out string inputPath)
+bool TryParseArguments(IReadOnlyList<string> args, out string inputPathArg)
 {
     if (args.Count != 1)
     {
-        inputPath = string.Empty;
+        inputPathArg = string.Empty;
         return false;
     }
 
-    inputPath = args[0];
+    inputPathArg = args[0];
     return true;
 }
 

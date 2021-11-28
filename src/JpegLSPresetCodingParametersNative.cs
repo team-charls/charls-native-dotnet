@@ -3,15 +3,14 @@
 
 using System.Runtime.InteropServices;
 
-namespace CharLS.Native
+namespace CharLS.Native;
+
+[StructLayout(LayoutKind.Sequential, Pack = 8)]
+internal struct JpegLSPresetCodingParametersNative
 {
-    [StructLayout(LayoutKind.Sequential, Pack = 8)]
-    internal struct JpegLSPresetCodingParametersNative
-    {
-        internal int MaximumSampleValue;
-        internal int Threshold1;
-        internal int Threshold2;
-        internal int Threshold3;
-        internal int ResetValue;
-    }
+    internal int MaximumSampleValue;
+    internal int Threshold1;
+    internal int Threshold2;
+    internal int Threshold3;
+    internal int ResetValue;
 }
