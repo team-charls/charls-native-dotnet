@@ -8,7 +8,7 @@ variables:
 jobs:
 - job: 'windows'
   pool:
-    vmImage: 'windows-latest'
+    vmImage: 'windows-2022'
   displayName: 'Windows - '
 
   strategy:
@@ -24,11 +24,6 @@ jobs:
     fetchDepth: 1
 
   - task: NuGetToolInstaller@1
-
-  - task: UseDotNet@2
-    displayName: 'Install .NET 5.0 SDK'
-    inputs:
-      version: 5.0.x
 
   - task: NuGetCommand@2
     inputs:
@@ -125,7 +120,7 @@ jobs:
 
 - job: 'macOS'
   pool:
-    vmImage: macOS-latest
+    vmImage: macOS-11
   displayName: 'macOS - '
 
   strategy:
