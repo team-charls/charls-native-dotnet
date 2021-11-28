@@ -23,8 +23,6 @@ jobs:
     submodules: true
     fetchDepth: 1
 
-  - task: NuGetToolInstaller@1
-
   - task: NuGetCommand@2
     inputs:
       restoreSolution: '$(solution)'
@@ -91,9 +89,9 @@ jobs:
       cmakeArgs: --build .
 
   - task: UseDotNet@2
-    displayName: 'Install .NET 6.0 SDK'
+    displayName: 'Install .NET 5.0 SDK'
     inputs:
-      version: 6.0.x
+      version: 5.0.x
 
   - task: DotNetCoreCLI@2
     displayName: 'Restore NuGet packages'
@@ -161,9 +159,9 @@ jobs:
       cmakeArgs: --build .
 
   - task: UseDotNet@2
-    displayName: 'Install .NET 6.0 SDK'
+    displayName: 'Install .NET 5.0 SDK'
     inputs:
-      version: 6.0.x
+      version: 5.0.x
 
   - task: DotNetCoreCLI@2
     displayName: 'Restore NuGet packages'
