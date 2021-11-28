@@ -6,9 +6,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
+    <FileVersion>1.2.0.0</FileVersion>
     <Copyright>Copyright 2021 Team CharLS</Copyright>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -47,11 +47,11 @@
   <!-- Only when building with msbuild on Windows include the native Windows DLLs
        On other platform build a NuGet package without native binaries. -->
   <ItemGroup Condition="'$(MSBuildRuntimeType)'=='Full'">
-    <Content Include="$(OutDir)\charls-2-x64.dll">
+    <Content Include="$(OutputPath)\charls-2-x64.dll">
       <Pack>true</Pack>
       <PackagePath>runtimes\win\native\</PackagePath>
     </Content>
-    <Content Include="$(OutDir)\charls-2-x86.dll">
+    <Content Include="$(OutputPath)\charls-2-x86.dll">
       <Pack>true</Pack>
       <PackagePath>runtimes\win\native\</PackagePath>
     </Content>
@@ -87,24 +87,24 @@
       <MySourceFiles Include="..\extern\charls\bin\x86\Release\charls-2-x86.dll;..\extern\charls\bin\x86\Release\charls-2-x86.pdb;..\extern\charls\bin\x64\Release\charls-2-x64.dll;..\extern\charls\bin\x64\Release\charls-2-x64.pdb" />
     </ItemGroup>
 
-    <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
   </Target>
 
   <Target Name="SignWindowsDlls" BeforeTargets="GenerateNuspec" Condition="'$(MSBuildRuntimeType)'=='Full'">
     <!-- Use TargetFrameworkVersion=v4.5 to sign with SHA256 -->
     <Message Text="Signing CharLS.Native.dll" />
-    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutDir)\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
+    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
 
     <Message Text="Signing charls-2-x64.dll" />
-    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutDir)\charls-2-x64.dll" TargetFrameworkVersion="v4.5" />
+    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)\charls-2-x64.dll" TargetFrameworkVersion="v4.5" />
 
     <Message Text="Signing charls-2-x86.dll" />
-    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutDir)\charls-2-x86.dll" TargetFrameworkVersion="v4.5" />
+    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)\charls-2-x86.dll" TargetFrameworkVersion="v4.5" />
   </Target>
 
   <Target Name="SignPackage" AfterTargets="Pack" Condition="'$(MSBuildRuntimeType)'=='Full'">
-    <Exec Command="nuget sign $(OutDir)$(PackageId).$(Version).nupkg -Timestamper $(_TimestampUrl) -CertificateFingerprint $(_CertificateThumbprint)" />
-    <Exec Command="nuget sign $(OutDir)$(PackageId).$(Version).snupkg -Timestamper $(_TimestampUrl) -CertificateFingerprint $(_CertificateThumbprint)" />
+    <Exec Command="nuget sign $(OutputPath)$(PackageId).$(Version).nupkg -Timestamper $(_TimestampUrl) -CertificateFingerprint $(_CertificateThumbprint)" />
+    <Exec Command="nuget sign $(OutputPath)$(PackageId).$(Version).snupkg -Timestamper $(_TimestampUrl) -CertificateFingerprint $(_CertificateThumbprint)" />
   </Target>
 
 </Project>
