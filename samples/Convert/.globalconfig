@@ -1,0 +1,11 @@
+# Copyright (c) Team CharLS.
+# SPDX-License-Identifier: BSD-3-Clause
+
+# The following configuration settings are used to control the build-in .NET analyzer in the C# compiler (Roslyn).
+# All warnings are by default enabled in the projects.
+# Some warnings type are however to noisy and not effective and globally disabled.
+is_global = true
+
+# CA1416: This call site is reachable on all platforms. 'Bitmap' is only supported on: 'windows'.
+# Rational: System.Drawing.Common is not supported anymore on Linux. It still works and there are no good alternatives at the moment.
+dotnet_diagnostic.CA1416.severity = none
