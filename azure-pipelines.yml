@@ -91,9 +91,9 @@ jobs:
       cmakeArgs: --build .
 
   - task: UseDotNet@2
-    displayName: 'Install .NET 5.0 SDK'
+    displayName: 'Install .NET 6.0 SDK'
     inputs:
-      version: 5.0.x
+      version: 6.0.x
 
   - task: DotNetCoreCLI@2
     displayName: 'Restore NuGet packages'
@@ -161,9 +161,9 @@ jobs:
       cmakeArgs: --build .
 
   - task: UseDotNet@2
-    displayName: 'Install .NET 5.0 SDK'
+    displayName: 'Install .NET 6.0 SDK'
     inputs:
-      version: 5.0.x
+      version: 6.0.x
 
   - task: DotNetCoreCLI@2
     displayName: 'Restore NuGet packages'
