@@ -3,19 +3,18 @@
 
 using Microsoft.Win32.SafeHandles;
 
-namespace CharLS.Native
-{
-    internal class SafeHandleJpegLSEncoder : SafeHandleZeroOrMinusOneIsInvalid
-    {
-        public SafeHandleJpegLSEncoder()
-            : base(true)
-        {
-        }
+namespace CharLS.Native;
 
-        protected override bool ReleaseHandle()
-        {
-            SafeNativeMethods.CharLSDestroyEncoder(handle);
-            return true;
-        }
+internal class SafeHandleJpegLSEncoder : SafeHandleZeroOrMinusOneIsInvalid
+{
+    public SafeHandleJpegLSEncoder()
+        : base(true)
+    {
+    }
+
+    protected override bool ReleaseHandle()
+    {
+        SafeNativeMethods.CharLSDestroyEncoder(handle);
+        return true;
     }
 }

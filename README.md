@@ -12,7 +12,7 @@ JPEG-LS (ISO-14495-1) is a lossless/near-lossless compression standard for conti
 
 ## Features
 
-* .NET 5.0 class library.
+* .NET 5.0  and .NET 6.0 class library.
 * Support for the .NET platforms: Windows, Linux and macOS.
 
 ## How to use
@@ -28,7 +28,7 @@ dotnet add package CharLS.Native
 ### Windows specific installation steps
 
 The NuGet package comes with prebuild CharLS DLLs for the x86 and X64 targets.
-The Microsoft Visual C++ Redistributable for Visual Studio 2015, 2017 and 2019 (v14.28 or newer) needs to be installed on the target system.
+The Microsoft Visual C++ 2015-2022 Redistributable (v14.30 or newer) needs to be installed on the target system.
 
 ### Linux specific installation steps
 

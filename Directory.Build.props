@@ -6,18 +6,18 @@
 <Project>
   <PropertyGroup>
     <!-- General -->
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
     <LangVersion>latest</LangVersion><!-- Use the latest released C# language version -->
     <Features>strict</Features>
     <Platforms>AnyCPU</Platforms>
     <Configurations>Debug;Release</Configurations>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
 
     <!-- Build -->
     <!-- Build to a folder outside the source folders, making it easier to clean. -->
     <OutputPath>$(MSBuildThisFileDirectory)build\binaries\$(Configuration)\</OutputPath>
     <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)build\intermediates\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 
     <!-- Static Analysis -->
@@ -26,5 +26,6 @@
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningLevel>5</WarningLevel>
   </PropertyGroup>
 </Project>

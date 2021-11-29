@@ -6,7 +6,7 @@ JPEG-LS (ISO-14495-1) is a lossless/near-lossless compression standard for conti
 
 ## Features
 
-* .NET 5.0 class library.
+* Support for .NET 6.0 and .NET 5.0.
 * Support for the .NET platforms: Windows, Linux and macOS.
 
 ## How to use

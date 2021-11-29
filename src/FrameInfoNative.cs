@@ -3,14 +3,13 @@
 
 using System.Runtime.InteropServices;
 
-namespace CharLS.Native
+namespace CharLS.Native;
+
+[StructLayout(LayoutKind.Sequential, Pack = 8)]
+internal struct FrameInfoNative
 {
-    [StructLayout(LayoutKind.Sequential, Pack = 8)]
-    internal struct FrameInfoNative
-    {
-        internal uint Width;
-        internal uint Height;
-        internal int BitsPerSample;
-        internal int ComponentCount;
-    }
+    internal uint Width;
+    internal uint Height;
+    internal int BitsPerSample;
+    internal int ComponentCount;
 }

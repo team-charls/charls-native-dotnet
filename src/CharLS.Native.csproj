@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   Copyright (c) Team CharLS.
   SPDX-License-Identifier: BSD-3-Clause
 -->
@@ -6,9 +6,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
+    <FileVersion>1.2.0.0</FileVersion>
     <Copyright>Copyright 2021 Team CharLS</Copyright>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -47,11 +47,11 @@
   <!-- Only when building with msbuild on Windows include the native Windows DLLs
        On other platform build a NuGet package without native binaries. -->
   <ItemGroup Condition="'$(MSBuildRuntimeType)'=='Full'">
-    <Content Include="$(OutDir)\charls-2-x64.dll">
+    <Content Include="$(OutputPath)\charls-2-x64.dll">
       <Pack>true</Pack>
       <PackagePath>runtimes\win\native\</PackagePath>
     </Content>
-    <Content Include="$(OutDir)\charls-2-x86.dll">
+    <Content Include="$(OutputPath)\charls-2-x86.dll">
       <Pack>true</Pack>
       <PackagePath>runtimes\win\native\</PackagePath>
     </Content>
@@ -64,6 +64,13 @@
   <ItemGroup>
     <None Include="..\doc\jpeg_ls_logo.png" Pack="true" PackagePath="\icon.png" />
     <None Include="README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="CharLS.Native.Test, PublicKey = 002400000480000094000000060200000024000052534131000400000100010015b9558a3d86b76370af6ffa68b97a0c9a4cc0c25fea9fbb3df9a3c4fc432125bd92aaaa8d22f036ba0c08380a2dce7273e7b95c22f6d97629b9fa27efdfc8393d594f731969499669f39a2f335501acd56f4200026c4925f474e8b50ad7eafe0fa5e235dababad076e09a796489bd3d6432ef1c76d0851992de77a0fd3970b4" />
+    <AssemblyAttribute Include="CLSCompliantAttribute">
+      <_Parameter1>true</_Parameter1>
+    </AssemblyAttribute>
   </ItemGroup>
 
   <ItemGroup>
@@ -80,24 +87,24 @@
       <MySourceFiles Include="..\extern\charls\bin\x86\Release\charls-2-x86.dll;..\extern\charls\bin\x86\Release\charls-2-x86.pdb;..\extern\charls\bin\x64\Release\charls-2-x64.dll;..\extern\charls\bin\x64\Release\charls-2-x64.pdb" />
     </ItemGroup>
 
-    <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
   </Target>
 
   <Target Name="SignWindowsDlls" BeforeTargets="GenerateNuspec" Condition="'$(MSBuildRuntimeType)'=='Full'">
     <!-- Use TargetFrameworkVersion=v4.5 to sign with SHA256 -->
     <Message Text="Signing CharLS.Native.dll" />
-    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutDir)\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
+    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
 
     <Message Text="Signing charls-2-x64.dll" />
-    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutDir)\charls-2-x64.dll" TargetFrameworkVersion="v4.5" />
+    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)\charls-2-x64.dll" TargetFrameworkVersion="v4.5" />
 
     <Message Text="Signing charls-2-x86.dll" />
-    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutDir)\charls-2-x86.dll" TargetFrameworkVersion="v4.5" />
+    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)\charls-2-x86.dll" TargetFrameworkVersion="v4.5" />
   </Target>
 
   <Target Name="SignPackage" AfterTargets="Pack" Condition="'$(MSBuildRuntimeType)'=='Full'">
-    <Exec Command="nuget sign $(OutDir)$(PackageId).$(Version).nupkg -Timestamper $(_TimestampUrl) -CertificateFingerprint $(_CertificateThumbprint)" />
-    <Exec Command="nuget sign $(OutDir)$(PackageId).$(Version).snupkg -Timestamper $(_TimestampUrl) -CertificateFingerprint $(_CertificateThumbprint)" />
+    <Exec Command="nuget sign $(OutputPath)$(PackageId).$(Version).nupkg -Timestamper $(_TimestampUrl) -CertificateFingerprint $(_CertificateThumbprint)" />
+    <Exec Command="nuget sign $(OutputPath)$(PackageId).$(Version).snupkg -Timestamper $(_TimestampUrl) -CertificateFingerprint $(_CertificateThumbprint)" />
   </Target>
 
 </Project>
