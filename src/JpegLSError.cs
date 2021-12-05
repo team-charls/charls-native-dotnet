@@ -180,6 +180,11 @@ public enum JpegLSError
     InvalidArgumentColorTransformation = 111,
 
     /// <summary>
+    /// The stride argument does not match with the frame info and buffer size.
+    /// </summary>
+    InvalidArgumentStride = 112,
+
+    /// <summary>
     /// This error is returned when the width parameter is defined more then once in an incompatible way.
     /// </summary>
     InvalidParameterWidth = 200,
@@ -202,5 +207,15 @@ public enum JpegLSError
     /// <summary>
     /// This error is returned when the stream contains an interleave mode (ILV) parameter outside the range [0, 2]
     /// </summary>
-    InvalidParameterInterleaveMode = 204
+    InvalidParameterInterleaveMode = 204,
+
+    /// <summary>
+    /// This error is returned when the stream contains a near-lossless (NEAR) parameter outside the range [0, min(255, MAXVAL/2)]
+    /// </summary>
+    InvalidParameterNearLossless = 205,
+
+    /// <summary>
+    /// This error is returned when the stream contains an invalid JPEG-LS preset coding parameters segment.
+    /// </summary>
+    InvalidParameterJpeglsPresetCodingParameters = 206
 }

@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.1.2 - 2021-12-5]
+
+### Added
+
+- Support for .NET 6.0.
+
+### Changed
+
+- Updated source code to leverage C# 10 features.
+- Added missing JpegLSError enumerations.
+- CharLS Windows DLLs updated to v2.2.1+bea1c0.
+
 ## [1.1.0 - 2021-5-8]
 
 ### Added
