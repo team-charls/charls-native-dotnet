@@ -1,6 +1,7 @@
 1.2.0
  - Added support for .NET 6.0
+ - Latest version of CharLS Windows DLLs v2.2.1 (bea1c0).
 
 1.1.0.
  - Added support for Linux and macOS
- - Latest version of CharLS Windows DLLs (42c3a58).
+ - Latest version of CharLS Windows DLLs v2.2.1 (42c3a58).

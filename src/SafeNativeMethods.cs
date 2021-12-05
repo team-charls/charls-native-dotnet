@@ -135,6 +135,8 @@ internal static class SafeNativeMethods
             case JpegLSError.InvalidParameterComponentCount:
             case JpegLSError.InvalidParameterBitsPerSample:
             case JpegLSError.InvalidParameterInterleaveMode:
+            case JpegLSError.InvalidParameterNearLossless:
+            case JpegLSError.InvalidParameterJpeglsPresetCodingParameters:
             case JpegLSError.UnexpectedFailure:
             case JpegLSError.NotEnoughMemory:
                 exception = new InvalidDataException(GetErrorMessage(error));
@@ -154,6 +156,7 @@ internal static class SafeNativeMethods
             case JpegLSError.InvalidArgumentPresetCodingParameters:
             case JpegLSError.InvalidArgumentSpiffEntrySize:
             case JpegLSError.InvalidArgumentColorTransformation:
+            case JpegLSError.InvalidArgumentStride:
                 exception = new ArgumentOutOfRangeException(GetErrorMessage(error));
                 break;
 

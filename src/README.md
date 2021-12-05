@@ -21,8 +21,8 @@ dotnet add package CharLS.Native
 
 ### Windows specific installation steps
 
-The NuGet package comes with prebuild CharLS DLLs for the x86 and X64 targets.
-The Microsoft Visual C++ Redistributable for Visual Studio 2015, 2017 and 2019 (v14.28 or newer) needs to be installed on the target system.
+The NuGet package comes with prebuild CharLS DLLs for x86 and X64 targets.
+The Microsoft Visual C++ Redistributable for Visual Studio 2015-2022 (v14.30 or newer) needs to be installed on the target system.
 
 ### Linux specific installation steps
 
