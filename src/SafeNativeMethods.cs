@@ -121,7 +121,7 @@ internal static class SafeNativeMethods
             case JpegLSError.UnknownJpegMarkerFound:
             case JpegLSError.JpegMarkerStartByteNotFound:
             case JpegLSError.StartOfImageMarkerNotFound:
-            case JpegLSError.StartOfFrameMarkerNotFound:
+            case JpegLSError.UnexpectedMarkerFound:
             case JpegLSError.InvalidMarkerSegmentSize:
             case JpegLSError.DuplicateStartOfImageMarker:
             case JpegLSError.DuplicateStartOfFrameMarker:
@@ -139,6 +139,9 @@ internal static class SafeNativeMethods
             case JpegLSError.InvalidParameterJpeglsPresetCodingParameters:
             case JpegLSError.UnexpectedFailure:
             case JpegLSError.NotEnoughMemory:
+            case JpegLSError.UnexpectedRestartMarker:
+            case JpegLSError.RestartMarkerNotFound:
+            case JpegLSError.CallbackFailed:
                 exception = new InvalidDataException(GetErrorMessage(error));
                 break;
 
