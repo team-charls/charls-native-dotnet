@@ -14,7 +14,7 @@ internal class SafeHandleJpegLSEncoder : SafeHandleZeroOrMinusOneIsInvalid
 
     protected override bool ReleaseHandle()
     {
-        SafeNativeMethods.CharLSDestroyEncoder(handle);
+        Interop.CharLSDestroyEncoder(handle);
         return true;
     }
 }
