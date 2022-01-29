@@ -1,6 +1,7 @@
 // Copyright (c) Team CharLS.
 // SPDX-License-Identifier: BSD-3-Clause
 
+using System.ComponentModel;
 using NUnit.Framework;
 
 namespace CharLS.Native.Test;
@@ -11,7 +12,8 @@ public class JpegLSEncoderTest
     [Test]
     public void CreateEncoderWithBadWidth()
     {
-        _ = Assert.Throws<ArgumentOutOfRangeException>(() => {
+        _ = Assert.Throws<ArgumentOutOfRangeException>(() =>
+        {
             using JpegLSEncoder _ = new(0, 1, 2, 1);
         });
     }
@@ -40,7 +42,8 @@ public class JpegLSEncoderTest
     public void InitializeFrameInfoWithNull()
     {
         using JpegLSEncoder encoder = new();
-        _ = Assert.Throws<ArgumentNullException>(() => {
+        _ = Assert.Throws<ArgumentNullException>(() =>
+        {
             encoder.FrameInfo = null;
         });
     }
@@ -83,7 +86,8 @@ public class JpegLSEncoderTest
     public void InitializePresetCodingParametersWithNull()
     {
         using JpegLSEncoder encoder = new();
-        _ = Assert.Throws<ArgumentNullException>(() => {
+        _ = Assert.Throws<ArgumentNullException>(() =>
+        {
             encoder.PresetCodingParameters = null;
         });
     }
@@ -95,23 +99,78 @@ public class JpegLSEncoderTest
             return;
 
         using JpegLSEncoder encoder = new();
-        Assert.DoesNotThrow(() => {
+        Assert.DoesNotThrow(() =>
+        {
             encoder.Destination = Memory<byte>.Empty;
         });
     }
 
     [Test]
-    public void UseAfterDispose()
+    public void UseAfterDisposeThrows()
     {
         JpegLSEncoder encoder = new();
         encoder.Dispose();
 
-        _ = Assert.Throws<ObjectDisposedException>(() => {
+        _ = Assert.Throws<ObjectDisposedException>(() =>
+        {
             encoder.NearLossless = 0;
         });
 
-        _ = Assert.Throws<ObjectDisposedException>(() => {
+        _ = Assert.Throws<ObjectDisposedException>(() =>
+        {
             encoder.Encode(new byte[10]);
         });
+    }
+
+    [Test]
+    public void DefaultEncodingOptionsIsIncludePCParametersJai()
+    {
+        using JpegLSEncoder encoder = new();
+        Assert.AreEqual(EncodingOptions.IncludePCParametersJai, encoder.EncodingOptions);
+    }
+
+    [Test]
+    public void BadEncodingOptionsThrows()
+    {
+        using JpegLSEncoder encoder = new();
+
+        _ = Assert.Throws<InvalidEnumArgumentException>(() =>
+        {
+            encoder.EncodingOptions = (EncodingOptions)8;
+        });
+    }
+
+    [Test]
+    public void WriteComment()
+    {
+        using JpegLSEncoder encoder = new();
+        encoder.Destination = new byte[100];
+
+        var comment = new byte[] { 1, 2, 3, 4 };
+        encoder.WriteComment(comment);
+
+        // TODO: test comment by reading it back.
+    }
+
+    [Test]
+    public void WriteEmptyComment()
+    {
+        using JpegLSEncoder encoder = new();
+        encoder.Destination = new byte[100];
+
+        encoder.WriteComment(Array.Empty<byte>());
+
+        // TODO: test comment by reading it back.
+    }
+
+    [Test]
+    public void WriteStringComment()
+    {
+        using JpegLSEncoder encoder = new();
+        encoder.Destination = new byte[100];
+
+        encoder.WriteComment("Hello");
+
+        // TODO: test comment by reading it back.
     }
 }

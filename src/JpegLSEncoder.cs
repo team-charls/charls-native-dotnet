@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 using System.Buffers;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+using System.Text;
 using static CharLS.Native.Interop;
 
 namespace CharLS.Native;
@@ -18,6 +20,7 @@ public sealed class JpegLSEncoder : IDisposable
     private int _nearLossless;
     private JpegLSInterleaveMode _interleaveMode;
     private JpegLSPresetCodingParameters? _presetCodingParameters;
+    private EncodingOptions _encodingOptions = EncodingOptions.IncludePCParametersJai;
     private Memory<byte> _destination;
     private MemoryHandle _destinationPin;
 
@@ -84,7 +87,8 @@ public sealed class JpegLSEncoder : IDisposable
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
 
-            FrameInfoNative infoNative = new() {
+            FrameInfoNative infoNative = new()
+            {
                 Height = (uint)value.Height,
                 Width = (uint)value.Width,
                 BitsPerSample = value.BitsPerSample,
@@ -133,6 +137,24 @@ public sealed class JpegLSEncoder : IDisposable
     }
 
     /// <summary>
+    /// Configures the encoding options the encoder should use. Default is IncludePCParametersJai
+    /// </summary>
+    /// <value>
+    /// Options to use. Options can be combined. Default is None.
+    /// </value>
+    /// <exception cref="InvalidEnumArgumentException">Thrown when the passed enum value is invalid.</exception>
+    public EncodingOptions EncodingOptions
+    {
+        get => _encodingOptions;
+
+        set
+        {
+            HandleJpegLSError(CharLSSetEncodingOptions(_encoder, value));
+            _encodingOptions = value;
+        }
+    }
+
+    /// <summary>
     /// Gets or sets the JPEG-LS preset coding parameters.
     /// </summary>
     /// <value>
@@ -148,7 +170,8 @@ public sealed class JpegLSEncoder : IDisposable
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
 
-            JpegLSPresetCodingParametersNative native = new() {
+            JpegLSPresetCodingParametersNative native = new()
+            {
                 MaximumSampleValue = value.MaximumSampleValue,
                 Threshold1 = value.Threshold1,
                 Threshold2 = value.Threshold2,
@@ -282,10 +305,43 @@ public sealed class JpegLSEncoder : IDisposable
         HandleJpegLSError(CharLSWriteSpiffHeader(_encoder, ref headerNative));
     }
 
+    /// <summary>
+    /// Writes a comment (COM) segment to the destination.
+    /// </summary>
+    /// <remarks>
+    /// Function should be called before decoding the image.
+    /// </remarks>
+    /// <param name="comment">The 'comment' bytes. Application specific, usually human readable UTF-8 string.</param>
+    public void WriteComment(ReadOnlySpan<byte> comment)
+    {
+        HandleJpegLSError(CharLSWriteComment(_encoder, ref MemoryMarshal.GetReference(comment), (nuint)comment.Length));
+    }
+
+    /// <summary>
+    /// Writes a comment (COM) segment to the destination.
+    /// </summary>
+    /// <remarks>
+    /// Function should be called before decoding the image.
+    /// </remarks>
+    /// <param name="comment">Application specific value, usually human readable UTF-8 string.</param>
+    public void WriteComment(string comment)
+    {
+        WriteComment(ToUtf8(comment).Span);
+    }
+
     [SuppressMessage("Usage", "CA2201:Do not raise reserved exception types", Justification = "CharLSCreateEncoder will only fail in an out of memory condition")]
     private static SafeHandleJpegLSEncoder CreateEncoder()
     {
         SafeHandleJpegLSEncoder encoder = CharLSCreateEncoder();
         return encoder.IsInvalid ? throw new OutOfMemoryException() : encoder;
+    }
+
+    private static ReadOnlyMemory<byte> ToUtf8(string text)
+    {
+        var utf8Encoded = new byte[Encoding.UTF8.GetMaxByteCount(text.Length) + 1];
+        int bytesWritten = Encoding.UTF8.GetBytes(text, 0, text.Length, utf8Encoded, 0);
+        utf8Encoded[bytesWritten] = 0;
+
+        return new ReadOnlyMemory<byte>(utf8Encoded, 0, bytesWritten + 1);
     }
 }
