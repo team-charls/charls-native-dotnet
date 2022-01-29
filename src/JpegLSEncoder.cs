@@ -4,7 +4,7 @@
 using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
-using static CharLS.Native.SafeNativeMethods;
+using static CharLS.Native.Interop;
 
 namespace CharLS.Native;
 

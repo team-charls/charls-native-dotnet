@@ -8,12 +8,12 @@ using System.Runtime.InteropServices;
 
 namespace CharLS.Native;
 
-internal static class SafeNativeMethods
+internal static class Interop
 {
     private const string NativeLibraryName = "charls-2";
 
     [SuppressMessage("Design", "CA1065:Do not raise exceptions in unexpected locations", Justification = "Type is unusable if native DLL doesn't match")]
-    static SafeNativeMethods()
+    static Interop()
     {
         NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), DllImportResolver);
 

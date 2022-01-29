@@ -155,7 +155,7 @@ public class JpegLSDecoderTest
 
     internal static bool CanHandleEmptyBuffer()
     {
-        SafeNativeMethods.CharLSGetVersionNumber(out int _, out int minor, out int patch);
+        Interop.CharLSGetVersionNumber(out int _, out int minor, out int patch);
         return minor > 2 || patch > 0;
     }
 
