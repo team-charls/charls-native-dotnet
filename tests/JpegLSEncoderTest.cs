@@ -143,9 +143,7 @@ public class JpegLSEncoderTest
     [Test]
     public void WriteComment()
     {
-        FrameInfo frameInfo = new(1, 1, 8, 1);
-        using JpegLSEncoder encoder = new(frameInfo, false);
-        encoder.Destination = new byte[100];
+        using JpegLSEncoder encoder = new(1, 1, 8, 1, true, 100);
 
         var comment1 = new byte[] { 1, 2, 3, 4 };
         encoder.WriteComment(comment1);
@@ -170,9 +168,7 @@ public class JpegLSEncoderTest
     [Test]
     public void WriteEmptyComment()
     {
-        FrameInfo frameInfo = new(1, 1, 8, 1);
-        using JpegLSEncoder encoder = new(frameInfo, false);
-        encoder.Destination = new byte[100];
+        using JpegLSEncoder encoder = new(new FrameInfo(1, 1, 8, 1), true, 100);
 
         encoder.WriteComment(Array.Empty<byte>());
         encoder.Encode(new byte[1]);
@@ -192,9 +188,7 @@ public class JpegLSEncoderTest
     [Test]
     public void WriteStringComment()
     {
-        FrameInfo frameInfo = new(1, 1, 8, 1);
-        using JpegLSEncoder encoder = new(frameInfo, false);
-        encoder.Destination = new byte[100];
+        using JpegLSEncoder encoder = new(new FrameInfo(1, 1, 8, 1), true, 100);
 
         encoder.WriteComment("Hello");
         encoder.Encode(new byte[1]);
@@ -222,10 +216,7 @@ public class JpegLSEncoderTest
     [Test]
     public void FailCommentEvent()
     {
-        FrameInfo frameInfo = new(1, 1, 8, 1);
-        using JpegLSEncoder encoder = new(frameInfo, false);
-        encoder.Destination = new byte[100];
-
+        using JpegLSEncoder encoder = new(new FrameInfo(1, 1, 8, 1), true, 100);
         encoder.WriteComment(Array.Empty<byte>());
         encoder.Encode(new byte[1]);
 
@@ -244,17 +235,27 @@ public class JpegLSEncoderTest
     [Test]
     public void RewindAndDecodeAgain()
     {
-        FrameInfo frameInfo = new(1, 1, 8, 1);
-        using JpegLSEncoder encoder = new(frameInfo, false);
-        encoder.Destination = new byte[100];
+        using JpegLSEncoder encoder = new(new FrameInfo(1, 1, 8, 1), true, 100);
 
         encoder.Encode(new byte[1]);
         var result1 = encoder.Destination.ToArray();
 
         encoder.Rewind();
+
         encoder.Encode(new byte[1]);
         var result2 = encoder.Destination.ToArray();
 
         Assert.AreEqual(result1.Length, result2.Length);
+    }
+
+    [Test]
+    public void BadExtraBytesThrows()
+    {
+        FrameInfo frameInfo = new(1, 1, 8, 1);
+
+        _ = Assert.Throws<ArgumentOutOfRangeException>(() =>
+        {
+            var _ = new JpegLSEncoder(frameInfo, true, -1);
+        });
     }
 }

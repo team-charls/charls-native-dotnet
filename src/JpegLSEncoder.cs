@@ -39,16 +39,20 @@ public sealed class JpegLSEncoder : IDisposable
     /// <param name="bitsPerSample">The bits per sample of the image to encode.</param>
     /// <param name="componentCount">The component count of the image to encode.</param>
     /// <param name="allocateDestination">Flag to control if destination buffer should be allocated or not.</param>
+    /// <param name="extraBytes">Number of extra destination bytes. Comments and tables are not included in the estimate.</param>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when one of the arguments is invalid.</exception>
     /// <exception cref="OutOfMemoryException">Thrown when memory allocation for the destination buffer fails.</exception>
-    public JpegLSEncoder(int width, int height, int bitsPerSample, int componentCount, bool allocateDestination = true)
+    public JpegLSEncoder(int width, int height, int bitsPerSample, int componentCount, bool allocateDestination = true, int extraBytes = 0)
     {
         try
         {
+            if (extraBytes < 0)
+                throw new ArgumentOutOfRangeException(nameof(extraBytes));
+
             FrameInfo = new(width, height, bitsPerSample, componentCount);
             if (allocateDestination)
             {
-                Destination = new byte[EstimatedDestinationSize];
+                Destination = new byte[EstimatedDestinationSize + extraBytes];
             }
         }
         catch
@@ -63,10 +67,11 @@ public sealed class JpegLSEncoder : IDisposable
     /// </summary>
     /// <param name="frameInfo">The frameInfo of the image to encode.</param>
     /// <param name="allocateDestination">Flag to control if destination buffer should be allocated or not.</param>
+    /// <param name="extraBytes">Number of extra destination bytes. Comments and tables are not included in the estimate.</param>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when one of the arguments is invalid.</exception>
     /// <exception cref="OutOfMemoryException">Thrown when memory allocation for the destination buffer fails.</exception>
-    public JpegLSEncoder(FrameInfo frameInfo, bool allocateDestination = true) :
-        this(frameInfo.Width, frameInfo.Height, frameInfo.BitsPerSample, frameInfo.ComponentCount, allocateDestination)
+    public JpegLSEncoder(FrameInfo frameInfo, bool allocateDestination = true, int extraBytes = 0) :
+        this(frameInfo.Width, frameInfo.Height, frameInfo.BitsPerSample, frameInfo.ComponentCount, allocateDestination, extraBytes)
     {
     }
 
