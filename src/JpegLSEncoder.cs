@@ -329,6 +329,14 @@ public sealed class JpegLSEncoder : IDisposable
         WriteComment(ToUtf8(comment).Span);
     }
 
+    /// <summary>
+    /// Resets the write position of the destination buffer to the beginning.
+    /// </summary>
+    public void Rewind()
+    {
+        HandleJpegLSError(CharLSRewind(_encoder));
+    }
+
     [SuppressMessage("Usage", "CA2201:Do not raise reserved exception types", Justification = "CharLSCreateEncoder will only fail in an out of memory condition")]
     private static SafeHandleJpegLSEncoder CreateEncoder()
     {

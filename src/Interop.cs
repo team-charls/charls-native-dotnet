@@ -77,6 +77,9 @@ internal static class Interop
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_get_bytes_written")]
     internal static extern JpegLSError CharLSGetBytesWritten(SafeHandleJpegLSEncoder encoder, [Out] out nuint bytesWritten);
 
+    [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_rewind")]
+    internal static extern JpegLSError CharLSRewind(SafeHandleJpegLSEncoder encoder);
+
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_create")]
     internal static extern SafeHandleJpegLSDecoder CharLSCreateDecoder();
 

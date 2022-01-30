@@ -240,4 +240,21 @@ public class JpegLSEncoderTest
             decoder.ReadHeader();
         });
     }
+
+    [Test]
+    public void RewindAndDecodeAgain()
+    {
+        FrameInfo frameInfo = new(1, 1, 8, 1);
+        using JpegLSEncoder encoder = new(frameInfo, false);
+        encoder.Destination = new byte[100];
+
+        encoder.Encode(new byte[1]);
+        var result1 = encoder.Destination.ToArray();
+
+        encoder.Rewind();
+        encoder.Encode(new byte[1]);
+        var result2 = encoder.Destination.ToArray();
+
+        Assert.AreEqual(result1.Length, result2.Length);
+    }
 }
