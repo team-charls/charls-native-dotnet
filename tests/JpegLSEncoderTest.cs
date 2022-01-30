@@ -143,34 +143,79 @@ public class JpegLSEncoderTest
     [Test]
     public void WriteComment()
     {
-        using JpegLSEncoder encoder = new();
+        FrameInfo frameInfo = new(1, 1, 8, 1);
+        using JpegLSEncoder encoder = new(frameInfo, false);
         encoder.Destination = new byte[100];
 
-        var comment = new byte[] { 1, 2, 3, 4 };
-        encoder.WriteComment(comment);
+        var comment1 = new byte[] { 1, 2, 3, 4 };
+        encoder.WriteComment(comment1);
+        encoder.Encode(new byte[1]);
 
-        // TODO: test comment by reading it back.
+        byte[]? comment2 = null;
+        using JpegLSDecoder decoder = new(encoder.EncodedData, false);
+        decoder.Comment += (_, e) =>
+        {
+            comment2 = e.Data.ToArray();
+        };
+        decoder.ReadHeader();
+
+        Assert.IsNotNull(comment2);
+        Assert.AreEqual(4, comment2!.Length);
+        Assert.AreEqual(1, comment2![0]);
+        Assert.AreEqual(2, comment2![1]);
+        Assert.AreEqual(3, comment2![2]);
+        Assert.AreEqual(4, comment2![3]);
     }
 
     [Test]
     public void WriteEmptyComment()
     {
-        using JpegLSEncoder encoder = new();
+        FrameInfo frameInfo = new(1, 1, 8, 1);
+        using JpegLSEncoder encoder = new(frameInfo, false);
         encoder.Destination = new byte[100];
 
         encoder.WriteComment(Array.Empty<byte>());
+        encoder.Encode(new byte[1]);
 
-        // TODO: test comment by reading it back.
+        byte[]? comment = null;
+        using JpegLSDecoder decoder = new(encoder.EncodedData, false);
+        decoder.Comment += (_, e) =>
+        {
+            comment = e.Data.ToArray();
+        };
+        decoder.ReadHeader();
+
+        Assert.IsNotNull(comment);
+        Assert.AreEqual(0, comment!.Length);
     }
 
     [Test]
     public void WriteStringComment()
     {
-        using JpegLSEncoder encoder = new();
+        FrameInfo frameInfo = new(1, 1, 8, 1);
+        using JpegLSEncoder encoder = new(frameInfo, false);
         encoder.Destination = new byte[100];
 
         encoder.WriteComment("Hello");
+        encoder.Encode(new byte[1]);
 
-        // TODO: test comment by reading it back.
+        ReadOnlyMemory<byte> comment = null;
+        using JpegLSDecoder decoder = new(encoder.EncodedData, false);
+        decoder.Comment += (_, e) =>
+        {
+            comment = e.Data;
+        };
+        decoder.ReadHeader();
+
+        Assert.IsNotNull(comment);
+        Assert.AreEqual(6, comment!.Length);
+
+        var data = comment.Span;
+        Assert.AreEqual((byte)'H', data[0]);
+        Assert.AreEqual((byte)'e', data[1]);
+        Assert.AreEqual((byte)'l', data[2]);
+        Assert.AreEqual((byte)'l', data[3]);
+        Assert.AreEqual((byte)'o', data[4]);
+        Assert.AreEqual(0, data[5]);
     }
 }

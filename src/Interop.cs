@@ -19,7 +19,7 @@ internal static class Interop
         NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), DllImportResolver);
 
         CharLSGetVersionNumber(out int major, out int minor, out int _);
-        if (major != 2 || minor < 1)
+        if (major != 2 || minor < 2)
         {
             throw new DllNotFoundException("Native DLL version mismatch");
         }
@@ -108,6 +108,9 @@ internal static class Interop
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_decode_to_buffer")]
     internal static extern JpegLSError CharLSDecodeToBuffer(SafeHandleJpegLSDecoder decoder, ref byte destination, nuint destinationSize, uint stride);
+
+    [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_at_comment")]
+    internal static extern JpegLSError CharLSAtComment(SafeHandleJpegLSDecoder decoder, Func<IntPtr, nuint, int> handler, IntPtr userContext);
 
     internal static void HandleJpegLSError(JpegLSError error)
     {
