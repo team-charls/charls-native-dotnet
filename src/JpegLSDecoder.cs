@@ -20,11 +20,30 @@ public sealed class JpegLSDecoder : IDisposable
     private ReadOnlyMemory<byte> _source;
     private MemoryHandle _sourcePin;
     private AtCommentHandler? _atCommentHandler;
+    private EventHandler<CommentEventArgs>? _comment;
 
     /// <summary>
     /// Occurs when a comment (COM segment) is read.
     /// </summary>
-    public event EventHandler<CommentEventArgs>? Comment;
+    public event EventHandler<CommentEventArgs> Comment
+    {
+        add
+        {
+            if (_comment == null)
+            {
+                _atCommentHandler = AtComment; // Ensure that the delegate is not collected.
+                HandleJpegLSError(CharLSAtComment(_decoder, _atCommentHandler, IntPtr.Zero));
+            }
+            _comment += value;
+        }
+
+        remove
+        {
+            _comment -= value;
+
+            // Note: Keep the delegate installed, it will be cleaned when the instance is disposed.
+        }
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JpegLSDecoder"/> class.
@@ -220,8 +239,6 @@ public sealed class JpegLSDecoder : IDisposable
     /// <exception cref="ObjectDisposedException">Thrown when the instance is used after being disposed.</exception>
     public bool TryReadSpiffHeader(out SpiffHeader? spiffHeader)
     {
-        InstallAtCommentHandlerIfNeeded();
-
         HandleJpegLSError(CharLSReadSpiffHeader(_decoder, out SpiffHeaderNative headerNative, out int headerFound));
         bool found = headerFound != 0;
         if (found)
@@ -248,10 +265,6 @@ public sealed class JpegLSDecoder : IDisposable
         if (tryReadSpiffHeader && TryReadSpiffHeader(out SpiffHeader? spiffHeader))
         {
             SpiffHeader = spiffHeader;
-        }
-        else
-        {
-            InstallAtCommentHandlerIfNeeded();
         }
 
         HandleJpegLSError(JpegLSDecoderReadHeader(_decoder));
@@ -297,20 +310,11 @@ public sealed class JpegLSDecoder : IDisposable
         return stride < 0 ? throw new ArgumentOutOfRangeException(nameof(stride), "Stride needs to be >= 0") : (uint)stride;
     }
 
-    private void InstallAtCommentHandlerIfNeeded()
-    {
-        if (Comment == null || _atCommentHandler != null)
-            return;
-
-        _atCommentHandler = AtComment; // Ensure that the delegate is not collected.
-        HandleJpegLSError(CharLSAtComment(_decoder, _atCommentHandler, IntPtr.Zero));
-    }
-
     private unsafe int AtComment(IntPtr data, nuint size)
     {
         // Take a copy to prevent that subscribers to this event need to be unsafe to read the comment.
         var comment = new ReadOnlySpan<byte>(data.ToPointer(), (int)size);
-        Comment?.Invoke(this, new CommentEventArgs(comment.ToArray()));
+        _comment?.Invoke(this, new CommentEventArgs(comment.ToArray()));
         return 0;
     }
 }
