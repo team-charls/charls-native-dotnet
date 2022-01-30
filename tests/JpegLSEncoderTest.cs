@@ -218,4 +218,26 @@ public class JpegLSEncoderTest
         Assert.AreEqual((byte)'o', data[4]);
         Assert.AreEqual(0, data[5]);
     }
+
+    [Test]
+    public void FailCommentEvent()
+    {
+        FrameInfo frameInfo = new(1, 1, 8, 1);
+        using JpegLSEncoder encoder = new(frameInfo, false);
+        encoder.Destination = new byte[100];
+
+        encoder.WriteComment(Array.Empty<byte>());
+        encoder.Encode(new byte[1]);
+
+        using JpegLSDecoder decoder = new(encoder.EncodedData, false);
+        decoder.Comment += (_, e) =>
+        {
+            e.Failed = true;
+        };
+
+        _ = Assert.Throws<InvalidDataException>(() =>
+        {
+            decoder.ReadHeader();
+        });
+    }
 }

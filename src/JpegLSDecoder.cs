@@ -313,8 +313,8 @@ public sealed class JpegLSDecoder : IDisposable
     private unsafe int AtComment(IntPtr data, nuint size)
     {
         // Take a copy to prevent that subscribers to this event need to be unsafe to read the comment.
-        var comment = new ReadOnlySpan<byte>(data.ToPointer(), (int)size);
-        _comment?.Invoke(this, new CommentEventArgs(comment.ToArray()));
-        return 0;
+        var eventArgs = new CommentEventArgs(new ReadOnlySpan<byte>(data.ToPointer(), (int)size).ToArray());
+        _comment?.Invoke(this, eventArgs);
+        return Convert.ToInt32(eventArgs.Failed);
     }
 }
