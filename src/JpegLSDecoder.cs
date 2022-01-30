@@ -19,7 +19,7 @@ public sealed class JpegLSDecoder : IDisposable
     private JpegLSInterleaveMode? _interleaveMode;
     private ReadOnlyMemory<byte> _source;
     private MemoryHandle _sourcePin;
-    private Func<IntPtr, nuint, int>? _atCommentHandler;
+    private AtCommentHandler? _atCommentHandler;
 
     /// <summary>
     /// Occurs when a comment (COM segment) is read.

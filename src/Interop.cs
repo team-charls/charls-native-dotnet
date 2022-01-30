@@ -13,13 +13,15 @@ internal static class Interop
 {
     private const string NativeLibraryName = "charls-2";
 
+    internal delegate int AtCommentHandler(IntPtr data, nuint size);
+
     [SuppressMessage("Design", "CA1065:Do not raise exceptions in unexpected locations", Justification = "Type is unusable if native DLL doesn't match")]
     static Interop()
     {
         NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), DllImportResolver);
 
         CharLSGetVersionNumber(out int major, out int minor, out int _);
-        if (major != 2 || minor < 2)
+        if (major != 2 || minor < 1)
         {
             throw new DllNotFoundException("Native DLL version mismatch");
         }
@@ -110,7 +112,7 @@ internal static class Interop
     internal static extern JpegLSError CharLSDecodeToBuffer(SafeHandleJpegLSDecoder decoder, ref byte destination, nuint destinationSize, uint stride);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_at_comment")]
-    internal static extern JpegLSError CharLSAtComment(SafeHandleJpegLSDecoder decoder, Func<IntPtr, nuint, int> handler, IntPtr userContext);
+    internal static extern JpegLSError CharLSAtComment(SafeHandleJpegLSDecoder decoder, AtCommentHandler handler, IntPtr userContext);
 
     internal static void HandleJpegLSError(JpegLSError error)
     {
