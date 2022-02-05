@@ -11,7 +11,7 @@ namespace CharLS.Native;
 public enum EncodingOptions
 {
     /// <summary>
-    /// No special encoding option is defined.
+    /// No special encoding options are defined.
     /// </summary>
     None = 0,
 
