@@ -6,10 +6,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>1.2.0</Version>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.2.0.0</FileVersion>
-    <Copyright>Copyright 2021 Team CharLS</Copyright>
+    <Version>2.0.0</Version>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+    <Copyright>Copyright 2022 Team CharLS</Copyright>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
@@ -87,8 +87,7 @@
       <MySourceFiles Include="..\extern\charls\bin\x86\$(Configuration)\charls-2-x86.dll;..\extern\charls\bin\x86\$(Configuration)\charls-2-x86.pdb;..\extern\charls\bin\x64\$(Configuration)\charls-2-x64.dll;..\extern\charls\bin\x64\$(Configuration)\charls-2-x64.pdb" />
     </ItemGroup>
 
-    <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutputPath)\net5.0" SkipUnchangedFiles="true" />
-    <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutputPath)\net6.0" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
   </Target>
 
   <Target Name="SignWindowsDlls" BeforeTargets="GenerateNuspec" Condition="'$(MSBuildRuntimeType)'=='Full'">

@@ -1,3 +1,7 @@
+2.0.0
+ - Dropped support for .NET 5.0 (out of support)
+ - Latest version of CharLS Windows DLLs v2.2.4 (4697b10).
+
 1.2.0
  - Added support for .NET 6.0
  - Latest version of CharLS Windows DLLs v2.2.1 (bea1c0).
