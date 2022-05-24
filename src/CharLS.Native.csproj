@@ -82,7 +82,7 @@
     <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=$(Configuration);Platform=x64" />
   </Target>
 
-  <Target Name="CopyNativeWindowsCharLSFiles" BeforeTargets="DispatchToInnerBuilds" Condition="'$(MSBuildRuntimeType)'=='Full'">
+  <Target Name="CopyNativeWindowsCharLSFiles" BeforeTargets="Build" Condition="'$(MSBuildRuntimeType)'=='Full'">
     <ItemGroup>
       <MySourceFiles Include="..\extern\charls\bin\x86\$(Configuration)\charls-2-x86.dll;..\extern\charls\bin\x86\$(Configuration)\charls-2-x86.pdb;..\extern\charls\bin\x64\$(Configuration)\charls-2-x64.dll;..\extern\charls\bin\x64\$(Configuration)\charls-2-x64.pdb" />
     </ItemGroup>

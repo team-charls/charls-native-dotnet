@@ -39,7 +39,7 @@ jobs:
     inputs:
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
-      otherConsoleOptions: --Framework:".NETCoreApp,Version=v5.0"
+      otherConsoleOptions: --Framework:".NETCoreApp,Version=v6.0"
       testAssemblyVer2: |
         **\CharLS.Native.Test.dll
         !**\*TestAdapter.dll
