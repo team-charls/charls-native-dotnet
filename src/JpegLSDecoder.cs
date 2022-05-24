@@ -37,12 +37,7 @@ public sealed class JpegLSDecoder : IDisposable
             _comment += value;
         }
 
-        remove
-        {
-            _comment -= value;
-
-            // Note: Keep the delegate installed, it will be cleaned when the instance is disposed.
-        }
+        remove => _comment -= value;// Note: Keep the delegate installed, it will be cleaned when the instance is disposed.
     }
 
     /// <summary>

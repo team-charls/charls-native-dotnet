@@ -130,6 +130,18 @@ public class JpegLSEncoderTest
     }
 
     [Test]
+    public void EncodingOptionsCanBeChanged()
+    {
+        using JpegLSEncoder encoder = new();
+
+        encoder.EncodingOptions = EncodingOptions.EvenDestinationSize | EncodingOptions.IncludeVersionNumber;
+        Assert.AreEqual(EncodingOptions.EvenDestinationSize | EncodingOptions.IncludeVersionNumber, encoder.EncodingOptions);
+
+        encoder.EncodingOptions = EncodingOptions.None;
+        Assert.AreEqual(EncodingOptions.None, encoder.EncodingOptions);
+    }
+
+    [Test]
     public void BadEncodingOptionsThrows()
     {
         using JpegLSEncoder encoder = new();
