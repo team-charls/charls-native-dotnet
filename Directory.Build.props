@@ -6,7 +6,7 @@
 <Project>
   <PropertyGroup>
     <!-- General -->
-    <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <LangVersion>latest</LangVersion><!-- Use the latest released C# language version -->
     <Features>strict</Features>
     <Platforms>AnyCPU</Platforms>
