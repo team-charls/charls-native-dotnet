@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 using System.ComponentModel;
+using System.Text;
 using NUnit.Framework;
 
 namespace CharLS.Native.Test;
@@ -125,6 +126,7 @@ public class JpegLSEncoderTest
     [Test]
     public void DefaultEncodingOptionsIsIncludePCParametersJai()
     {
+        // Note: use the same default as the native CharLS implementation. Will change in the future.
         using JpegLSEncoder encoder = new();
         Assert.AreEqual(EncodingOptions.IncludePCParametersJai, encoder.EncodingOptions);
     }
@@ -150,6 +152,94 @@ public class JpegLSEncoderTest
         {
             encoder.EncodingOptions = (EncodingOptions)8;
         });
+    }
+
+    [Test]
+    public void EncodingOptionsEvenDestinationSizeEnabled()
+    {
+        using JpegLSEncoder encoder = new(new FrameInfo(512, 512, 8, 1));
+        encoder.EncodingOptions = EncodingOptions.EvenDestinationSize;
+
+        var source = new byte[512 * 512];
+        encoder.Encode(source);
+
+        Assert.AreEqual(100, encoder.BytesWritten);
+    }
+
+    [Test]
+    public void EncodingOptionsEvenDestinationSizeNotEnabled()
+    {
+        using JpegLSEncoder encoder = new(new FrameInfo(512, 512, 8, 1));
+
+        var source = new byte[512 * 512];
+        encoder.Encode(source);
+
+        Assert.AreEqual(99, encoder.BytesWritten);
+    }
+
+    [Test]
+    public void EncodingOptionsIncludeVersionNumberEnabled()
+    {
+        using JpegLSEncoder encoder = new(new FrameInfo(512, 512, 8, 1));
+        encoder.EncodingOptions |= EncodingOptions.IncludeVersionNumber;
+
+        var source = new byte[512 * 512];
+        encoder.Encode(source);
+
+        byte[]? versionComment = null;
+        using JpegLSDecoder decoder = new(encoder.EncodedData, false);
+        decoder.Comment += (_, e) =>
+        {
+            versionComment = e.Data.ToArray();
+        };
+        decoder.ReadHeader();
+
+        Assert.IsNotNull(versionComment);
+
+        string versionString = Encoding.UTF8.GetString(versionComment!);
+        versionString = versionString[..7];
+
+        Assert.AreEqual("charls ", versionString);
+    }
+
+    [Test]
+    public void EncodingOptionsIncludeVersionNumberNotEnabled()
+    {
+        using JpegLSEncoder encoder = new(new FrameInfo(512, 512, 8, 1));
+        var source = new byte[512 * 512];
+        encoder.Encode(source);
+
+        byte[]? versionComment = null;
+        using JpegLSDecoder decoder = new(encoder.EncodedData, false);
+        decoder.Comment += (_, e) =>
+        {
+            versionComment = e.Data.ToArray();
+        };
+        decoder.ReadHeader();
+
+        Assert.IsNull(versionComment);
+    }
+
+    [Test]
+    public void EncodingOptionsIncludePCParametersJaiEnabled()
+    {
+        using JpegLSEncoder encoder = new(new FrameInfo(100, 100, 14, 1));
+        encoder.EncodingOptions |= EncodingOptions.IncludePCParametersJai;
+        var source = new byte[100 * 100 * 2];
+        encoder.Encode(source);
+
+        Assert.AreEqual(59, encoder.BytesWritten);
+    }
+
+    [Test]
+    public void EncodingOptionsIncludePCParametersJaiNotEnabled()
+    {
+        using JpegLSEncoder encoder = new(new FrameInfo(100, 100, 14, 1));
+        encoder.EncodingOptions = EncodingOptions.None;
+        var source = new byte[100 * 100 * 2];
+        encoder.Encode(source);
+
+        Assert.AreEqual(44, encoder.BytesWritten);
     }
 
     [Test]
