@@ -9,18 +9,6 @@ namespace CharLS.Native;
 public sealed record SpiffHeader
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="SpiffHeader"/> class.
-    /// </summary>
-    public SpiffHeader()
-    {
-        ColorSpace = SpiffColorSpace.None;
-        CompressionType = SpiffCompressionType.JpegLS;
-        ResolutionUnit = SpiffResolutionUnit.AspectRatio;
-        VerticalResolution = 1;
-        HorizontalResolution = 1;
-    }
-
-    /// <summary>
     /// Gets or sets the application profile identifier.
     /// </summary>
     /// <value>
@@ -58,7 +46,7 @@ public sealed record SpiffHeader
     /// <value>
     /// The color space.
     /// </value>
-    public SpiffColorSpace ColorSpace { get; init; }
+    public SpiffColorSpace ColorSpace { get; init; } = SpiffColorSpace.None;
 
     /// <summary>
     /// Gets or sets the bits per sample, range (1, 2, 4, 8, 12, 16).
@@ -74,7 +62,7 @@ public sealed record SpiffHeader
     /// <value>
     /// The type of the compression.
     /// </value>
-    public SpiffCompressionType CompressionType { get; init; }
+    public SpiffCompressionType CompressionType { get; init; } = SpiffCompressionType.JpegLS;
 
     /// <summary>
     /// Gets or sets the resolution unit.
@@ -82,7 +70,7 @@ public sealed record SpiffHeader
     /// <value>
     /// The resolution unit.
     /// </value>
-    public SpiffResolutionUnit ResolutionUnit { get; init; }
+    public SpiffResolutionUnit ResolutionUnit { get; init; } = SpiffResolutionUnit.AspectRatio;
 
     /// <summary>
     /// Gets or sets the vertical resolution.
@@ -90,7 +78,7 @@ public sealed record SpiffHeader
     /// <value>
     /// The vertical resolution.
     /// </value>
-    public int VerticalResolution { get; init; }
+    public int VerticalResolution { get; init; } = 1;
 
     /// <summary>
     /// Gets or sets the horizontal resolution.
@@ -98,7 +86,7 @@ public sealed record SpiffHeader
     /// <value>
     /// The horizontal resolution.
     /// </value>
-    public int HorizontalResolution { get; init; }
+    public int HorizontalResolution { get; init; } = 1;
 
     internal static bool TryCreate(in SpiffHeaderNative headerNative, out SpiffHeader? spiffHeader)
     {

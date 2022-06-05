@@ -8,7 +8,7 @@ variables:
 jobs:
 - job: 'windows'
   pool:
-    vmImage: 'windows-2022'
+    vmImage: 'windows-latest'
   displayName: 'Windows - '
 
   strategy:
@@ -39,7 +39,7 @@ jobs:
     inputs:
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
-      otherConsoleOptions: --Framework:".NETCoreApp,Version=v5.0"
+      otherConsoleOptions: --Framework:".NETCoreApp,Version=v6.0"
       testAssemblyVer2: |
         **\CharLS.Native.Test.dll
         !**\*TestAdapter.dll
@@ -91,11 +91,6 @@ jobs:
       cmakeArgs: --build .
 
   - task: UseDotNet@2
-    displayName: 'Install .NET 5.0 SDK'
-    inputs:
-      version: 5.0.x
-
-  - task: UseDotNet@2
     displayName: 'Install .NET 6.0 SDK'
     inputs:
       version: 6.0.x
@@ -112,10 +107,7 @@ jobs:
       arguments: '--configuration $(buildConfiguration) --no-restore'
       platform: '$(buildPlatform)'
 
-  - script: cp $(Build.BinariesDirectory)/build/libcharls.so.2 $(Build.SourcesDirectory)/build/binaries/$(buildConfiguration)/net5.0/
-    displayName: "Copy shared library to .NET 5.0 unit test location"
-
-  - script: cp $(Build.BinariesDirectory)/build/libcharls.so.2 $(Build.SourcesDirectory)/build/binaries/$(buildConfiguration)/net6.0/
+  - script: cp $(Build.BinariesDirectory)/build/libcharls.so.2 $(Build.SourcesDirectory)/build/binaries/$(buildConfiguration)/
     displayName: "Copy shared library to .NET 6.0 unit test location"
 
   - task: DotNetCoreCLI@2
@@ -128,7 +120,7 @@ jobs:
 
 - job: 'macOS'
   pool:
-    vmImage: macOS-11
+    vmImage: macOS-latest
   displayName: 'macOS - '
 
   strategy:
@@ -169,11 +161,6 @@ jobs:
       cmakeArgs: --build .
 
   - task: UseDotNet@2
-    displayName: 'Install .NET 5.0 SDK'
-    inputs:
-      version: 5.0.x
-
-  - task: UseDotNet@2
     displayName: 'Install .NET 6.0 SDK'
     inputs:
       version: 6.0.x
@@ -190,10 +177,7 @@ jobs:
       arguments: '--configuration $(buildConfiguration) --no-restore'
       platform: '$(buildPlatform)'
 
-  - script: cp $(Build.BinariesDirectory)/build/libcharls.2.dylib $(Build.SourcesDirectory)/build/binaries/$(buildConfiguration)/net5.0/
-    displayName: "Copy shared library to .NET 5.0 unit test location"
-
-  - script: cp $(Build.BinariesDirectory)/build/libcharls.2.dylib $(Build.SourcesDirectory)/build/binaries/$(buildConfiguration)/net6.0/
+  - script: cp $(Build.BinariesDirectory)/build/libcharls.2.dylib $(Build.SourcesDirectory)/build/binaries/$(buildConfiguration)/
     displayName: "Copy shared library to .NET 6.0 unit test location"
 
   - task: DotNetCoreCLI@2

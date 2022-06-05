@@ -150,6 +150,11 @@ public enum JpegLSError
     CallbackFailed = 27,
 
     /// <summary>
+    /// This error is returned when the End of Image (EOI) marker could not be found.
+    /// </summary>
+    EndOfImageMarkerNotFound = 28,
+
+    /// <summary>
     /// The argument for the width parameter is outside the range [1, 65535].
     /// </summary>
     InvalidArgumentWidth = 100,
@@ -199,6 +204,11 @@ public enum JpegLSError
     /// The stride argument does not match with the frame info and buffer size.
     /// </summary>
     InvalidArgumentStride = 112,
+
+    /// <summary>
+    /// The encoding options argument has an invalid value.
+    /// </summary>
+    InvalidArgumentEncodingOptions = 113,
 
     /// <summary>
     /// This error is returned when the width parameter is defined more then once in an incompatible way.

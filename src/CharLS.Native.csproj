@@ -1,4 +1,4 @@
-﻿<!--
+<!--
   Copyright (c) Team CharLS.
   SPDX-License-Identifier: BSD-3-Clause
 -->
@@ -6,10 +6,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>1.2.0</Version>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.2.0.0</FileVersion>
-    <Copyright>Copyright 2021 Team CharLS</Copyright>
+    <Version>2.0.0</Version>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+    <Copyright>Copyright 2022 Team CharLS</Copyright>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
@@ -39,7 +39,7 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
 
     <_CertificateThumbprint>$(CertificateThumbprint)</_CertificateThumbprint>
-    <_CertificateThumbprint Condition="'$(_CertificateThumbprint)' == ''">6e78b103da0729369e44004121fb6bf685fec5d8</_CertificateThumbprint>
+    <_CertificateThumbprint Condition="'$(_CertificateThumbprint)' == ''">ec5c63c27f439b88457aae74893074733e5d35c0</_CertificateThumbprint>
     <_TimestampUrl>$(TimestampUrl)</_TimestampUrl>
     <_TimestampUrl Condition="'$(_TimestampUrl)' == ''">http://time.certum.pl/</_TimestampUrl>
   </PropertyGroup>
@@ -78,13 +78,13 @@
   </ItemGroup>
 
   <Target Name="BuildNativeWindowsCharLS" BeforeTargets="CopyNativeWindowsCharLSFiles" Condition="'$(MSBuildRuntimeType)'=='Full'">
-    <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=Release;Platform=Win32" />
-    <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=Release;Platform=x64" />
+    <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=$(Configuration);Platform=Win32" />
+    <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=$(Configuration);Platform=x64" />
   </Target>
 
   <Target Name="CopyNativeWindowsCharLSFiles" BeforeTargets="Build" Condition="'$(MSBuildRuntimeType)'=='Full'">
     <ItemGroup>
-      <MySourceFiles Include="..\extern\charls\bin\x86\Release\charls-2-x86.dll;..\extern\charls\bin\x86\Release\charls-2-x86.pdb;..\extern\charls\bin\x64\Release\charls-2-x64.dll;..\extern\charls\bin\x64\Release\charls-2-x64.pdb" />
+      <MySourceFiles Include="..\extern\charls\bin\x86\$(Configuration)\charls-2-x86.dll;..\extern\charls\bin\x86\$(Configuration)\charls-2-x86.pdb;..\extern\charls\bin\x64\$(Configuration)\charls-2-x64.dll;..\extern\charls\bin\x64\$(Configuration)\charls-2-x64.pdb" />
     </ItemGroup>
 
     <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />

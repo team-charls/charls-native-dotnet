@@ -170,19 +170,19 @@ public class JpegLSCodecTest
 
         var spiffHeader = decoder.SpiffHeader;
         Assert.IsNotNull(spiffHeader);
-        if (decoder.SpiffHeader != null)
-        {
-            Assert.AreEqual(SpiffProfileId.None, spiffHeader!.ProfileId);
-            Assert.AreEqual(1, decoder.SpiffHeader.ComponentCount);
-            Assert.AreEqual(1, spiffHeader.Height);
-            Assert.AreEqual(1, spiffHeader.Width);
-            Assert.AreEqual(SpiffColorSpace.Grayscale, spiffHeader.ColorSpace);
-            Assert.AreEqual(2, spiffHeader.BitsPerSample);
-            Assert.AreEqual(SpiffCompressionType.JpegLS, spiffHeader.CompressionType);
-            Assert.AreEqual(SpiffResolutionUnit.AspectRatio, spiffHeader.ResolutionUnit);
-            Assert.AreEqual(1, spiffHeader.VerticalResolution);
-            Assert.AreEqual(1, spiffHeader.HorizontalResolution);
-        }
+        if (decoder.SpiffHeader == null)
+            return;
+
+        Assert.AreEqual(SpiffProfileId.None, spiffHeader!.ProfileId);
+        Assert.AreEqual(1, decoder.SpiffHeader.ComponentCount);
+        Assert.AreEqual(1, spiffHeader.Height);
+        Assert.AreEqual(1, spiffHeader.Width);
+        Assert.AreEqual(SpiffColorSpace.Grayscale, spiffHeader.ColorSpace);
+        Assert.AreEqual(2, spiffHeader.BitsPerSample);
+        Assert.AreEqual(SpiffCompressionType.JpegLS, spiffHeader.CompressionType);
+        Assert.AreEqual(SpiffResolutionUnit.AspectRatio, spiffHeader.ResolutionUnit);
+        Assert.AreEqual(1, spiffHeader.VerticalResolution);
+        Assert.AreEqual(1, spiffHeader.HorizontalResolution);
     }
 
     [Test]
@@ -256,6 +256,36 @@ public class JpegLSCodecTest
 
         var exception = Assert.Throws<InvalidDataException>(() => Decode(source));
         Assert.AreEqual(JpegLSError.UnknownJpegMarkerFound, exception!.Data["JpegLSError"]);
+    }
+
+    [Test]
+    public void EncodeOversizedImageWidth()
+    {
+        const int size = ushort.MaxValue + 1;
+        using JpegLSEncoder encoder = new(new FrameInfo(size, 1, 8, 1));
+        var source = new byte[size];
+        encoder.Encode(source);
+
+        using JpegLSDecoder decoder = new(encoder.EncodedData);
+        var destination = new byte[size];
+        decoder.Decode(destination);
+
+        Assert.AreEqual(source, destination);
+    }
+
+    [Test]
+    public void EncodeOversizedImageHeight()
+    {
+        const int size = ushort.MaxValue + 1;
+        using JpegLSEncoder encoder = new(new FrameInfo(1, size, 8, 1));
+        var source = new byte[size];
+        encoder.Encode(source);
+
+        using JpegLSDecoder decoder = new(encoder.EncodedData);
+        var destination = new byte[size];
+        decoder.Decode(destination);
+
+        Assert.AreEqual(source, destination);
     }
 
     private static byte[] TripletToPlanar(IList<byte> buffer, int width, int height)

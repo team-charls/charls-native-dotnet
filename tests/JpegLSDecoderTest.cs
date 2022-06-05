@@ -149,8 +149,78 @@ public class JpegLSDecoderTest
         using JpegLSDecoder decoder = new();
 
         _ = Assert.Throws<InvalidOperationException>(() => {
-            var _ = decoder.GetDestinationSize();
+            _ = decoder.GetDestinationSize();
         });
+    }
+
+    [Test]
+    public void CommentHandlerReceivesCommentBytes()
+    {
+        using JpegLSEncoder encoder = new(1, 1, 8, 1, true, 100);
+
+        var comment1 = new byte[] { 1, 2, 3, 4 };
+        encoder.WriteComment(comment1);
+        encoder.Encode(new byte[1]);
+
+        byte[]? comment2 = null;
+        using JpegLSDecoder decoder = new(encoder.EncodedData, false);
+
+        void CommentHandler(object? _, CommentEventArgs e)
+        {
+            comment2 = e.Data.ToArray();
+        }
+
+        decoder.Comment += CommentHandler;
+        decoder.Comment -= CommentHandler;
+        decoder.Comment += CommentHandler;
+        decoder.ReadHeader();
+
+        Assert.IsNotNull(comment2);
+        Assert.AreEqual(4, comment2!.Length);
+        Assert.AreEqual(1, comment2![0]);
+        Assert.AreEqual(2, comment2![1]);
+        Assert.AreEqual(3, comment2![2]);
+        Assert.AreEqual(4, comment2![3]);
+    }
+
+    [Test]
+    public void CommentHandlerSubscribeWithNull()
+    {
+        using JpegLSDecoder decoder = new();
+        decoder.Comment += null;
+    }
+
+    [Test]
+    public void CommentHandlerUnsubscribeWithNull()
+    {
+        using JpegLSDecoder decoder = new();
+        decoder.Comment -= null;
+    }
+
+    [Test]
+    public void ReadCommentWithoutHandler()
+    {
+        using JpegLSEncoder encoder = new(new FrameInfo(1, 1, 8, 1), true, 100);
+
+        encoder.WriteComment("Hello");
+        encoder.Encode(new byte[1]);
+
+        using JpegLSDecoder decoder = new(encoder.EncodedData, false);
+        decoder.ReadHeader();
+
+        Assert.Pass();
+    }
+
+    [Test]
+    public void ReadHeaderWithoutSpiffHeader()
+    {
+        using JpegLSEncoder encoder = new(new FrameInfo(1, 1, 8, 1));
+        encoder.WriteStandardSpiffHeader(SpiffColorSpace.Grayscale);
+        encoder.Encode(new byte[1]);
+
+        using JpegLSDecoder decoder = new(encoder.EncodedData, false);
+        decoder.ReadHeader(false);
+        Assert.IsNull(decoder.SpiffHeader);
     }
 
     internal static bool CanHandleEmptyBuffer()

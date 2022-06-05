@@ -1,6 +1,7 @@
 // Copyright (c) Team CharLS.
 // SPDX-License-Identifier: BSD-3-Clause
 
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
@@ -12,15 +13,17 @@ internal static class Interop
 {
     private const string NativeLibraryName = "charls-2";
 
+    internal delegate int AtCommentHandler(IntPtr data, nuint size);
+
     [SuppressMessage("Design", "CA1065:Do not raise exceptions in unexpected locations", Justification = "Type is unusable if native DLL doesn't match")]
     static Interop()
     {
         NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), DllImportResolver);
 
         CharLSGetVersionNumber(out int major, out int minor, out int _);
-        if (major != 2 || minor < 1)
+        if (major != 2 || minor < 3)
         {
-            throw new DllNotFoundException("Native DLL version mismatch");
+            throw new DllNotFoundException($"Native DLL version mismatch: expected minimal v2.3, found v{major}.{minor}");
         }
     }
 
@@ -39,6 +42,9 @@ internal static class Interop
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_set_interleave_mode")]
     internal static extern JpegLSError CharLSSetInterleaveMode(SafeHandleJpegLSEncoder encoder, [In] JpegLSInterleaveMode interleaveMode);
+
+    [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_set_encoding_options")]
+    internal static extern JpegLSError CharLSSetEncodingOptions(SafeHandleJpegLSEncoder encoder, [In] EncodingOptions encodingOptions);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_set_preset_coding_parameters")]
     internal static extern JpegLSError CharLSSetPresetCodingParameters(SafeHandleJpegLSEncoder encoder, [In] ref JpegLSPresetCodingParametersNative presetCodingParameters);
@@ -65,8 +71,14 @@ internal static class Interop
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_write_spiff_header")]
     internal static extern JpegLSError CharLSWriteSpiffHeader(SafeHandleJpegLSEncoder encoder, [In] ref SpiffHeaderNative spiffHeader);
 
+    [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_write_comment")]
+    internal static extern JpegLSError CharLSWriteComment(SafeHandleJpegLSEncoder encoder, ref byte comment, nuint commentLength);
+
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_get_bytes_written")]
     internal static extern JpegLSError CharLSGetBytesWritten(SafeHandleJpegLSEncoder encoder, [Out] out nuint bytesWritten);
+
+    [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_rewind")]
+    internal static extern JpegLSError CharLSRewind(SafeHandleJpegLSEncoder encoder);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_create")]
     internal static extern SafeHandleJpegLSDecoder CharLSCreateDecoder();
@@ -101,6 +113,9 @@ internal static class Interop
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_decode_to_buffer")]
     internal static extern JpegLSError CharLSDecodeToBuffer(SafeHandleJpegLSDecoder decoder, ref byte destination, nuint destinationSize, uint stride);
+
+    [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_at_comment")]
+    internal static extern JpegLSError CharLSAtComment(SafeHandleJpegLSDecoder decoder, AtCommentHandler handler, IntPtr userContext);
 
     internal static void HandleJpegLSError(JpegLSError error)
     {
@@ -142,6 +157,7 @@ internal static class Interop
             case JpegLSError.UnexpectedRestartMarker:
             case JpegLSError.RestartMarkerNotFound:
             case JpegLSError.CallbackFailed:
+            case JpegLSError.EndOfImageMarkerNotFound:
                 exception = new InvalidDataException(GetErrorMessage(error));
                 break;
 
@@ -154,13 +170,17 @@ internal static class Interop
             case JpegLSError.InvalidArgumentHeight:
             case JpegLSError.InvalidArgumentComponentCount:
             case JpegLSError.InvalidArgumentBitsPerSample:
-            case JpegLSError.InvalidArgumentInterleaveMode:
             case JpegLSError.InvalidArgumentNearLossless:
             case JpegLSError.InvalidArgumentPresetCodingParameters:
             case JpegLSError.InvalidArgumentSpiffEntrySize:
-            case JpegLSError.InvalidArgumentColorTransformation:
             case JpegLSError.InvalidArgumentStride:
                 exception = new ArgumentOutOfRangeException(GetErrorMessage(error));
+                break;
+
+            case JpegLSError.InvalidArgumentColorTransformation:
+            case JpegLSError.InvalidArgumentInterleaveMode:
+            case JpegLSError.InvalidArgumentEncodingOptions:
+                exception = new InvalidEnumArgumentException(GetErrorMessage(error));
                 break;
 
             case JpegLSError.InvalidOperation:
