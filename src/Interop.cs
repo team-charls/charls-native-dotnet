@@ -21,9 +21,9 @@ internal static class Interop
         NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), DllImportResolver);
 
         CharLSGetVersionNumber(out int major, out int minor, out int _);
-        if (major != 2 || minor < 1)
+        if (major != 2 || minor < 3)
         {
-            throw new DllNotFoundException($"Native DLL version mismatch: expected minimal v2.2, found v{major}.{minor}");
+            throw new DllNotFoundException($"Native DLL version mismatch: expected minimal v2.3, found v{major}.{minor}");
         }
     }
 

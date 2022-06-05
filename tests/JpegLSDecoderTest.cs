@@ -197,6 +197,32 @@ public class JpegLSDecoderTest
         decoder.Comment -= null;
     }
 
+    [Test]
+    public void ReadCommentWithoutHandler()
+    {
+        using JpegLSEncoder encoder = new(new FrameInfo(1, 1, 8, 1), true, 100);
+
+        encoder.WriteComment("Hello");
+        encoder.Encode(new byte[1]);
+
+        using JpegLSDecoder decoder = new(encoder.EncodedData, false);
+        decoder.ReadHeader();
+
+        Assert.Pass();
+    }
+
+    [Test]
+    public void ReadHeaderWithoutSpiffHeader()
+    {
+        using JpegLSEncoder encoder = new(new FrameInfo(1, 1, 8, 1));
+        encoder.WriteStandardSpiffHeader(SpiffColorSpace.Grayscale);
+        encoder.Encode(new byte[1]);
+
+        using JpegLSDecoder decoder = new(encoder.EncodedData, false);
+        decoder.ReadHeader(false);
+        Assert.IsNull(decoder.SpiffHeader);
+    }
+
     internal static bool CanHandleEmptyBuffer()
     {
         Interop.CharLSGetVersionNumber(out int _, out int minor, out int patch);
