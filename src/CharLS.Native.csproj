@@ -39,7 +39,7 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
 
     <_CertificateThumbprint>$(CertificateThumbprint)</_CertificateThumbprint>
-    <_CertificateThumbprint Condition="'$(_CertificateThumbprint)' == ''">6e78b103da0729369e44004121fb6bf685fec5d8</_CertificateThumbprint>
+    <_CertificateThumbprint Condition="'$(_CertificateThumbprint)' == ''">ec5c63c27f439b88457aae74893074733e5d35c0</_CertificateThumbprint>
     <_TimestampUrl>$(TimestampUrl)</_TimestampUrl>
     <_TimestampUrl Condition="'$(_TimestampUrl)' == ''">http://time.certum.pl/</_TimestampUrl>
   </PropertyGroup>
