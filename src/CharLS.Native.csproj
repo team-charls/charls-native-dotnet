@@ -84,7 +84,7 @@
 
   <Target Name="CopyNativeWindowsCharLSFiles" BeforeTargets="Build" Condition="'$(MSBuildRuntimeType)'=='Full'">
     <ItemGroup>
-      <MySourceFiles Include="..\extern\charls\bin\x86\$(Configuration)\charls-2-x86.dll;..\extern\charls\bin\x86\$(Configuration)\charls-2-x86.pdb;..\extern\charls\bin\x64\$(Configuration)\charls-2-x64.dll;..\extern\charls\bin\x64\$(Configuration)\charls-2-x64.pdb" />
+      <MySourceFiles Include="..\extern\charls\build\bin\x86\$(Configuration)\charls-2-x86.dll;..\extern\charls\build\bin\x86\$(Configuration)\charls-2-x86.pdb;..\extern\charls\build\bin\x64\$(Configuration)\charls-2-x64.dll;..\extern\charls\build\bin\x64\$(Configuration)\charls-2-x64.pdb" />
     </ItemGroup>
 
     <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
