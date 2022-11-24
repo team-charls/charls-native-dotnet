@@ -9,7 +9,11 @@ using System.Runtime.InteropServices;
 
 namespace CharLS.Native;
 
+#if  NET7_0
+internal static partial class Interop
+#else
 internal static class Interop
+#endif
 {
     private const string NativeLibraryName = "charls-2";
 
@@ -27,6 +31,96 @@ internal static class Interop
         }
     }
 
+#if  NET7_0
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_get_version_number")]
+    internal static partial void CharLSGetVersionNumber(out int major, out int minor, out int patch);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, StringMarshalling = StringMarshalling.Utf8, EntryPoint = "charls_get_error_message")]
+    internal static partial IntPtr CharLSGetErrorMessage(int errorValue);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_set_frame_info")]
+    internal static partial JpegLSError CharLSSetFrameInfo(SafeHandleJpegLSEncoder encoder, ref FrameInfoNative frameInfo);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_set_near_lossless")]
+    internal static partial JpegLSError CharLSSetNearLossless(SafeHandleJpegLSEncoder encoder, int nearLossless);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_set_interleave_mode")]
+    internal static partial JpegLSError CharLSSetInterleaveMode(SafeHandleJpegLSEncoder encoder, JpegLSInterleaveMode interleaveMode);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_set_encoding_options")]
+    internal static partial JpegLSError CharLSSetEncodingOptions(SafeHandleJpegLSEncoder encoder, EncodingOptions encodingOptions);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_set_preset_coding_parameters")]
+    internal static partial JpegLSError CharLSSetPresetCodingParameters(SafeHandleJpegLSEncoder encoder, ref JpegLSPresetCodingParametersNative presetCodingParameters);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_create")]
+    internal static partial SafeHandleJpegLSEncoder CharLSCreateEncoder();
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_destroy")]
+    internal static partial void CharLSDestroyEncoder(IntPtr encoder);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_set_destination_buffer")]
+    internal static unsafe partial JpegLSError CharLSSetDestinationBuffer(SafeHandleJpegLSEncoder encoder, byte* destination, nuint destinationLength);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_get_estimated_destination_size")]
+    internal static partial JpegLSError CharLSGetEstimatedDestinationSize(SafeHandleJpegLSEncoder encoder, out nuint sizeInBytes);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_encode_from_buffer")]
+    internal static partial JpegLSError CharLSEncodeFromBuffer(SafeHandleJpegLSEncoder encoder, ref byte source, nuint sourceSizeBytes, uint stride);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_write_standard_spiff_header")]
+    internal static partial JpegLSError CharLSWriteStandardSpiffHeader(SafeHandleJpegLSEncoder encoder,
+        SpiffColorSpace colorSpace, SpiffResolutionUnit resolutionUnit, uint verticalResolution, uint horizontalResolution);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_write_spiff_header")]
+    internal static partial JpegLSError CharLSWriteSpiffHeader(SafeHandleJpegLSEncoder encoder, ref SpiffHeaderNative spiffHeader);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_write_comment")]
+    internal static partial JpegLSError CharLSWriteComment(SafeHandleJpegLSEncoder encoder, ref byte comment, nuint commentLength);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_get_bytes_written")]
+    internal static partial JpegLSError CharLSGetBytesWritten(SafeHandleJpegLSEncoder encoder, out nuint bytesWritten);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_rewind")]
+    internal static partial JpegLSError CharLSRewind(SafeHandleJpegLSEncoder encoder);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_create")]
+    internal static partial SafeHandleJpegLSDecoder CharLSCreateDecoder();
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_destroy")]
+    internal static partial void CharLSDestroyDecoder(IntPtr decoder);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_set_source_buffer")]
+    internal static unsafe partial JpegLSError CharLSSetSourceBuffer(SafeHandleJpegLSDecoder decoder, byte* source, nuint sourceLength);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_read_spiff_header")]
+    internal static partial JpegLSError CharLSReadSpiffHeader(SafeHandleJpegLSDecoder decoder,
+        out SpiffHeaderNative spiffHeader, out int headerFound);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_read_header")]
+    internal static partial JpegLSError JpegLSDecoderReadHeader(SafeHandleJpegLSDecoder decoder);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_get_frame_info")]
+    internal static partial JpegLSError CharLSGetFrameInfo(SafeHandleJpegLSDecoder decoder, out FrameInfoNative frameInfo);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_get_near_lossless")]
+    internal static partial JpegLSError CharLSGetNearLossless(SafeHandleJpegLSDecoder decoder, int component, out int nearLossless);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_get_interleave_mode")]
+    internal static partial JpegLSError CharLSGetInterleaveMode(SafeHandleJpegLSDecoder decoder, out JpegLSInterleaveMode interleaveMode);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_get_preset_coding_parameters")]
+    internal static partial JpegLSError CharLSGetPresetCodingParameters(SafeHandleJpegLSDecoder decoder, int reserved, out JpegLSPresetCodingParametersNative presetCodingParameters);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_get_destination_size")]
+    internal static partial JpegLSError CharLSGetDestinationSize(SafeHandleJpegLSDecoder decoder, uint stride, out nuint destinationSize);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_decode_to_buffer")]
+    internal static partial JpegLSError CharLSDecodeToBuffer(SafeHandleJpegLSDecoder decoder, ref byte destination, nuint destinationSize, uint stride);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_at_comment")]
+    internal static partial JpegLSError CharLSAtComment(SafeHandleJpegLSDecoder decoder, AtCommentHandler handler, IntPtr userContext);
+#else
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_get_version_number")]
     internal static extern void CharLSGetVersionNumber(out int major, out int minor, out int patch);
 
@@ -116,6 +210,7 @@ internal static class Interop
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_at_comment")]
     internal static extern JpegLSError CharLSAtComment(SafeHandleJpegLSDecoder decoder, AtCommentHandler handler, IntPtr userContext);
+#endif
 
     internal static void HandleJpegLSError(JpegLSError error)
     {

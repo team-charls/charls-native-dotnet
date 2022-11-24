@@ -63,7 +63,7 @@
 
   <ItemGroup>
     <None Include="..\doc\jpeg_ls_logo.png" Pack="true" PackagePath="\icon.png" />
-    <None Include="README.md" Pack="true" PackagePath="\"/>
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>

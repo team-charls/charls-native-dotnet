@@ -225,7 +225,7 @@ public class JpegLSCodecTest
     [Test]
     public void DecodeBitStreamWithNoMarkerStart()
     {
-        var source = new byte[] { 0x33, 0x33 };
+        var source = "33"u8.ToArray();
 
         var exception = Assert.Throws<InvalidDataException>(() => Decode(source));
         Assert.AreEqual(JpegLSError.JpegMarkerStartByteNotFound, exception!.Data["JpegLSError"]);

@@ -37,6 +37,10 @@ dotnet_diagnostic.CA1062.severity = none
 # Rational: False warning (cannot handle C# 9.0 constructs)
 dotnet_diagnostic.CA1812.severity = none
 
+# CA1852: Type 'Program' can be sealed because it has no subtypes in its containing assembly and is not externally visible
+# Rational: False warning
+dotnet_diagnostic.CA1852.severity = none
+
 # IDE0055: Fix formatting
 # Rational: Formatting rule is incompatible with StyleCop
 dotnet_diagnostic.IDE0055.severity = none
