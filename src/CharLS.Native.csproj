@@ -81,7 +81,7 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
   </ItemGroup>
 
-  <Target Name="BuildNativeWindowsCharLS" BeforeTargets="CopyNativeWindowsCharLSFiles" Condition="'$(MSBuildRuntimeType)'=='Full'">
+  <Target Name="BuildNativeWindowsCharLS" BeforeTargets="DispatchToInnerBuilds" Condition="'$(MSBuildRuntimeType)'=='Full'">
     <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=$(Configuration);Platform=Win32" />
     <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=$(Configuration);Platform=x64" />
     <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=$(Configuration);Platform=ARM64" />
