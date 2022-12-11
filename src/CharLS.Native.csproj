@@ -55,6 +55,10 @@
       <Pack>true</Pack>
       <PackagePath>runtimes\win\native\</PackagePath>
     </Content>
+    <Content Include="$(OutputPath)\charls-2-arm64.dll">
+      <Pack>true</Pack>
+      <PackagePath>runtimes\win\native\</PackagePath>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -80,11 +84,14 @@
   <Target Name="BuildNativeWindowsCharLS" BeforeTargets="CopyNativeWindowsCharLSFiles" Condition="'$(MSBuildRuntimeType)'=='Full'">
     <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=$(Configuration);Platform=Win32" />
     <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=$(Configuration);Platform=x64" />
+    <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=$(Configuration);Platform=ARM64" />
   </Target>
 
   <Target Name="CopyNativeWindowsCharLSFiles" BeforeTargets="Build" Condition="'$(MSBuildRuntimeType)'=='Full'">
     <ItemGroup>
-      <MySourceFiles Include="..\extern\charls\build\bin\x86\$(Configuration)\charls-2-x86.dll;..\extern\charls\build\bin\x86\$(Configuration)\charls-2-x86.pdb;..\extern\charls\build\bin\x64\$(Configuration)\charls-2-x64.dll;..\extern\charls\build\bin\x64\$(Configuration)\charls-2-x64.pdb" />
+      <MySourceFiles Include="..\extern\charls\build\bin\x86\$(Configuration)\charls-2-x86.dll;..\extern\charls\build\bin\x86\$(Configuration)\charls-2-x86.pdb" />
+      <MySourceFiles Include="..\extern\charls\build\bin\x64\$(Configuration)\charls-2-x64.dll;..\extern\charls\build\bin\x64\$(Configuration)\charls-2-x64.pdb" />
+      <MySourceFiles Include="..\extern\charls\build\bin\ARM64\$(Configuration)\charls-2-arm64.dll;..\extern\charls\build\bin\ARM64\$(Configuration)\charls-2-arm64.pdb" />
     </ItemGroup>
 
     <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
@@ -100,6 +107,9 @@
 
     <Message Text="Signing charls-2-x86.dll" />
     <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)\charls-2-x86.dll" TargetFrameworkVersion="v4.5" />
+
+    <Message Text="Signing charls-2-arm64.dll" />
+    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)\charls-2-arm64.dll" TargetFrameworkVersion="v4.5" />
   </Target>
 
   <Target Name="SignPackage" AfterTargets="Pack" Condition="'$(MSBuildRuntimeType)'=='Full'">

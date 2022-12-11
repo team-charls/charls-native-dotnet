@@ -17,7 +17,7 @@ internal static class Interop
 {
     private const string NativeLibraryName = "charls-2";
 
-    internal delegate int AtCommentHandler(IntPtr data, nuint size);
+    internal delegate int AtCommentHandler(nint data, nuint size);
 
     [SuppressMessage("Design", "CA1065:Do not raise exceptions in unexpected locations", Justification = "Type is unusable if native DLL doesn't match")]
     static Interop()
@@ -36,7 +36,7 @@ internal static class Interop
     internal static partial void CharLSGetVersionNumber(out int major, out int minor, out int patch);
 
     [LibraryImport(NativeLibraryName, SetLastError = false, StringMarshalling = StringMarshalling.Utf8, EntryPoint = "charls_get_error_message")]
-    internal static partial IntPtr CharLSGetErrorMessage(int errorValue);
+    internal static partial nint CharLSGetErrorMessage(int errorValue);
 
     [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_set_frame_info")]
     internal static partial JpegLSError CharLSSetFrameInfo(SafeHandleJpegLSEncoder encoder, ref FrameInfoNative frameInfo);
@@ -57,7 +57,7 @@ internal static class Interop
     internal static partial SafeHandleJpegLSEncoder CharLSCreateEncoder();
 
     [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_destroy")]
-    internal static partial void CharLSDestroyEncoder(IntPtr encoder);
+    internal static partial void CharLSDestroyEncoder(nint encoder);
 
     [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_set_destination_buffer")]
     internal static unsafe partial JpegLSError CharLSSetDestinationBuffer(SafeHandleJpegLSEncoder encoder, byte* destination, nuint destinationLength);
@@ -88,7 +88,7 @@ internal static class Interop
     internal static partial SafeHandleJpegLSDecoder CharLSCreateDecoder();
 
     [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_destroy")]
-    internal static partial void CharLSDestroyDecoder(IntPtr decoder);
+    internal static partial void CharLSDestroyDecoder(nint decoder);
 
     [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_set_source_buffer")]
     internal static unsafe partial JpegLSError CharLSSetSourceBuffer(SafeHandleJpegLSDecoder decoder, byte* source, nuint sourceLength);
@@ -119,7 +119,7 @@ internal static class Interop
     internal static partial JpegLSError CharLSDecodeToBuffer(SafeHandleJpegLSDecoder decoder, ref byte destination, nuint destinationSize, uint stride);
 
     [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_at_comment")]
-    internal static partial JpegLSError CharLSAtComment(SafeHandleJpegLSDecoder decoder, AtCommentHandler handler, IntPtr userContext);
+    internal static partial JpegLSError CharLSAtComment(SafeHandleJpegLSDecoder decoder, AtCommentHandler handler, nint userContext);
 #else
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_get_version_number")]
     internal static extern void CharLSGetVersionNumber(out int major, out int minor, out int patch);
@@ -296,12 +296,12 @@ internal static class Interop
 
     private static string GetErrorMessage(JpegLSError error)
     {
-        IntPtr message = CharLSGetErrorMessage((int)error);
+        nint message = CharLSGetErrorMessage((int)error);
 
         return Marshal.PtrToStringAnsi(message) ?? string.Empty;
     }
 
-    private static IntPtr DllImportResolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
+    private static nint DllImportResolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
     {
         return libraryName != NativeLibraryName
             ? IntPtr.Zero
@@ -311,7 +311,8 @@ internal static class Interop
     private static string GetLibraryName()
     {
         return OperatingSystem.IsWindows()
-            ? Environment.Is64BitProcess ? "charls-2-x64" : "charls-2-x86"
+            ? Environment.Is64BitProcess ?
+                RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? "charls-2-arm64" : "charls-2-x64" : "charls-2-x86"
             : OperatingSystem.IsLinux()
                 ? "charls.so.2"
                 : OperatingSystem.IsMacOS()
