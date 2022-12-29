@@ -8,10 +8,6 @@ namespace CharLS.Native;
 /// </summary>
 public sealed class CommentEventArgs : EventArgs
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CommentEventArgs"/> class.
-    /// </summary>
-    /// <param name="data"></param>
     internal CommentEventArgs(byte[] data)
     {
         Data = data;

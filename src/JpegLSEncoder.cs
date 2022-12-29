@@ -314,7 +314,7 @@ public sealed class JpegLSEncoder : IDisposable
     /// Writes a comment (COM) segment to the destination.
     /// </summary>
     /// <remarks>
-    /// Function should be called before decoding the image.
+    /// Function should be called before encoding the image data.
     /// </remarks>
     /// <param name="comment">The 'comment' bytes. Application specific, usually human readable UTF-8 string.</param>
     public void WriteComment(ReadOnlySpan<byte> comment)
@@ -326,12 +326,26 @@ public sealed class JpegLSEncoder : IDisposable
     /// Writes a comment (COM) segment to the destination.
     /// </summary>
     /// <remarks>
-    /// Function should be called before decoding the image.
+    /// Function should be called before encoding the image data.
     /// </remarks>
     /// <param name="comment">Application specific value, usually human readable UTF-8 string.</param>
     public void WriteComment(string comment)
     {
         WriteComment(ToUtf8(comment).Span);
+    }
+
+    /// <summary>
+    /// Writes an application data (APPn) segment to the destination.
+    /// </summary>
+    /// <remarks>
+    /// Function should be called before encoding the image data.
+    /// </remarks>
+    /// <param name="applicationDataId">The ID of the application data segment in the range [0..15].</param>
+    /// <param name="applicationData">The 'application data' bytes. Application specific.</param>
+    public void WriteApplicationData(int applicationDataId, ReadOnlySpan<byte> applicationData)
+    {
+        HandleJpegLSError(CharLSWriteApplicationData(_encoder, applicationDataId,
+            ref MemoryMarshal.GetReference(applicationData), (nuint)applicationData.Length));
     }
 
     /// <summary>

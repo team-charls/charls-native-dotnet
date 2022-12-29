@@ -82,9 +82,9 @@
   </ItemGroup>
 
   <Target Name="BuildNativeWindowsCharLS" BeforeTargets="DispatchToInnerBuilds" Condition="'$(MSBuildRuntimeType)'=='Full'">
-    <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=$(Configuration);Platform=Win32" />
-    <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=$(Configuration);Platform=x64" />
-    <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=$(Configuration);Platform=ARM64" />
+    <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=$(Configuration);Platform=Win32;CHARLS_DETERMINISTIC_BUILD=true" />
+    <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=$(Configuration);Platform=x64;CHARLS_DETERMINISTIC_BUILD=true" />
+    <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=$(Configuration);Platform=ARM64;CHARLS_DETERMINISTIC_BUILD=true" />
   </Target>
 
   <Target Name="CopyNativeWindowsCharLSFiles" BeforeTargets="Build" Condition="'$(MSBuildRuntimeType)'=='Full'">

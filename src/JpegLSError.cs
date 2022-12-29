@@ -155,6 +155,11 @@ public enum JpegLSError
     EndOfImageMarkerNotFound = 28,
 
     /// <summary>
+    /// This error is returned when the SPIFF header is invalid.
+    /// </summary>
+    InvalidSpiffHeader = 29,
+
+    /// <summary>
     /// The argument for the width parameter is outside the range [1, 65535].
     /// </summary>
     InvalidArgumentWidth = 100,

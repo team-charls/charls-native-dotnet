@@ -20,7 +20,9 @@ public sealed class JpegLSDecoder : IDisposable
     private ReadOnlyMemory<byte> _source;
     private MemoryHandle _sourcePin;
     private AtCommentHandler? _atCommentHandler;
+    private AtApplicationDataHandler? _atApplicationData;
     private EventHandler<CommentEventArgs>? _comment;
+    private EventHandler<ApplicationDataEventArgs>? _applicationData;
 
     /// <summary>
     /// Occurs when a comment (COM segment) is read.
@@ -29,7 +31,7 @@ public sealed class JpegLSDecoder : IDisposable
     {
         add
         {
-            if (_comment == null)
+            if (_atCommentHandler == null)
             {
                 _atCommentHandler = AtComment; // Ensure that the delegate is not collected.
                 HandleJpegLSError(CharLSAtComment(_decoder, _atCommentHandler, IntPtr.Zero));
@@ -38,6 +40,24 @@ public sealed class JpegLSDecoder : IDisposable
         }
 
         remove => _comment -= value;// Note: Keep the delegate installed, it will be cleaned when the instance is disposed.
+    }
+
+    /// <summary>
+    /// Occurs when an application data (APPn segment) is read.
+    /// </summary>
+    public event EventHandler<ApplicationDataEventArgs> ApplicationData
+    {
+        add
+        {
+            if (_atApplicationData == null)
+            {
+                _atApplicationData = AtApplicationData; // Ensure that the delegate is not collected.
+                HandleJpegLSError(CharLSAtApplicationData(_decoder, _atApplicationData, IntPtr.Zero));
+            }
+            _applicationData += value;
+        }
+
+        remove => _applicationData -= value;// Note: Keep the delegate installed, it will be cleaned when the instance is disposed.
     }
 
     /// <summary>
@@ -249,20 +269,45 @@ public sealed class JpegLSDecoder : IDisposable
     }
 
     /// <summary>
+    /// Validates a SPIFF header with the FrameInfo.
+    /// </summary>
+    /// <param name="spiffHeader">Reference to a SPIFF header that will be validated.</param>
+    /// <exception cref="InvalidDataException">Thrown when the SPIFF header is not valid.</exception>
+    public void ValidateSpiffHeader(SpiffHeader spiffHeader)
+    {
+        var frameInfo = new FrameInfoNative
+        {
+            BitsPerSample = FrameInfo.BitsPerSample,
+            ComponentCount = FrameInfo.ComponentCount,
+            Height = (uint)FrameInfo.Height,
+            Width = (uint)FrameInfo.Width
+        };
+        var spiffHeaderNative = new SpiffHeaderNative(spiffHeader);
+
+        HandleJpegLSError(CharLSValidateSpiffHeader(ref spiffHeaderNative, ref frameInfo));
+    }
+
+    /// <summary>
     /// Reads the header of the JPEG-LS stream.
     /// After calling this method, the informational properties can be obtained.
     /// </summary>
     /// <param name="tryReadSpiffHeader">if set to <c>true</c> try to read the SPIFF header first.</param>
-    /// <exception cref="InvalidDataException">Thrown when the JPEG-LS stream is not valid.</exception>
+    /// <exception cref="InvalidDataException">Thrown when the JPEG-LS stream or SPIFF header is not valid.</exception>
     /// <exception cref="ObjectDisposedException">Thrown when the instance is used after being disposed.</exception>
     public void ReadHeader(bool tryReadSpiffHeader = true)
     {
-        if (tryReadSpiffHeader && TryReadSpiffHeader(out SpiffHeader? spiffHeader))
+        SpiffHeader? spiffHeader = null;
+        if (tryReadSpiffHeader)
         {
-            SpiffHeader = spiffHeader;
+            _ = TryReadSpiffHeader(out spiffHeader);
         }
 
         HandleJpegLSError(JpegLSDecoderReadHeader(_decoder));
+        if (spiffHeader == null)
+            return;
+
+        ValidateSpiffHeader(spiffHeader);
+        SpiffHeader = spiffHeader;
     }
 
     /// <summary>
@@ -310,6 +355,14 @@ public sealed class JpegLSDecoder : IDisposable
         // Take a copy to prevent that subscribers to this event need to be unsafe to read the comment.
         var eventArgs = new CommentEventArgs(new ReadOnlySpan<byte>(data.ToPointer(), (int)size).ToArray());
         _comment?.Invoke(this, eventArgs);
+        return Convert.ToInt32(eventArgs.Failed);
+    }
+
+    private unsafe int AtApplicationData(int applicationDataId, IntPtr data, nuint size)
+    {
+        // Take a copy to prevent that subscribers to this event need to be unsafe to read the comment.
+        var eventArgs = new ApplicationDataEventArgs(applicationDataId, new ReadOnlySpan<byte>(data.ToPointer(), (int)size).ToArray());
+        _applicationData?.Invoke(this, eventArgs);
         return Convert.ToInt32(eventArgs.Failed);
     }
 }

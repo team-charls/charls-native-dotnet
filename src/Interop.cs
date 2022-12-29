@@ -17,7 +17,9 @@ internal static class Interop
 {
     private const string NativeLibraryName = "charls-2";
 
-    internal delegate int AtCommentHandler(nint data, nuint size);
+    internal delegate int AtCommentHandler(nint dataPtr, nuint dataSize);
+
+    internal delegate int AtApplicationDataHandler(int applicationDataId, nint applicationDataPtr, nuint applicationDataSize);
 
     [SuppressMessage("Design", "CA1065:Do not raise exceptions in unexpected locations", Justification = "Type is unusable if native DLL doesn't match")]
     static Interop()
@@ -25,15 +27,18 @@ internal static class Interop
         NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), DllImportResolver);
 
         CharLSGetVersionNumber(out int major, out int minor, out int _);
-        if (major != 2 || minor < 3)
+        if (major != 2 || minor < 4)
         {
-            throw new DllNotFoundException($"Native DLL version mismatch: expected minimal v2.3, found v{major}.{minor}");
+            throw new DllNotFoundException($"Native DLL version mismatch: expected minimal v2.4, found v{major}.{minor}");
         }
     }
 
 #if  NET7_0
     [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_get_version_number")]
     internal static partial void CharLSGetVersionNumber(out int major, out int minor, out int patch);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_validate_spiff_header")]
+    internal static partial JpegLSError CharLSValidateSpiffHeader(ref SpiffHeaderNative spiffHeader, ref FrameInfoNative frameInfo);
 
     [LibraryImport(NativeLibraryName, SetLastError = false, StringMarshalling = StringMarshalling.Utf8, EntryPoint = "charls_get_error_message")]
     internal static partial nint CharLSGetErrorMessage(int errorValue);
@@ -78,6 +83,10 @@ internal static class Interop
     [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_write_comment")]
     internal static partial JpegLSError CharLSWriteComment(SafeHandleJpegLSEncoder encoder, ref byte comment, nuint commentLength);
 
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_write_application_data")]
+    internal static partial JpegLSError CharLSWriteApplicationData(SafeHandleJpegLSEncoder encoder, int applicationDataId,
+        ref byte applicationData, nuint applicationDataLength);
+
     [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_get_bytes_written")]
     internal static partial JpegLSError CharLSGetBytesWritten(SafeHandleJpegLSEncoder encoder, out nuint bytesWritten);
 
@@ -120,9 +129,15 @@ internal static class Interop
 
     [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_at_comment")]
     internal static partial JpegLSError CharLSAtComment(SafeHandleJpegLSDecoder decoder, AtCommentHandler handler, nint userContext);
+
+    [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_at_application_data")]
+    internal static partial JpegLSError CharLSAtApplicationData(SafeHandleJpegLSDecoder decoder, AtApplicationDataHandler handler, nint userContext);
 #else
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_get_version_number")]
     internal static extern void CharLSGetVersionNumber(out int major, out int minor, out int patch);
+
+    [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_validate_spiff_header")]
+    internal static extern JpegLSError CharLSValidateSpiffHeader([In] ref SpiffHeaderNative spiffHeader, [In] ref FrameInfoNative frameInfo);
 
     [DllImport(NativeLibraryName, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
         ThrowOnUnmappableChar = true, EntryPoint = "charls_get_error_message")]
@@ -168,6 +183,10 @@ internal static class Interop
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_write_comment")]
     internal static extern JpegLSError CharLSWriteComment(SafeHandleJpegLSEncoder encoder, ref byte comment, nuint commentLength);
 
+    [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_write_application_data")]
+    internal static extern JpegLSError CharLSWriteApplicationData(SafeHandleJpegLSEncoder encoder, int applicationDataId,
+        ref byte applicationData, nuint applicationDataLength);
+
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_get_bytes_written")]
     internal static extern JpegLSError CharLSGetBytesWritten(SafeHandleJpegLSEncoder encoder, [Out] out nuint bytesWritten);
 
@@ -210,6 +229,9 @@ internal static class Interop
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_at_comment")]
     internal static extern JpegLSError CharLSAtComment(SafeHandleJpegLSDecoder decoder, AtCommentHandler handler, IntPtr userContext);
+
+    [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_at_application_data")]
+    internal static extern JpegLSError CharLSAtApplicationData(SafeHandleJpegLSDecoder decoder, AtApplicationDataHandler handler, IntPtr userContext);
 #endif
 
     internal static void HandleJpegLSError(JpegLSError error)
@@ -253,6 +275,7 @@ internal static class Interop
             case JpegLSError.RestartMarkerNotFound:
             case JpegLSError.CallbackFailed:
             case JpegLSError.EndOfImageMarkerNotFound:
+            case JpegLSError.InvalidSpiffHeader:
                 exception = new InvalidDataException(GetErrorMessage(error));
                 break;
 

@@ -29,7 +29,8 @@ public class JpegLSDecoderTest
         if (!CanHandleEmptyBuffer())
             return;
 
-        Assert.DoesNotThrow(() => {
+        Assert.DoesNotThrow(() =>
+        {
             using JpegLSDecoder _ = new(Memory<byte>.Empty, false);
         });
     }
@@ -41,7 +42,8 @@ public class JpegLSDecoderTest
             return;
 
         using JpegLSDecoder decoder = new();
-        Assert.DoesNotThrow(() => {
+        Assert.DoesNotThrow(() =>
+        {
             decoder.Source = Memory<byte>.Empty;
         });
     }
@@ -51,7 +53,8 @@ public class JpegLSDecoderTest
     {
         using JpegLSDecoder decoder = new() { Source = new byte[10] };
 
-        _ = Assert.Throws<InvalidOperationException>(() => {
+        _ = Assert.Throws<InvalidOperationException>(() =>
+        {
             decoder.Source = new byte[20];
         });
     }
@@ -84,7 +87,8 @@ public class JpegLSDecoderTest
         byte[] source = ReadAllBytes("t8nde0.jls");
 
         using JpegLSDecoder decoder = new(source);
-        _ = Assert.Throws<ArgumentOutOfRangeException>(() => {
+        _ = Assert.Throws<ArgumentOutOfRangeException>(() =>
+        {
             var _ = decoder.GetDestinationSize(-1);
         });
     }
@@ -96,7 +100,8 @@ public class JpegLSDecoderTest
 
         using JpegLSDecoder decoder = new(source);
         var buffer = new byte[decoder.GetDestinationSize()];
-        _ = Assert.Throws<ArgumentOutOfRangeException>(() => {
+        _ = Assert.Throws<ArgumentOutOfRangeException>(() =>
+        {
             decoder.Decode(buffer, -1);
         });
     }
@@ -107,7 +112,8 @@ public class JpegLSDecoderTest
         byte[] source = ReadAllBytes("t8nde0.jls");
 
         using JpegLSDecoder decoder = new(source);
-        _ = Assert.Throws<ArgumentException>(() => {
+        _ = Assert.Throws<ArgumentException>(() =>
+        {
             decoder.Decode(null);
         });
     }
@@ -123,32 +129,36 @@ public class JpegLSDecoderTest
     }
 
     [Test]
-    public void UseAfterDispose()
+    public void UseAfterDisposeThrows()
     {
         JpegLSDecoder decoder = new();
         decoder.Dispose();
 
-        _ = Assert.Throws<ObjectDisposedException>(() => {
+        _ = Assert.Throws<ObjectDisposedException>(() =>
+        {
             var _ = decoder.TryReadSpiffHeader(out var _);
         });
 
         Assert.IsNotNull(decoder.Source);
 
-        _ = Assert.Throws<ObjectDisposedException>(() => {
+        _ = Assert.Throws<ObjectDisposedException>(() =>
+        {
             var _ = decoder.GetDestinationSize();
         });
 
-        _ = Assert.Throws<ObjectDisposedException>(() => {
+        _ = Assert.Throws<ObjectDisposedException>(() =>
+        {
             var _ = decoder.Decode();
         });
     }
 
     [Test]
-    public void UseBeforeReadHeader()
+    public void UseBeforeReadHeaderThrows()
     {
         using JpegLSDecoder decoder = new();
 
-        _ = Assert.Throws<InvalidOperationException>(() => {
+        _ = Assert.Throws<InvalidOperationException>(() =>
+        {
             _ = decoder.GetDestinationSize();
         });
     }
@@ -212,6 +222,64 @@ public class JpegLSDecoderTest
     }
 
     [Test]
+    public void ApplicationDataHandlerReceivesApplicationDataBytes()
+    {
+        using JpegLSEncoder encoder = new(1, 1, 8, 1, true, 100);
+
+        var applicationData1 = new byte[] { 1, 2, 3, 4 };
+        encoder.WriteApplicationData(12, applicationData1);
+        encoder.Encode(new byte[1]);
+
+        byte[]? applicationData2 = null;
+        using JpegLSDecoder decoder = new(encoder.EncodedData, false);
+
+        void ApplicationDataHandler(object? _, ApplicationDataEventArgs e)
+        {
+            applicationData2 = e.Data.ToArray();
+        }
+
+        decoder.ApplicationData += ApplicationDataHandler;
+        decoder.ApplicationData -= ApplicationDataHandler;
+        decoder.ApplicationData += ApplicationDataHandler;
+        decoder.ReadHeader();
+
+        Assert.IsNotNull(applicationData2);
+        Assert.AreEqual(4, applicationData2!.Length);
+        Assert.AreEqual(1, applicationData2![0]);
+        Assert.AreEqual(2, applicationData2![1]);
+        Assert.AreEqual(3, applicationData2![2]);
+        Assert.AreEqual(4, applicationData2![3]);
+    }
+
+    [Test]
+    public void ApplicationDataHandlerSubscribeWithNull()
+    {
+        using JpegLSDecoder decoder = new();
+        decoder.ApplicationData += null;
+    }
+
+    [Test]
+    public void ApplicationDataHandlerUnsubscribeWithNull()
+    {
+        using JpegLSDecoder decoder = new();
+        decoder.ApplicationData -= null;
+    }
+
+    [Test]
+    public void ApplicationDataWithoutHandler()
+    {
+        using JpegLSEncoder encoder = new(new FrameInfo(1, 1, 8, 1), true, 100);
+
+        encoder.WriteApplicationData(7, new byte[] { 1, 2, 3, 4 });
+        encoder.Encode(new byte[1]);
+
+        using JpegLSDecoder decoder = new(encoder.EncodedData, false);
+        decoder.ReadHeader();
+
+        Assert.Pass();
+    }
+
+    [Test]
     public void ReadHeaderWithoutSpiffHeader()
     {
         using JpegLSEncoder encoder = new(new FrameInfo(1, 1, 8, 1));
@@ -220,7 +288,21 @@ public class JpegLSDecoderTest
 
         using JpegLSDecoder decoder = new(encoder.EncodedData, false);
         decoder.ReadHeader(false);
+
         Assert.IsNull(decoder.SpiffHeader);
+    }
+
+    [Test]
+    public void ReadBadSpiffHeaderThrows()
+    {
+        using JpegLSEncoder encoder = new(new FrameInfo(1, 1, 8, 1));
+        encoder.WriteStandardSpiffHeader(SpiffColorSpace.Rgb);
+        encoder.Encode(new byte[1]);
+
+        using JpegLSDecoder decoder = new(encoder.EncodedData, false);
+
+        var exception = Assert.Throws<InvalidDataException>(() => { decoder.ReadHeader(); });
+        Assert.AreEqual(JpegLSError.InvalidSpiffHeader, exception!.GetJpegLSError());
     }
 
     internal static bool CanHandleEmptyBuffer()
