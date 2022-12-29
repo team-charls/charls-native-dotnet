@@ -335,6 +335,58 @@ public class JpegLSEncoderTest
     }
 
     [Test]
+    public void WriteApplicationData()
+    {
+        using JpegLSEncoder encoder = new(1, 1, 8, 1, true, 100);
+
+        var applicationData1 = new byte[] { 1, 2, 3, 4 };
+        encoder.WriteApplicationData(3, applicationData1);
+        encoder.Encode(new byte[1]);
+
+        int applicationDataId = -1;
+        byte[]? applicationData2 = null;
+        using JpegLSDecoder decoder = new(encoder.EncodedData, false);
+        decoder.ApplicationData += (_, e) =>
+        {
+            applicationDataId = e.Id;
+            applicationData2 = e.Data.ToArray();
+        };
+        decoder.ReadHeader();
+
+        Assert.AreEqual(3, applicationDataId);
+        Assert.IsNotNull(applicationData2);
+        Assert.AreEqual(4, applicationData2!.Length);
+        Assert.AreEqual(1, applicationData2![0]);
+        Assert.AreEqual(2, applicationData2![1]);
+        Assert.AreEqual(3, applicationData2![2]);
+        Assert.AreEqual(4, applicationData2![3]);
+    }
+
+    [Test]
+    public void WriteEmptyApplicationData()
+    {
+        using JpegLSEncoder encoder = new(new FrameInfo(1, 1, 8, 1), true, 100);
+
+        encoder.WriteApplicationData(15, Array.Empty<byte>());
+        encoder.Encode(new byte[1]);
+
+        int applicationDataId = -1;
+        byte[]? applicationData = null;
+        using JpegLSDecoder decoder = new(encoder.EncodedData, false);
+        decoder.ApplicationData += (_, e) =>
+        {
+            applicationDataId = e.Id;
+            applicationData = e.Data.ToArray();
+        };
+        decoder.ReadHeader();
+
+        Assert.AreEqual(15, applicationDataId);
+        Assert.IsNotNull(applicationData);
+        Assert.AreEqual(0, applicationData!.Length);
+    }
+
+
+    [Test]
     public void RewindAndDecodeAgain()
     {
         using JpegLSEncoder encoder = new(new FrameInfo(1, 1, 8, 1), true, 100);
