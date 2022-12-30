@@ -7,18 +7,18 @@ using NUnit.Framework;
 namespace CharLS.Native.Test;
 
 [TestFixture]
-public class JpegLSCodecTest
+public sealed class JpegLSCodecTest
 {
     [Test]
     public void GetMetadataInfoFromLosslessEncodedColorImage()
     {
         using JpegLSDecoder decoder = new(ReadAllBytes("t8c0e0.jls"));
 
-        Assert.AreEqual(decoder.FrameInfo.Height, 256);
-        Assert.AreEqual(decoder.FrameInfo.Width, 256);
-        Assert.AreEqual(decoder.FrameInfo.BitsPerSample, 8);
-        Assert.AreEqual(decoder.FrameInfo.ComponentCount, 3);
-        Assert.AreEqual(decoder.NearLossless, 0);
+        Assert.AreEqual(256, decoder.FrameInfo.Height);
+        Assert.AreEqual(256, decoder.FrameInfo.Width);
+        Assert.AreEqual(8, decoder.FrameInfo.BitsPerSample);
+        Assert.AreEqual(3, decoder.FrameInfo.ComponentCount);
+        Assert.AreEqual(0, decoder.NearLossless);
     }
 
     [Test]
@@ -27,11 +27,11 @@ public class JpegLSCodecTest
         using JpegLSDecoder decoder = new(ReadAllBytes("t8c0e3.jls"));
 
         var frameInfo = decoder.FrameInfo;
-        Assert.AreEqual(frameInfo.Height, 256);
-        Assert.AreEqual(frameInfo.Width, 256);
-        Assert.AreEqual(frameInfo.BitsPerSample, 8);
-        Assert.AreEqual(frameInfo.ComponentCount, 3);
-        Assert.AreEqual(decoder.NearLossless, 3);
+        Assert.AreEqual(256, frameInfo.Height);
+        Assert.AreEqual(256, frameInfo.Width);
+        Assert.AreEqual(8, frameInfo.BitsPerSample);
+        Assert.AreEqual(3, frameInfo.ComponentCount);
+        Assert.AreEqual(3, decoder.NearLossless);
     }
 
     [Test]

@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace CharLS.Native.Test;
 
 [TestFixture]
-public class JpegLSEncoderTest
+public sealed class JpegLSEncoderTest
 {
     [Test]
     public void CreateEncoderWithBadWidth()
@@ -328,10 +328,12 @@ public class JpegLSEncoderTest
             e.Failed = true;
         };
 
-        _ = Assert.Throws<InvalidDataException>(() =>
+        var exception = Assert.Throws<InvalidDataException>(() =>
         {
             decoder.ReadHeader();
         });
+
+        Assert.AreEqual(JpegLSError.CallbackFailed, exception!.GetJpegLSError());
     }
 
     [Test]
@@ -385,6 +387,26 @@ public class JpegLSEncoderTest
         Assert.AreEqual(0, applicationData!.Length);
     }
 
+    [Test]
+    public void FailApplicationDataEvent()
+    {
+        using JpegLSEncoder encoder = new(new FrameInfo(1, 1, 8, 1), true, 100);
+        encoder.WriteApplicationData(3, Array.Empty<byte>());
+        encoder.Encode(new byte[1]);
+
+        using JpegLSDecoder decoder = new(encoder.EncodedData, false);
+        decoder.ApplicationData += (_, e) =>
+        {
+            e.Failed = true;
+        };
+
+        var exception = Assert.Throws<InvalidDataException>(() =>
+        {
+            decoder.ReadHeader();
+        });
+
+        Assert.AreEqual(JpegLSError.CallbackFailed, exception!.GetJpegLSError());
+    }
 
     [Test]
     public void RewindAndDecodeAgain()

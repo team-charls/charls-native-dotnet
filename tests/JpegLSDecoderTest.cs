@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace CharLS.Native.Test;
 
 [TestFixture]
-public class JpegLSDecoderTest
+public sealed class JpegLSDecoderTest
 {
     [Test]
     public void ReadPresetCodingParameters()
@@ -198,6 +198,8 @@ public class JpegLSDecoderTest
     {
         using JpegLSDecoder decoder = new();
         decoder.Comment += null;
+
+        Assert.Pass();
     }
 
     [Test]
@@ -205,6 +207,8 @@ public class JpegLSDecoderTest
     {
         using JpegLSDecoder decoder = new();
         decoder.Comment -= null;
+
+        Assert.Pass();
     }
 
     [Test]
@@ -256,6 +260,8 @@ public class JpegLSDecoderTest
     {
         using JpegLSDecoder decoder = new();
         decoder.ApplicationData += null;
+
+        Assert.Pass();
     }
 
     [Test]
@@ -263,6 +269,8 @@ public class JpegLSDecoderTest
     {
         using JpegLSDecoder decoder = new();
         decoder.ApplicationData -= null;
+
+        Assert.Pass();
     }
 
     [Test]
