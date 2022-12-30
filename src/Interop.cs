@@ -19,9 +19,11 @@ internal static class Interop
 
     internal delegate int AtCommentHandler(nint dataPtr, nuint dataSize);
 
-    internal delegate int AtApplicationDataHandler(int applicationDataId, nint applicationDataPtr, nuint applicationDataSize);
+    internal delegate int AtApplicationDataHandler(int applicationDataId, nint applicationDataPtr,
+        nuint applicationDataSize);
 
-    [SuppressMessage("Design", "CA1065:Do not raise exceptions in unexpected locations", Justification = "Type is unusable if native DLL doesn't match")]
+    [SuppressMessage("Design", "CA1065:Do not raise exceptions in unexpected locations",
+        Justification = "Type is unusable if native DLL doesn't match")]
     static Interop()
     {
         NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), DllImportResolver);
@@ -29,11 +31,12 @@ internal static class Interop
         CharLSGetVersionNumber(out int major, out int minor, out int _);
         if (major != 2 || minor < 4)
         {
-            throw new DllNotFoundException($"Native DLL version mismatch: expected minimal v2.4, found v{major}.{minor}");
+            throw new DllNotFoundException(
+                $"Native DLL version mismatch: expected minimal v2.4, found v{major}.{minor}");
         }
     }
 
-#if  NET7_0
+#if NET7_0
     [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_get_version_number")]
     internal static partial void CharLSGetVersionNumber(out int major, out int minor, out int patch);
 
@@ -137,26 +140,32 @@ internal static class Interop
     internal static extern void CharLSGetVersionNumber(out int major, out int minor, out int patch);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_validate_spiff_header")]
-    internal static extern JpegLSError CharLSValidateSpiffHeader([In] ref SpiffHeaderNative spiffHeader, [In] ref FrameInfoNative frameInfo);
+    internal static extern JpegLSError CharLSValidateSpiffHeader([In] ref SpiffHeaderNative spiffHeader,
+        [In] ref FrameInfoNative frameInfo);
 
     [DllImport(NativeLibraryName, SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false,
         ThrowOnUnmappableChar = true, EntryPoint = "charls_get_error_message")]
     internal static extern IntPtr CharLSGetErrorMessage(int errorValue);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_set_frame_info")]
-    internal static extern JpegLSError CharLSSetFrameInfo(SafeHandleJpegLSEncoder encoder, [In] ref FrameInfoNative frameInfo);
+    internal static extern JpegLSError CharLSSetFrameInfo(SafeHandleJpegLSEncoder encoder,
+        [In] ref FrameInfoNative frameInfo);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_set_near_lossless")]
     internal static extern JpegLSError CharLSSetNearLossless(SafeHandleJpegLSEncoder encoder, [In] int nearLossless);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_set_interleave_mode")]
-    internal static extern JpegLSError CharLSSetInterleaveMode(SafeHandleJpegLSEncoder encoder, [In] JpegLSInterleaveMode interleaveMode);
+    internal static extern JpegLSError CharLSSetInterleaveMode(SafeHandleJpegLSEncoder encoder,
+        [In] JpegLSInterleaveMode interleaveMode);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_set_encoding_options")]
-    internal static extern JpegLSError CharLSSetEncodingOptions(SafeHandleJpegLSEncoder encoder, [In] EncodingOptions encodingOptions);
+    internal static extern JpegLSError CharLSSetEncodingOptions(SafeHandleJpegLSEncoder encoder,
+        [In] EncodingOptions encodingOptions);
 
-    [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_set_preset_coding_parameters")]
-    internal static extern JpegLSError CharLSSetPresetCodingParameters(SafeHandleJpegLSEncoder encoder, [In] ref JpegLSPresetCodingParametersNative presetCodingParameters);
+    [DllImport(NativeLibraryName, SetLastError = false,
+        EntryPoint = "charls_jpegls_encoder_set_preset_coding_parameters")]
+    internal static extern JpegLSError CharLSSetPresetCodingParameters(SafeHandleJpegLSEncoder encoder,
+        [In] ref JpegLSPresetCodingParametersNative presetCodingParameters);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_create")]
     internal static extern SafeHandleJpegLSEncoder CharLSCreateEncoder();
@@ -165,30 +174,40 @@ internal static class Interop
     internal static extern void CharLSDestroyEncoder(IntPtr encoder);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_set_destination_buffer")]
-    internal static extern unsafe JpegLSError CharLSSetDestinationBuffer(SafeHandleJpegLSEncoder encoder, byte* destination, nuint destinationLength);
+    internal static extern unsafe JpegLSError CharLSSetDestinationBuffer(SafeHandleJpegLSEncoder encoder,
+        byte* destination, nuint destinationLength);
 
-    [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_get_estimated_destination_size")]
-    internal static extern JpegLSError CharLSGetEstimatedDestinationSize(SafeHandleJpegLSEncoder encoder, [Out] out nuint sizeInBytes);
+    [DllImport(NativeLibraryName, SetLastError = false,
+        EntryPoint = "charls_jpegls_encoder_get_estimated_destination_size")]
+    internal static extern JpegLSError CharLSGetEstimatedDestinationSize(SafeHandleJpegLSEncoder encoder,
+        [Out] out nuint sizeInBytes);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_encode_from_buffer")]
-    internal static extern JpegLSError CharLSEncodeFromBuffer(SafeHandleJpegLSEncoder encoder, ref byte source, nuint sourceSizeBytes, uint stride);
+    internal static extern JpegLSError CharLSEncodeFromBuffer(SafeHandleJpegLSEncoder encoder, ref byte source,
+        nuint sourceSizeBytes, uint stride);
 
-    [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_write_standard_spiff_header")]
+    [DllImport(NativeLibraryName, SetLastError = false,
+        EntryPoint = "charls_jpegls_encoder_write_standard_spiff_header")]
     internal static extern JpegLSError CharLSWriteStandardSpiffHeader(SafeHandleJpegLSEncoder encoder,
-        SpiffColorSpace colorSpace, SpiffResolutionUnit resolutionUnit, uint verticalResolution, uint horizontalResolution);
+        SpiffColorSpace colorSpace, SpiffResolutionUnit resolutionUnit, uint verticalResolution,
+        uint horizontalResolution);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_write_spiff_header")]
-    internal static extern JpegLSError CharLSWriteSpiffHeader(SafeHandleJpegLSEncoder encoder, [In] ref SpiffHeaderNative spiffHeader);
+    internal static extern JpegLSError CharLSWriteSpiffHeader(SafeHandleJpegLSEncoder encoder,
+        [In] ref SpiffHeaderNative spiffHeader);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_write_comment")]
-    internal static extern JpegLSError CharLSWriteComment(SafeHandleJpegLSEncoder encoder, ref byte comment, nuint commentLength);
+    internal static extern JpegLSError CharLSWriteComment(SafeHandleJpegLSEncoder encoder, ref byte comment,
+        nuint commentLength);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_write_application_data")]
-    internal static extern JpegLSError CharLSWriteApplicationData(SafeHandleJpegLSEncoder encoder, int applicationDataId,
+    internal static extern JpegLSError CharLSWriteApplicationData(SafeHandleJpegLSEncoder encoder,
+        int applicationDataId,
         ref byte applicationData, nuint applicationDataLength);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_get_bytes_written")]
-    internal static extern JpegLSError CharLSGetBytesWritten(SafeHandleJpegLSEncoder encoder, [Out] out nuint bytesWritten);
+    internal static extern JpegLSError CharLSGetBytesWritten(SafeHandleJpegLSEncoder encoder,
+        [Out] out nuint bytesWritten);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_encoder_rewind")]
     internal static extern JpegLSError CharLSRewind(SafeHandleJpegLSEncoder encoder);
@@ -200,7 +219,8 @@ internal static class Interop
     internal static extern void CharLSDestroyDecoder(IntPtr decoder);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_set_source_buffer")]
-    internal static extern unsafe JpegLSError CharLSSetSourceBuffer(SafeHandleJpegLSDecoder decoder, byte* source, nuint sourceLength);
+    internal static extern unsafe JpegLSError CharLSSetSourceBuffer(SafeHandleJpegLSDecoder decoder, byte* source,
+        nuint sourceLength);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_read_spiff_header")]
     internal static extern JpegLSError CharLSReadSpiffHeader(SafeHandleJpegLSDecoder decoder,
@@ -210,28 +230,37 @@ internal static class Interop
     internal static extern JpegLSError JpegLSDecoderReadHeader(SafeHandleJpegLSDecoder decoder);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_get_frame_info")]
-    internal static extern JpegLSError CharLSGetFrameInfo(SafeHandleJpegLSDecoder decoder, [Out] out FrameInfoNative frameInfo);
+    internal static extern JpegLSError CharLSGetFrameInfo(SafeHandleJpegLSDecoder decoder,
+        [Out] out FrameInfoNative frameInfo);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_get_near_lossless")]
-    internal static extern JpegLSError CharLSGetNearLossless(SafeHandleJpegLSDecoder decoder, int component, [Out] out int nearLossless);
+    internal static extern JpegLSError CharLSGetNearLossless(SafeHandleJpegLSDecoder decoder, int component,
+        [Out] out int nearLossless);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_get_interleave_mode")]
-    internal static extern JpegLSError CharLSGetInterleaveMode(SafeHandleJpegLSDecoder decoder, [Out] out JpegLSInterleaveMode interleaveMode);
+    internal static extern JpegLSError CharLSGetInterleaveMode(SafeHandleJpegLSDecoder decoder,
+        [Out] out JpegLSInterleaveMode interleaveMode);
 
-    [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_get_preset_coding_parameters")]
-    internal static extern JpegLSError CharLSGetPresetCodingParameters(SafeHandleJpegLSDecoder decoder, int reserved, [Out] out JpegLSPresetCodingParametersNative presetCodingParameters);
+    [DllImport(NativeLibraryName, SetLastError = false,
+        EntryPoint = "charls_jpegls_decoder_get_preset_coding_parameters")]
+    internal static extern JpegLSError CharLSGetPresetCodingParameters(SafeHandleJpegLSDecoder decoder, int reserved,
+        [Out] out JpegLSPresetCodingParametersNative presetCodingParameters);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_get_destination_size")]
-    internal static extern JpegLSError CharLSGetDestinationSize(SafeHandleJpegLSDecoder decoder, uint stride, [Out] out nuint destinationSize);
+    internal static extern JpegLSError CharLSGetDestinationSize(SafeHandleJpegLSDecoder decoder, uint stride,
+        [Out] out nuint destinationSize);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_decode_to_buffer")]
-    internal static extern JpegLSError CharLSDecodeToBuffer(SafeHandleJpegLSDecoder decoder, ref byte destination, nuint destinationSize, uint stride);
+    internal static extern JpegLSError CharLSDecodeToBuffer(SafeHandleJpegLSDecoder decoder, ref byte destination,
+        nuint destinationSize, uint stride);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_at_comment")]
-    internal static extern JpegLSError CharLSAtComment(SafeHandleJpegLSDecoder decoder, AtCommentHandler handler, IntPtr userContext);
+    internal static extern JpegLSError CharLSAtComment(SafeHandleJpegLSDecoder decoder, AtCommentHandler handler,
+        IntPtr userContext);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_at_application_data")]
-    internal static extern JpegLSError CharLSAtApplicationData(SafeHandleJpegLSDecoder decoder, AtApplicationDataHandler handler, IntPtr userContext);
+    internal static extern JpegLSError CharLSAtApplicationData(SafeHandleJpegLSDecoder decoder,
+        AtApplicationDataHandler handler, IntPtr userContext);
 #endif
 
     internal static void HandleJpegLSError(JpegLSError error)
@@ -313,7 +342,7 @@ internal static class Interop
                 break;
         }
 
-        exception.Data.Add(nameof(JpegLSError), error);
+        exception.SetJpegLSError(error);
         throw exception;
     }
 
@@ -333,13 +362,27 @@ internal static class Interop
 
     private static string GetLibraryName()
     {
-        return OperatingSystem.IsWindows()
-            ? Environment.Is64BitProcess ?
-                RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? "charls-2-arm64" : "charls-2-x64" : "charls-2-x86"
-            : OperatingSystem.IsLinux()
-                ? "charls.so.2"
-                : OperatingSystem.IsMacOS()
-                    ? "charls.2"
-                    : throw new NotSupportedException("No native JPEG-LS codec is available for " + Environment.OSVersion);
+        return OperatingSystem.IsWindows() ? GetLibraryNameForWindows() : GetLibraryNameForLinuxVariant();
+    }
+
+    private static string GetLibraryNameForWindows()
+    {
+        return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
+            ? "charls-2-arm64"
+            : GetLibraryNameForWindowsOnIntel();
+    }
+
+    private static string GetLibraryNameForWindowsOnIntel()
+    {
+        return Environment.Is64BitProcess ? "charls-2-x64" : "charls-2-x86";
+    }
+
+    private static string GetLibraryNameForLinuxVariant()
+    {
+        return OperatingSystem.IsLinux()
+            ? "charls.so.2"
+            : OperatingSystem.IsMacOS()
+            ? "charls.2"
+            : throw new NotSupportedException("No native JPEG-LS codec is available for " + Environment.OSVersion);
     }
 }

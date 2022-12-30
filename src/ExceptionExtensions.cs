@@ -1,7 +1,7 @@
 // Copyright (c) Team CharLS.
 // SPDX-License-Identifier: BSD-3-Clause
 
-namespace CharLS;
+namespace CharLS.Native;
 
 /// <summary>
 /// Provides helper methods for Exception objects and JpegLSError values.
@@ -15,5 +15,10 @@ public static class ExceptionExtensions
     {
         var value = exception.Data[nameof(JpegLSError)];
         return value != null ? (JpegLSError)value : default;
+    }
+
+    internal static void SetJpegLSError(this Exception exception, JpegLSError error)
+    {
+        exception.Data.Add(nameof(JpegLSError), error);
     }
 }

@@ -5,7 +5,10 @@ using Microsoft.Win32.SafeHandles;
 
 namespace CharLS.Native;
 
-internal class SafeHandleJpegLSDecoder : SafeHandleZeroOrMinusOneIsInvalid
+/// <summary>
+/// Helper class that manages the native JpegLSDecoder resource.
+/// </summary>
+internal sealed class SafeHandleJpegLSDecoder : SafeHandleZeroOrMinusOneIsInvalid
 {
     public SafeHandleJpegLSDecoder()
         : base(true)
