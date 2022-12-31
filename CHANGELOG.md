@@ -1,8 +1,19 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
+
+## [3.0.0 - 2022-12-31]
+
+### Added
+
+- Support for Charls v2.4.0. CharLS v2.4.0 is now the minimum required version.
+- Support for .NET 7.0.
+- Support for the native ARM64 CharLS DLL on Windows.
+- Added support to retrieve the JpegLSError value from a thrown exception.
+- Added support to write and read JPEG Application Data segments.
+- Added support to validate SPIFF headers.
 
 ## [2.0.0 - 2022-6-5]
 

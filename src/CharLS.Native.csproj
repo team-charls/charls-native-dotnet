@@ -6,9 +6,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>2.0.0</Version>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.0</FileVersion>
+    <Version>3.0.0</Version>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
     <Copyright>Copyright 2022 Team CharLS</Copyright>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -39,7 +39,7 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
 
     <_CertificateThumbprint>$(CertificateThumbprint)</_CertificateThumbprint>
-    <_CertificateThumbprint Condition="'$(_CertificateThumbprint)' == ''">ec5c63c27f439b88457aae74893074733e5d35c0</_CertificateThumbprint>
+    <_CertificateThumbprint Condition="'$(_CertificateThumbprint)' == ''">9feab4ced15f46daab7bec04a1e811ee0b948034</_CertificateThumbprint>
     <_TimestampUrl>$(TimestampUrl)</_TimestampUrl>
     <_TimestampUrl Condition="'$(_TimestampUrl)' == ''">http://time.certum.pl/</_TimestampUrl>
   </PropertyGroup>
@@ -99,17 +99,20 @@
 
   <Target Name="SignWindowsDlls" BeforeTargets="GenerateNuspec" Condition="'$(MSBuildRuntimeType)'=='Full'">
     <!-- Use TargetFrameworkVersion=v4.5 to sign with SHA256 -->
-    <Message Text="Signing CharLS.Native.dll" />
-    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
+    <Message Text="Signing CharLS.Native.dll (.NET 6.0)" />
+    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)net6.0\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
+
+    <Message Text="Signing CharLS.Native.dll (.NET 7.0)" />
+    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)net7.0\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
 
     <Message Text="Signing charls-2-x64.dll" />
-    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)\charls-2-x64.dll" TargetFrameworkVersion="v4.5" />
+    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)charls-2-x64.dll" TargetFrameworkVersion="v4.5" />
 
     <Message Text="Signing charls-2-x86.dll" />
-    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)\charls-2-x86.dll" TargetFrameworkVersion="v4.5" />
+    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)charls-2-x86.dll" TargetFrameworkVersion="v4.5" />
 
     <Message Text="Signing charls-2-arm64.dll" />
-    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)\charls-2-arm64.dll" TargetFrameworkVersion="v4.5" />
+    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)charls-2-arm64.dll" TargetFrameworkVersion="v4.5" />
   </Target>
 
   <Target Name="SignPackage" AfterTargets="Pack" Condition="'$(MSBuildRuntimeType)'=='Full'">

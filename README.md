@@ -64,7 +64,7 @@ A sample application is included in the GitHub repository that demonstrates how 
 
 ### Building Windows DLLs and code signing all components
 
-Building the NuGet package with signed Windows DLLs can only be done on the Window platform with Visual Studio 2019 or with Build tools for Visual Studio 2019.
+Building the NuGet package with signed Windows DLLs can only be done on the Window platform with Visual Studio 2022 or with Build tools for Visual Studio 2022.
 To support code signing with a code signing certificate, stored on a smart card, a Windows command file is available: `create-signed-nuget-package.cmd`.
 Instructions:
 
