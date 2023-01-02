@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.1 - 2023-1-2]
+
+### Changed
+
+- CharLS Windows DLLs updated to v2.4.1
+
 ## [3.0.0 - 2022-12-31]
 
 ### Added
