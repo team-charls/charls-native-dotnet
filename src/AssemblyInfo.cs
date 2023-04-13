@@ -4,4 +4,9 @@
 using System.Runtime.InteropServices;
 
 [assembly: ComVisible(false)]
+
+#if NET6_0_OR_GREATER
 [assembly: DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
+#else
+[assembly: DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
+#endif

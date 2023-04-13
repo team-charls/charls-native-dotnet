@@ -126,7 +126,11 @@ string GetOutputPath(string inputPathArg)
 void Save(string path, ReadOnlySpan<byte> encodedData)
 {
     using FileStream output = new(path, FileMode.OpenOrCreate);
+#if NET6_0_OR_GREATER
     output.Write(encodedData);
+#else
+    output.Write(encodedData.ToArray(), 0, encodedData.ToArray().Length);
+#endif
 }
 
 bool TryParseArguments(IReadOnlyList<string> args, out string inputPathArg)

@@ -305,7 +305,11 @@ public sealed class JpegLSCodecTest
 
     private static byte[] ReadAllBytes(string path, int bytesToSkip = 0)
     {
+#if NET6_0_OR_GREATER
         var fullPath = Path.Join(DataFileDirectory, path);
+#else
+        var fullPath = Path.Combine(DataFileDirectory, path);
+#endif
 
         if (bytesToSkip == 0)
             return File.ReadAllBytes(fullPath);
@@ -323,7 +327,11 @@ public sealed class JpegLSCodecTest
         get
         {
             var assemblyLocation = new Uri(Assembly.GetExecutingAssembly().Location);
+#if NET6_0_OR_GREATER
             return Path.Join(Path.GetDirectoryName(assemblyLocation.LocalPath), "DataFiles");
+#else
+            return Path.Combine(Path.GetDirectoryName(assemblyLocation.LocalPath), "DataFiles");
+#endif
         }
     }
 

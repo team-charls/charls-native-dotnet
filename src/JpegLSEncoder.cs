@@ -246,7 +246,11 @@ public sealed class JpegLSEncoder : IDisposable
     /// <value>
     /// The memory region with the encoded data.
     /// </value>
+#if NET6_0_OR_GREATER
     public ReadOnlyMemory<byte> EncodedData => _destination[..BytesWritten];
+#else
+    public ReadOnlyMemory<byte> EncodedData => _destination.Slice(0, BytesWritten);
+#endif
 
     /// <summary>
     /// Gets the bytes written to the destination buffer.

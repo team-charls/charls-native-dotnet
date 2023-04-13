@@ -38,6 +38,32 @@ jobs:
       configuration: '$(buildConfiguration)'
 
   - task: VSTest@2
+    displayName: 'Test Charls.Native (.NET Framework 4.8 x86)'
+    inputs:
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+      otherConsoleOptions: --Framework:".NETFramework,Version=v4.8" --Platform:x86
+      testAssemblyVer2: |
+        **\net48\CharLS.Native.Test.dll
+        !**\*TestAdapter.dll
+        !**\intermediates\**
+      runInParallel: true
+      codeCoverageEnabled: true
+
+  - task: VSTest@2
+    displayName: 'Test Charls.Native (.NET Framework 4.8 x64)'
+    inputs:
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+      otherConsoleOptions: --Framework:".NETFramework,Version=v4.8" --Platform:x64
+      testAssemblyVer2: |
+        **\net48\CharLS.Native.Test.dll
+        !**\*TestAdapter.dll
+        !**\intermediates\**
+      runInParallel: true
+      codeCoverageEnabled: true
+
+  - task: VSTest@2
     displayName: 'Test Charls.Native (.NET 6.0 x86)'
     inputs:
       platform: '$(buildPlatform)'
