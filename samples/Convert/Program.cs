@@ -129,7 +129,7 @@ void Save(string path, ReadOnlySpan<byte> encodedData)
 #if NET6_0_OR_GREATER
     output.Write(encodedData);
 #else
-    output.Write(encodedData.ToArray(), 0, encodedData.ToArray().Length);
+    output.Write(encodedData.ToArray(), 0, encodedData.Length);
 #endif
 }
 
