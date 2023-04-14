@@ -6,10 +6,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>3.0.1</Version>
+    <Version>3.1.0</Version>
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
-    <FileVersion>3.0.1.0</FileVersion>
-    <Copyright>Copyright 2022 Team CharLS</Copyright>
+    <FileVersion>3.1.0.0</FileVersion>
+    <Copyright>Copyright 2023 Team CharLS</Copyright>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
@@ -104,6 +104,9 @@
 
   <Target Name="SignWindowsDlls" BeforeTargets="GenerateNuspec" Condition="'$(MSBuildRuntimeType)'=='Full'">
     <!-- Use TargetFrameworkVersion=v4.5 to sign with SHA256 -->
+    <Message Text="Signing CharLS.Native.dll (.NET Framework 4.8)" />
+    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)net48\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
+
     <Message Text="Signing CharLS.Native.dll (.NET 6.0)" />
     <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)net6.0\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
 

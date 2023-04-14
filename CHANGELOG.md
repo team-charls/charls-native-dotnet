@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.0 - 2023-4-14]
+
+### Added
+
+- Support for .NET Framework 4.8.
+
+### Fixed
+
+- Fixed [#45](https://github.com/team-charls/charls-native-dotnet/issues/45), Callbacks AtCommentHandler and AtApplicationDataHandler fail in x86 mode on Windows.
+
 ## [3.0.1 - 2023-1-2]
 
 ### Changed
