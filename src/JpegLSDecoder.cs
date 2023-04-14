@@ -350,7 +350,7 @@ public sealed class JpegLSDecoder : IDisposable
         return stride < 0 ? throw new ArgumentOutOfRangeException(nameof(stride), "Stride needs to be >= 0") : (uint)stride;
     }
 
-    private unsafe int AtComment(IntPtr data, nuint size)
+    private unsafe int AtComment(IntPtr data, nuint size, nint userContextPtr)
     {
         // Take a copy to prevent that subscribers to this event need to be unsafe to read the comment.
         var eventArgs = new CommentEventArgs(new ReadOnlySpan<byte>(data.ToPointer(), (int)size).ToArray());
@@ -358,7 +358,7 @@ public sealed class JpegLSDecoder : IDisposable
         return Convert.ToInt32(eventArgs.Failed);
     }
 
-    private unsafe int AtApplicationData(int applicationDataId, IntPtr data, nuint size)
+    private unsafe int AtApplicationData(int applicationDataId, IntPtr data, nuint size, nint userContextPtr)
     {
         // Take a copy to prevent that subscribers to this event need to be unsafe to read the comment.
         var eventArgs = new ApplicationDataEventArgs(applicationDataId, new ReadOnlySpan<byte>(data.ToPointer(), (int)size).ToArray());

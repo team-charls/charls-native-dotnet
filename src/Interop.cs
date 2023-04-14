@@ -17,10 +17,10 @@ internal static class Interop
 {
     private const string NativeLibraryName = "charls-2";
 
-    internal delegate int AtCommentHandler(nint dataPtr, nuint dataSize);
+    internal delegate int AtCommentHandler(nint dataPtr, nuint dataSize, nint userContextPtr);
 
     internal delegate int AtApplicationDataHandler(int applicationDataId, nint applicationDataPtr,
-        nuint applicationDataSize);
+        nuint applicationDataSize, nint userContextPtr);
 
     [SuppressMessage("Design", "CA1065:Do not raise exceptions in unexpected locations",
         Justification = "Type is unusable if native DLL doesn't match")]

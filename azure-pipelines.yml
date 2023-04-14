@@ -38,12 +38,52 @@ jobs:
       configuration: '$(buildConfiguration)'
 
   - task: VSTest@2
+    displayName: 'Test Charls.Native (.NET 6.0 x86)'
     inputs:
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
-      otherConsoleOptions: --Framework:".NETCoreApp,Version=v6.0"
+      otherConsoleOptions: --Framework:".NETCoreApp,Version=v6.0" --Platform:x86
       testAssemblyVer2: |
-        **\CharLS.Native.Test.dll
+        **\net6.0\CharLS.Native.Test.dll
+        !**\*TestAdapter.dll
+        !**\intermediates\**
+      runInParallel: true
+      codeCoverageEnabled: true
+
+  - task: VSTest@2
+    displayName: 'Test Charls.Native (.NET 6.0 x64)'
+    inputs:
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+      otherConsoleOptions: --Framework:".NETCoreApp,Version=v6.0" --Platform:x64
+      testAssemblyVer2: |
+        **\net6.0\CharLS.Native.Test.dll
+        !**\*TestAdapter.dll
+        !**\intermediates\**
+      runInParallel: true
+      codeCoverageEnabled: true
+
+  - task: VSTest@2
+    displayName: 'Test Charls.Native (.NET 7.0 x86)'
+    inputs:
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+      otherConsoleOptions: --Framework:".NETCoreApp,Version=v7.0" --Platform:x86
+      testAssemblyVer2: |
+        **\net7.0\CharLS.Native.Test.dll
+        !**\*TestAdapter.dll
+        !**\intermediates\**
+      runInParallel: true
+      codeCoverageEnabled: true
+
+  - task: VSTest@2
+    displayName: 'Test Charls.Native (.NET 7.0 x64)'
+    inputs:
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+      otherConsoleOptions: --Framework:".NETCoreApp,Version=v7.0" --Platform:x64
+      testAssemblyVer2: |
+        **\net7.0\CharLS.Native.Test.dll
         !**\*TestAdapter.dll
         !**\intermediates\**
       runInParallel: true
