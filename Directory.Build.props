@@ -7,6 +7,7 @@
   <PropertyGroup>
     <!-- General -->
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks Condition="'$(MSBuildRuntimeType)'=='Full'">$(TargetFrameworks);net48</TargetFrameworks>
     <LangVersion>latest</LangVersion><!-- Use the latest released C# language version -->
     <Features>strict</Features>
     <Platforms>AnyCPU</Platforms>

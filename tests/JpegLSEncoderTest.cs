@@ -197,7 +197,11 @@ public sealed class JpegLSEncoderTest
         Assert.IsNotNull(versionComment);
 
         string versionString = Encoding.UTF8.GetString(versionComment!);
+#if NET6_0_OR_GREATER
         versionString = versionString[..7];
+#else
+        versionString = versionString.Substring(0, 7);
+#endif
 
         Assert.AreEqual("charls ", versionString);
     }
