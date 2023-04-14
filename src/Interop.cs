@@ -48,7 +48,7 @@ internal static class Interop
     internal delegate void CharLSDestroyDecoderFn(IntPtr decoder);
     internal unsafe delegate JpegLSError CharLSSetSourceBufferFn(SafeHandleJpegLSDecoder decoder, byte* source, nuint sourceLength);
     internal delegate JpegLSError CharLSReadSpiffHeaderFn(SafeHandleJpegLSDecoder decoder, out SpiffHeaderNative spiffHeader, out int headerFound);
-    internal delegate JpegLSError JpegLSDecoderReadHeaderFn(SafeHandleJpegLSDecoder decoder);
+    internal delegate JpegLSError CharLSReadHeaderFn(SafeHandleJpegLSDecoder decoder);
     internal delegate JpegLSError CharLSGetFrameInfoFn(SafeHandleJpegLSDecoder decoder, out FrameInfoNative frameInfo);
     internal delegate JpegLSError CharLSGetNearLosslessFn(SafeHandleJpegLSDecoder decoder, int component, out int nearLossless);
     internal delegate JpegLSError CharLSGetInterleaveModeFn(SafeHandleJpegLSDecoder decoder, out JpegLSInterleaveMode interleaveMode);
@@ -81,7 +81,7 @@ internal static class Interop
     internal static CharLSDestroyDecoderFn CharLSDestroyDecoder = GetFunctionCharLSDestroyDecoder();
     internal static CharLSSetSourceBufferFn CharLSSetSourceBuffer = GetFunctionCharLSSetSourceBuffer();
     internal static CharLSReadSpiffHeaderFn CharLSReadSpiffHeader = GetFunctionCharLSReadSpiffHeader();
-    internal static JpegLSDecoderReadHeaderFn JpegLSDecoderReadHeader = GetFunctionJpegLSDecoderReadHeader();
+    internal static CharLSReadHeaderFn CharLSReadHeader = GetFunctionCharLSReadHeader();
     internal static CharLSGetFrameInfoFn CharLSGetFrameInfo = GetFunctionCharLSGetFrameInfo();
     internal static CharLSGetNearLosslessFn CharLSGetNearLossless = GetFunctionCharLSGetNearLossless();
     internal static CharLSGetInterleaveModeFn CharLSGetInterleaveMode = GetFunctionCharLSGetInterleaveMode();
@@ -186,7 +186,7 @@ internal static class Interop
         out SpiffHeaderNative spiffHeader, out int headerFound);
 
     [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_read_header")]
-    internal static partial JpegLSError JpegLSDecoderReadHeader(SafeHandleJpegLSDecoder decoder);
+    internal static partial JpegLSError CharLSReadHeader(SafeHandleJpegLSDecoder decoder);
 
     [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_get_frame_info")]
     internal static partial JpegLSError CharLSGetFrameInfo(SafeHandleJpegLSDecoder decoder, out FrameInfoNative frameInfo);
@@ -303,7 +303,7 @@ internal static class Interop
         [Out] out SpiffHeaderNative spiffHeader, [Out] out int headerFound);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_read_header")]
-    internal static extern JpegLSError JpegLSDecoderReadHeader(SafeHandleJpegLSDecoder decoder);
+    internal static extern JpegLSError CharLSReadHeader(SafeHandleJpegLSDecoder decoder);
 
     [DllImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_jpegls_decoder_get_frame_info")]
     internal static extern JpegLSError CharLSGetFrameInfo(SafeHandleJpegLSDecoder decoder,
@@ -610,13 +610,13 @@ internal static class Interop
         [Out] out SpiffHeaderNative spiffHeader, [Out] out int headerFound);
 
     [DllImport(NativeLibraryNameX86, SetLastError = false, EntryPoint = "charls_jpegls_decoder_read_header")]
-    internal static extern JpegLSError JpegLSDecoderReadHeaderX86(SafeHandleJpegLSDecoder decoder);
+    internal static extern JpegLSError CharLSReadHeaderX86(SafeHandleJpegLSDecoder decoder);
 
     [DllImport(NativeLibraryNameX64, SetLastError = false, EntryPoint = "charls_jpegls_decoder_read_header")]
-    internal static extern JpegLSError JpegLSDecoderReadHeaderX64(SafeHandleJpegLSDecoder decoder);
+    internal static extern JpegLSError CharLSReadHeaderX64(SafeHandleJpegLSDecoder decoder);
 
     [DllImport(NativeLibraryNameArm64, SetLastError = false, EntryPoint = "charls_jpegls_decoder_read_header")]
-    internal static extern JpegLSError JpegLSDecoderReadHeaderArm64(SafeHandleJpegLSDecoder decoder);
+    internal static extern JpegLSError CharLSReadHeaderArm64(SafeHandleJpegLSDecoder decoder);
 
     [DllImport(NativeLibraryNameX86, SetLastError = false, EntryPoint = "charls_jpegls_decoder_get_frame_info")]
     internal static extern JpegLSError CharLSGetFrameInfoX86(SafeHandleJpegLSDecoder decoder,
@@ -995,13 +995,13 @@ internal static class Interop
         };
     }
 
-    private static JpegLSDecoderReadHeaderFn GetFunctionJpegLSDecoderReadHeader()
+    private static CharLSReadHeaderFn GetFunctionCharLSReadHeader()
     {
         return RuntimeInformation.ProcessArchitecture switch
         {
-            Architecture.X86 => JpegLSDecoderReadHeaderX86,
-            Architecture.X64 => JpegLSDecoderReadHeaderX64,
-            Architecture.Arm64 => JpegLSDecoderReadHeaderArm64,
+            Architecture.X86 => CharLSReadHeaderX86,
+            Architecture.X64 => CharLSReadHeaderX64,
+            Architecture.Arm64 => CharLSReadHeaderArm64,
             Architecture.Arm => throw new NotSupportedException(CreateNotSupportedErrorMessage()),
             _ => throw new ArgumentOutOfRangeException()
         };

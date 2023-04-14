@@ -302,7 +302,7 @@ public sealed class JpegLSDecoder : IDisposable
             _ = TryReadSpiffHeader(out spiffHeader);
         }
 
-        HandleJpegLSError(JpegLSDecoderReadHeader(_decoder));
+        HandleJpegLSError(CharLSReadHeader(_decoder));
         if (spiffHeader == null)
             return;
 
