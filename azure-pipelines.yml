@@ -49,6 +49,7 @@ jobs:
         !**\intermediates\**
       runInParallel: true
       codeCoverageEnabled: true
+      runSettingsFile: 'tests\CodeCoverage.runsettings'
 
   - task: VSTest@2
     displayName: 'Test Charls.Native (.NET Framework 4.8 x64)'
@@ -62,6 +63,7 @@ jobs:
         !**\intermediates\**
       runInParallel: true
       codeCoverageEnabled: true
+      runSettingsFile: 'tests\CodeCoverage.runsettings'
 
   - task: VSTest@2
     displayName: 'Test Charls.Native (.NET 6.0 x86)'
@@ -75,6 +77,7 @@ jobs:
         !**\intermediates\**
       runInParallel: true
       codeCoverageEnabled: true
+      runSettingsFile: 'tests\CodeCoverage.runsettings'
 
   - task: VSTest@2
     displayName: 'Test Charls.Native (.NET 6.0 x64)'
@@ -88,6 +91,7 @@ jobs:
         !**\intermediates\**
       runInParallel: true
       codeCoverageEnabled: true
+      runSettingsFile: 'tests\CodeCoverage.runsettings'
 
   - task: VSTest@2
     displayName: 'Test Charls.Native (.NET 7.0 x86)'
@@ -101,6 +105,7 @@ jobs:
         !**\intermediates\**
       runInParallel: true
       codeCoverageEnabled: true
+      runSettingsFile: 'tests\CodeCoverage.runsettings'
 
   - task: VSTest@2
     displayName: 'Test Charls.Native (.NET 7.0 x64)'
@@ -114,7 +119,7 @@ jobs:
         !**\intermediates\**
       runInParallel: true
       codeCoverageEnabled: true
-
+      runSettingsFile: 'tests\CodeCoverage.runsettings'
 
 - job: 'linux'
   pool:
