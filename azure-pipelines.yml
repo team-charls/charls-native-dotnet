@@ -196,8 +196,7 @@ jobs:
     inputs:
       command: 'test'
       projects: '**/*tests/*.csproj'
-      arguments: '--configuration $(buildConfiguration) --no-restore'
-
+      arguments: '--configuration $(buildConfiguration) --no-restore --logger trx --collect "Code Coverage"'
 
 - job: 'macOS'
   pool:
@@ -274,4 +273,4 @@ jobs:
     inputs:
       command: 'test'
       projects: '**/*tests/*.csproj'
-      arguments: '--configuration $(buildConfiguration) --no-restore'
+      arguments: '--configuration $(buildConfiguration) --no-restore --logger trx --collect "Code Coverage"'
