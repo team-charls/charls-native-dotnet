@@ -9,8 +9,8 @@
               <Include>
                 <ModulePath>.*charls\.native\.dll$</ModulePath>
                 <ModulePath>.*charls\.native\.test\.dll$</ModulePath>
-                <ModulePath>.*Debug.*charls.2.x86\.dll$</ModulePath>
-                <ModulePath>.*Debug.*charls.2.x64\.dll$</ModulePath>
+                <ModulePath>.*debug.*charls.2.x86\.dll$</ModulePath>
+                <ModulePath>.*debug.*charls.2.x64\.dll$</ModulePath>
               </Include>
             </ModulePaths>
             <UseVerifiableInstrumentation>False</UseVerifiableInstrumentation>
