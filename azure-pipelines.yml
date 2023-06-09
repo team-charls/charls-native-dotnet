@@ -198,15 +198,6 @@ jobs:
       projects: '**/*tests/*.csproj'
       arguments: '--configuration $(buildConfiguration) --no-restore --logger trx --collect "Code Coverage"'
 
-  - task: PublishTestResults@2
-    displayName: 'Publish Test Results'
-    inputs:
-      testResultsFormat: VSTest
-      testResultsFiles: '**/*.trx'
-      testRunTitle: 'linux'
-      publishRunAttachments: true
-    condition: always()
-
 - job: 'macOS'
   pool:
     vmImage: macOS-latest
@@ -283,12 +274,3 @@ jobs:
       command: 'test'
       projects: '**/*tests/*.csproj'
       arguments: '--configuration $(buildConfiguration) --no-restore --logger trx --collect "Code Coverage"'
-
-  - task: PublishTestResults@2
-    displayName: 'Publish Test Results'
-    inputs:
-      testResultsFormat: VSTest
-      testResultsFiles: '**/*.trx'
-      testRunTitle: 'macos'
-      publishRunAttachments: true
-    condition: always()
