@@ -46,8 +46,12 @@ public sealed class JpegLSEncoder : IDisposable
     {
         try
         {
+#if NET8_0_OR_GREATER
+            ArgumentOutOfRangeException.ThrowIfNegative(extraBytes);
+#else
             if (extraBytes < 0)
                 throw new ArgumentOutOfRangeException(nameof(extraBytes));
+#endif
 
             FrameInfo = new(width, height, bitsPerSample, componentCount);
             if (allocateDestination)
@@ -89,8 +93,12 @@ public sealed class JpegLSEncoder : IDisposable
 
         set
         {
+#if NET6_0_OR_GREATER
+            ArgumentNullException.ThrowIfNull(value);
+#else
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
+#endif
 
             FrameInfoNative infoNative = new()
             {
@@ -172,8 +180,12 @@ public sealed class JpegLSEncoder : IDisposable
 
         set
         {
+#if NET6_0_OR_GREATER
+            ArgumentNullException.ThrowIfNull(value);
+#else
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
+#endif
 
             JpegLSPresetCodingParametersNative native = new()
             {
