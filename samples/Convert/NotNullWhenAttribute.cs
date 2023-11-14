@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 #if !NET6_0_OR_GREATER
+#pragma warning disable IDE0290 // Use primary constructor
 
 namespace System.Diagnostics.CodeAnalysis;
 
@@ -16,4 +17,5 @@ internal sealed class NotNullWhenAttribute : Attribute
     public bool ReturnValue { get; }
 }
 
+#pragma warning restore IDE0290 // Use primary constructor
 #endif
