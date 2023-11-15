@@ -332,7 +332,7 @@ public sealed class JpegLSEncoder : IDisposable
     /// <remarks>
     /// Function should be called before encoding the image data.
     /// </remarks>
-    /// <param name="comment">The 'comment' bytes. Application specific, usually human readable UTF-8 string.</param>
+    /// <param name="comment">The 'comment' bytes. Application specific, usually human-readable UTF-8 string.</param>
     public void WriteComment(ReadOnlySpan<byte> comment)
     {
         HandleJpegLSError(CharLSWriteComment(_encoder, ref MemoryMarshal.GetReference(comment), (nuint)comment.Length));
@@ -344,7 +344,7 @@ public sealed class JpegLSEncoder : IDisposable
     /// <remarks>
     /// Function should be called before encoding the image data.
     /// </remarks>
-    /// <param name="comment">Application specific value, usually human readable UTF-8 string.</param>
+    /// <param name="comment">Application specific value, usually human-readable UTF-8 string.</param>
     public void WriteComment(string comment)
     {
         WriteComment(ToUtf8(comment).Span);
