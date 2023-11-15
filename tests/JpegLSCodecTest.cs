@@ -60,7 +60,8 @@ public sealed class JpegLSCodecTest
         var uncompressedOriginal = ReadAllBytes("test8.ppm", 15);
         uncompressedOriginal = TripletToPlanar(uncompressedOriginal, info.Width, info.Height);
 
-        using JpegLSEncoder encoder = new() { FrameInfo = info };
+        using JpegLSEncoder encoder = new();
+        encoder.FrameInfo = info;
 
         encoder.Destination = new byte[encoder.EstimatedDestinationSize];
         encoder.Encode(uncompressedOriginal);
@@ -82,7 +83,8 @@ public sealed class JpegLSCodecTest
         uncompressedOriginal = TripletToPlanar(uncompressedOriginal, info.Width, info.Height);
 
         JpegLSPresetCodingParameters presetCodingParameters = new(255, 9, 10, 11, 31);
-        using JpegLSEncoder encoder = new() { FrameInfo = info, PresetCodingParameters = presetCodingParameters };
+        using JpegLSEncoder encoder = new(info, false);
+        encoder.PresetCodingParameters = presetCodingParameters;
 
         encoder.Destination = new byte[encoder.EstimatedDestinationSize];
         encoder.Encode(uncompressedOriginal);
@@ -101,9 +103,8 @@ public sealed class JpegLSCodecTest
     public void EncodeOneByOneColor()
     {
         var uncompressedOriginal = new byte[] { 77, 33, 255 };
-        using JpegLSEncoder encoder = new() { FrameInfo = new(1, 1, 8, 3) };
+        using JpegLSEncoder encoder = new(1, 1, 8, 3);
 
-        encoder.Destination = new byte[encoder.EstimatedDestinationSize];
         encoder.Encode(uncompressedOriginal);
 
         using JpegLSDecoder decoder = new(encoder.Destination);
@@ -117,9 +118,8 @@ public sealed class JpegLSCodecTest
     public void Encode2BitMonochrome()
     {
         var uncompressedOriginal = new byte[] { 1 };
-        using JpegLSEncoder encoder = new() { FrameInfo = new(1, 1, 2, 1) };
+        using JpegLSEncoder encoder = new(1, 1, 2, 1);
 
-        encoder.Destination = new byte[encoder.EstimatedDestinationSize];
         encoder.Encode(uncompressedOriginal);
 
         using JpegLSDecoder decoder = new(encoder.Destination);
@@ -133,9 +133,8 @@ public sealed class JpegLSCodecTest
     public void WriteStandardSpiffHeader()
     {
         var uncompressedOriginal = new byte[] { 1 };
-        using JpegLSEncoder encoder = new() { FrameInfo = new(1, 1, 2, 1) };
+        using JpegLSEncoder encoder = new(1, 1, 2, 1);
 
-        encoder.Destination = new byte[encoder.EstimatedDestinationSize];
         encoder.WriteStandardSpiffHeader(SpiffColorSpace.Grayscale);
         encoder.Encode(uncompressedOriginal);
 
@@ -160,9 +159,8 @@ public sealed class JpegLSCodecTest
     public void WriteStandardSpiffHeaderReadWithProperty()
     {
         var uncompressedOriginal = new byte[] { 1 };
-        using JpegLSEncoder encoder = new() { FrameInfo = new(1, 1, 2, 1) };
+        using JpegLSEncoder encoder = new(1, 1, 2, 1);
 
-        encoder.Destination = new byte[encoder.EstimatedDestinationSize];
         encoder.WriteStandardSpiffHeader(SpiffColorSpace.Grayscale);
         encoder.Encode(uncompressedOriginal);
 
@@ -189,9 +187,7 @@ public sealed class JpegLSCodecTest
     public void WriteSpiffHeader()
     {
         var uncompressedOriginal = new byte[] { 1 };
-        using JpegLSEncoder encoder = new() { FrameInfo = new(1, 1, 2, 1) };
-
-        encoder.Destination = new byte[encoder.EstimatedDestinationSize];
+        using JpegLSEncoder encoder = new(1, 1, 2, 1);
 
         SpiffHeader originalSpiffHeader = new()
         {

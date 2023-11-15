@@ -30,7 +30,7 @@ public sealed class JpegLSPresetCodingParametersTest
             Threshold1 = 9,
             Threshold2 = 10,
             Threshold3 = 11,
-            ResetValue =  31
+            ResetValue = 31
         };
 
         Assert.AreEqual(255, presetCodingParameters.MaximumSampleValue);
