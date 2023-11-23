@@ -25,20 +25,6 @@ jobs:
 
   - task: NuGetToolInstaller@1
 
-  - task: UseDotNet@2
-    displayName: 'Install .NET 6.0 SDK'
-    inputs:
-      version: 6.0.x
-      includePreviewVersions : true
-    env:
-      PROCESSOR_ARCHITECTURE: x86
-
-  - task: UseDotNet@2
-    displayName: 'Install .NET 8.0 SDK'
-    inputs:
-      version: 8.0.x
-      includePreviewVersions : true
-
   - task: NuGetCommand@2
     inputs:
       feedsToUse: config
@@ -73,34 +59,6 @@ jobs:
       otherConsoleOptions: --Framework:".NETFramework,Version=v4.8" --Platform:x64
       testAssemblyVer2: |
         **\net48\CharLS.Native.Test.dll
-        !**\*TestAdapter.dll
-        !**\intermediates\**
-      runInParallel: true
-      codeCoverageEnabled: true
-      runSettingsFile: 'tests\CodeCoverage.runsettings'
-
-  - task: VSTest@2
-    displayName: 'Test Charls.Native (.NET 6.0 x86)'
-    inputs:
-      platform: '$(buildPlatform)'
-      configuration: '$(buildConfiguration)'
-      otherConsoleOptions: --Framework:".NETCoreApp,Version=v6.0" --Platform:x86
-      testAssemblyVer2: |
-        **\net6.0\CharLS.Native.Test.dll
-        !**\*TestAdapter.dll
-        !**\intermediates\**
-      runInParallel: true
-      codeCoverageEnabled: true
-      runSettingsFile: 'tests\CodeCoverage.runsettings'
-
-  - task: VSTest@2
-    displayName: 'Test Charls.Native (.NET 6.0 x64)'
-    inputs:
-      platform: '$(buildPlatform)'
-      configuration: '$(buildConfiguration)'
-      otherConsoleOptions: --Framework:".NETCoreApp,Version=v6.0" --Platform:x64
-      testAssemblyVer2: |
-        **\net6.0\CharLS.Native.Test.dll
         !**\*TestAdapter.dll
         !**\intermediates\**
       runInParallel: true
