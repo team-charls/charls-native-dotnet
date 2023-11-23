@@ -66,13 +66,13 @@ jobs:
       runSettingsFile: 'tests\CodeCoverage.runsettings'
 
   - task: VSTest@2
-    displayName: 'Test Charls.Native (.NET 7.0 x86)'
+    displayName: 'Test Charls.Native (.NET 6.0 x64)'
     inputs:
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
-      otherConsoleOptions: --Framework:".NETCoreApp,Version=v7.0" --Platform:x86
+      otherConsoleOptions: --Framework:".NETCoreApp,Version=v6.0" --Platform:x64
       testAssemblyVer2: |
-        **\net7.0\CharLS.Native.Test.dll
+        **\net6.0\CharLS.Native.Test.dll
         !**\*TestAdapter.dll
         !**\intermediates\**
       runInParallel: true
