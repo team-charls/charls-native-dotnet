@@ -99,12 +99,12 @@ public enum JpegLSError
     InvalidMarkerSegmentSize = 17,
 
     /// <summary>
-    /// This error is returned when the stream contains more then one SOI (Start Of Image) marker.
+    /// This error is returned when the stream contains more than one SOI (Start Of Image) marker.
     /// </summary>
     DuplicateStartOfImageMarker = 18,
 
     /// <summary>
-    /// This error is returned when the stream contains more then one SOF (Start Of Frame) marker.
+    /// This error is returned when the stream contains more than one SOF (Start Of Frame) marker.
     /// </summary>
     DuplicateStartOfFrameMarker = 19,
 
@@ -145,7 +145,7 @@ public enum JpegLSError
     RestartMarkerNotFound = 26,
 
     /// <summary>
-    /// This error is returned when a callback function returns a non zero value.
+    /// This error is returned when a callback function returns a non-zero value.
     /// </summary>
     CallbackFailed = 27,
 
@@ -216,12 +216,12 @@ public enum JpegLSError
     InvalidArgumentEncodingOptions = 113,
 
     /// <summary>
-    /// This error is returned when the width parameter is defined more then once in an incompatible way.
+    /// This error is returned when the width parameter is defined more than once in an incompatible way.
     /// </summary>
     InvalidParameterWidth = 200,
 
     /// <summary>
-    /// This error is returned when the height parameter is defined more then once in an incompatible way.
+    /// This error is returned when the height parameter is defined more than once in an incompatible way.
     /// </summary>
     InvalidParameterHeight = 201,
 

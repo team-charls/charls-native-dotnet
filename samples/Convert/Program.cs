@@ -51,10 +51,8 @@ try
             ConvertBgrToRgb(pixels, sourceImage.Width, sourceImage.Height, bitmapData.Stride);
         }
 
-        using JpegLSEncoder jpeglsEncoder = new(frameInfo)
-        {
-            InterleaveMode = frameInfo.ComponentCount == 1 ? JpegLSInterleaveMode.None : JpegLSInterleaveMode.Sample
-        };
+        using JpegLSEncoder jpeglsEncoder = new(frameInfo);
+        jpeglsEncoder.InterleaveMode = frameInfo.ComponentCount == 1 ? JpegLSInterleaveMode.None : JpegLSInterleaveMode.Sample;
 
         jpeglsEncoder.WriteStandardSpiffHeader(MapComponentCountToSpiffColorSpace(frameInfo.ComponentCount));
         jpeglsEncoder.Encode(pixels, bitmapData.Stride);

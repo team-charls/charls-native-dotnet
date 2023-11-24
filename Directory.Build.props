@@ -6,7 +6,7 @@
 <Project>
   <PropertyGroup>
     <!-- General -->
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <TargetFrameworks Condition="'$(MSBuildRuntimeType)'=='Full'">$(TargetFrameworks);net48</TargetFrameworks>
     <LangVersion>latest</LangVersion><!-- Use the latest released C# language version -->
     <Features>strict</Features>
@@ -15,6 +15,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ChecksumAlgorithm>SHA256</ChecksumAlgorithm> <!-- Use Sha256 for checksums in PDBs (default is SHA1) -->
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
 
     <!--
       Make sure any documentation comments which are included in code get checked for syntax during the build, but do
@@ -30,7 +32,6 @@
     <!-- Build to a folder outside the source folders, making it easier to clean. -->
     <OutputPath>$(MSBuildThisFileDirectory)build\bin\$(Configuration)\</OutputPath>
     <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)build\intermediates\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
-    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 
     <!-- Static Analysis -->
     <AnalysisLevel>latest</AnalysisLevel><!-- Use the latest analysis leve (.NET 5.0 and newer feature) -->

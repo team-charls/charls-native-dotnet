@@ -51,7 +51,7 @@ public sealed class JpegLSDecoderTest
     [Test]
     public void SetSourceTwice()
     {
-        using JpegLSDecoder decoder = new() { Source = new byte[10] };
+        using JpegLSDecoder decoder = new(new byte[10], false);
 
         _ = Assert.Throws<InvalidOperationException>(() =>
         {
@@ -87,10 +87,7 @@ public sealed class JpegLSDecoderTest
         byte[] source = ReadAllBytes("t8nde0.jls");
 
         using JpegLSDecoder decoder = new(source);
-        _ = Assert.Throws<ArgumentOutOfRangeException>(() =>
-        {
-            var _ = decoder.GetDestinationSize(-1);
-        });
+        _ = Assert.Throws<ArgumentOutOfRangeException>(() => { _ = decoder.GetDestinationSize(-1); });
     }
 
     [Test]
@@ -134,22 +131,13 @@ public sealed class JpegLSDecoderTest
         JpegLSDecoder decoder = new();
         decoder.Dispose();
 
-        _ = Assert.Throws<ObjectDisposedException>(() =>
-        {
-            var _ = decoder.TryReadSpiffHeader(out var _);
-        });
+        _ = Assert.Throws<ObjectDisposedException>(() => { _ = decoder.TryReadSpiffHeader(out _); });
 
         Assert.IsNotNull(decoder.Source);
 
-        _ = Assert.Throws<ObjectDisposedException>(() =>
-        {
-            var _ = decoder.GetDestinationSize();
-        });
+        _ = Assert.Throws<ObjectDisposedException>(() => { _ = decoder.GetDestinationSize(); });
 
-        _ = Assert.Throws<ObjectDisposedException>(() =>
-        {
-            var _ = decoder.Decode();
-        });
+        _ = Assert.Throws<ObjectDisposedException>(() => { _ = decoder.Decode(); });
     }
 
     [Test]
@@ -175,11 +163,6 @@ public sealed class JpegLSDecoderTest
         byte[]? comment2 = null;
         using JpegLSDecoder decoder = new(encoder.EncodedData, false);
 
-        void CommentHandler(object? _, CommentEventArgs e)
-        {
-            comment2 = e.Data.ToArray();
-        }
-
         decoder.Comment += CommentHandler;
         decoder.Comment -= CommentHandler;
         decoder.Comment += CommentHandler;
@@ -191,6 +174,12 @@ public sealed class JpegLSDecoderTest
         Assert.AreEqual(2, comment2![1]);
         Assert.AreEqual(3, comment2![2]);
         Assert.AreEqual(4, comment2![3]);
+        return;
+
+        void CommentHandler(object? _, CommentEventArgs e)
+        {
+            comment2 = e.Data.ToArray();
+        }
     }
 
     [Test]
@@ -237,11 +226,6 @@ public sealed class JpegLSDecoderTest
         byte[]? applicationData2 = null;
         using JpegLSDecoder decoder = new(encoder.EncodedData, false);
 
-        void ApplicationDataHandler(object? _, ApplicationDataEventArgs e)
-        {
-            applicationData2 = e.Data.ToArray();
-        }
-
         decoder.ApplicationData += ApplicationDataHandler;
         decoder.ApplicationData -= ApplicationDataHandler;
         decoder.ApplicationData += ApplicationDataHandler;
@@ -253,6 +237,12 @@ public sealed class JpegLSDecoderTest
         Assert.AreEqual(2, applicationData2![1]);
         Assert.AreEqual(3, applicationData2![2]);
         Assert.AreEqual(4, applicationData2![3]);
+        return;
+
+        void ApplicationDataHandler(object? _, ApplicationDataEventArgs e)
+        {
+            applicationData2 = e.Data.ToArray();
+        }
     }
 
     [Test]

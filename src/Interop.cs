@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 namespace CharLS.Native;
 
 
-#if NET7_0
+#if NET7_0_OR_GREATER
 internal static partial class Interop
 #else
 internal static class Interop
@@ -112,7 +112,7 @@ internal static class Interop
         }
     }
 
-#if NET7_0
+#if NET7_0_OR_GREATER
     [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_get_version_number")]
     internal static partial void CharLSGetVersionNumber(out int major, out int minor, out int patch);
 

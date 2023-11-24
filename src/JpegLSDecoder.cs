@@ -91,7 +91,7 @@ public sealed class JpegLSDecoder : IDisposable
     }
 
     /// <summary>
-    /// Gets or sets the the source buffer that contains the encoded JPEG-LS bytes.
+    /// Gets or sets the source buffer that contains the encoded JPEG-LS bytes.
     /// </summary>
     /// <value>
     /// A region of memory that contains an encoded JPEG-LS image.
@@ -136,7 +136,7 @@ public sealed class JpegLSDecoder : IDisposable
     /// Gets the frame information of the image contained in the JPEG-LS stream.
     /// </summary>
     /// <remarks>
-    /// Property should be obtained after calling <see cref="ReadHeader"/>".
+    /// Property should be obtained after calling <see cref="ReadHeader"/>.
     /// </remarks>
     /// <value>
     /// The frame information of the parsed JPEG-LS image.
@@ -162,7 +162,7 @@ public sealed class JpegLSDecoder : IDisposable
     /// Gets the near lossless parameter used to encode the JPEG-LS stream.
     /// </summary>
     /// <remarks>
-    /// Property should be obtained after calling <see cref="ReadHeader"/>".
+    /// Property should be obtained after calling <see cref="ReadHeader"/>.
     /// </remarks>
     /// <value>
     /// The near lossless parameter. A value of 0 means that the image is lossless encoded.
@@ -187,7 +187,7 @@ public sealed class JpegLSDecoder : IDisposable
     /// Gets the interleave mode that was used to encode the scan(s).
     /// </summary>
     /// <remarks>
-    /// Property should be obtained after calling <see cref="ReadHeader"/>".
+    /// Property should be obtained after calling <see cref="ReadHeader"/>.
     /// </remarks>
     /// <returns>The result of the operation: success or a failure code.</returns>
     /// <exception cref="ObjectDisposedException">Thrown when the instance is used after being disposed.</exception>

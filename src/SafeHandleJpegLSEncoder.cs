@@ -8,13 +8,8 @@ namespace CharLS.Native;
 /// <summary>
 /// Helper class that manages the native JpegLSEncoder resource.
 /// </summary>
-internal sealed class SafeHandleJpegLSEncoder : SafeHandleZeroOrMinusOneIsInvalid
+internal sealed class SafeHandleJpegLSEncoder() : SafeHandleZeroOrMinusOneIsInvalid(true)
 {
-    public SafeHandleJpegLSEncoder()
-        : base(true)
-    {
-    }
-
     protected override bool ReleaseHandle()
     {
         Interop.CharLSDestroyEncoder(handle);

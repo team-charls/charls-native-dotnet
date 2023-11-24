@@ -433,9 +433,6 @@ public sealed class JpegLSEncoderTest
     {
         FrameInfo frameInfo = new(1, 1, 8, 1);
 
-        _ = Assert.Throws<ArgumentOutOfRangeException>(() =>
-        {
-            var _ = new JpegLSEncoder(frameInfo, true, -1);
-        });
+        _ = Assert.Throws<ArgumentOutOfRangeException>(() => { _ = new JpegLSEncoder(frameInfo, true, -1); });
     }
 }
