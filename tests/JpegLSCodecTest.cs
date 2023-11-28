@@ -14,11 +14,14 @@ public sealed class JpegLSCodecTest
     {
         using JpegLSDecoder decoder = new(ReadAllBytes("t8c0e0.jls"));
 
-        Assert.AreEqual(256, decoder.FrameInfo.Height);
-        Assert.AreEqual(256, decoder.FrameInfo.Width);
-        Assert.AreEqual(8, decoder.FrameInfo.BitsPerSample);
-        Assert.AreEqual(3, decoder.FrameInfo.ComponentCount);
-        Assert.AreEqual(0, decoder.NearLossless);
+        Assert.Multiple(() =>
+        {
+            Assert.That(decoder.FrameInfo.Height, Is.EqualTo(256));
+            Assert.That(decoder.FrameInfo.Width, Is.EqualTo(256));
+            Assert.That(decoder.FrameInfo.BitsPerSample, Is.EqualTo(8));
+            Assert.That(decoder.FrameInfo.ComponentCount, Is.EqualTo(3));
+            Assert.That(decoder.NearLossless, Is.EqualTo(0));
+        });
     }
 
     [Test]
@@ -27,11 +30,14 @@ public sealed class JpegLSCodecTest
         using JpegLSDecoder decoder = new(ReadAllBytes("t8c0e3.jls"));
 
         var frameInfo = decoder.FrameInfo;
-        Assert.AreEqual(256, frameInfo.Height);
-        Assert.AreEqual(256, frameInfo.Width);
-        Assert.AreEqual(8, frameInfo.BitsPerSample);
-        Assert.AreEqual(3, frameInfo.ComponentCount);
-        Assert.AreEqual(3, decoder.NearLossless);
+        Assert.Multiple(() =>
+        {
+            Assert.That(frameInfo.Height, Is.EqualTo(256));
+            Assert.That(frameInfo.Width, Is.EqualTo(256));
+            Assert.That(frameInfo.BitsPerSample, Is.EqualTo(8));
+            Assert.That(frameInfo.ComponentCount, Is.EqualTo(3));
+            Assert.That(decoder.NearLossless, Is.EqualTo(3));
+        });
     }
 
     [Test]
@@ -49,7 +55,7 @@ public sealed class JpegLSCodecTest
             expected = TripletToPlanar(expected, frameInfo.Width, frameInfo.Height);
         }
 
-        Assert.AreEqual(expected, uncompressed);
+        Assert.That(uncompressed, Is.EqualTo(expected));
     }
 
     [Test]
@@ -67,11 +73,11 @@ public sealed class JpegLSCodecTest
         encoder.Encode(uncompressedOriginal);
 
         using JpegLSDecoder decoder = new(encoder.EncodedData);
-        Assert.AreEqual(info, decoder.FrameInfo);
+        Assert.That(decoder.FrameInfo, Is.EqualTo(info));
 
         var uncompressed = decoder.Decode();
-        Assert.AreEqual(uncompressedOriginal.Length, uncompressed.Length);
-        Assert.AreEqual(uncompressedOriginal, uncompressed);
+        Assert.That(uncompressed, Has.Length.EqualTo(uncompressedOriginal.Length));
+        Assert.That(uncompressed, Is.EqualTo(uncompressedOriginal));
     }
 
     [Test]
@@ -92,11 +98,11 @@ public sealed class JpegLSCodecTest
         using JpegLSDecoder decoder = new(encoder.EncodedData);
         var pcp = decoder.PresetCodingParameters;
 
-        Assert.AreEqual(presetCodingParameters, pcp);
+        Assert.That(pcp, Is.EqualTo(presetCodingParameters));
 
         var uncompressed = decoder.Decode();
-        Assert.AreEqual(uncompressedOriginal.Length, uncompressed.Length);
-        Assert.AreEqual(uncompressedOriginal, uncompressed);
+        Assert.That(uncompressed, Has.Length.EqualTo(uncompressedOriginal.Length));
+        Assert.That(uncompressed, Is.EqualTo(uncompressedOriginal));
     }
 
     [Test]
@@ -110,8 +116,8 @@ public sealed class JpegLSCodecTest
         using JpegLSDecoder decoder = new(encoder.Destination);
 
         var uncompressed = decoder.Decode();
-        Assert.AreEqual(uncompressedOriginal.Length, uncompressed.Length);
-        Assert.AreEqual(uncompressedOriginal, uncompressed);
+        Assert.That(uncompressed, Has.Length.EqualTo(uncompressedOriginal.Length));
+        Assert.That(uncompressed, Is.EqualTo(uncompressedOriginal));
     }
 
     [Test]
@@ -125,8 +131,8 @@ public sealed class JpegLSCodecTest
         using JpegLSDecoder decoder = new(encoder.Destination);
 
         var uncompressed = decoder.Decode();
-        Assert.AreEqual(uncompressedOriginal.Length, uncompressed.Length);
-        Assert.AreEqual(uncompressedOriginal, uncompressed);
+        Assert.That(uncompressed, Has.Length.EqualTo(uncompressedOriginal.Length));
+        Assert.That(uncompressed, Is.EqualTo(uncompressedOriginal));
     }
 
     [Test]
@@ -141,18 +147,21 @@ public sealed class JpegLSCodecTest
         using JpegLSDecoder decoder = new(encoder.Destination, false);
         bool spiffHeaderPresent = decoder.TryReadSpiffHeader(out var spiffHeader);
 
-        Assert.IsTrue(spiffHeaderPresent);
+        Assert.Multiple(() =>
+        {
+            Assert.That(spiffHeaderPresent, Is.True);
 
-        Assert.AreEqual(SpiffProfileId.None, spiffHeader!.ProfileId);
-        Assert.AreEqual(1, spiffHeader.ComponentCount);
-        Assert.AreEqual(1, spiffHeader.Height);
-        Assert.AreEqual(1, spiffHeader.Width);
-        Assert.AreEqual(SpiffColorSpace.Grayscale, spiffHeader.ColorSpace);
-        Assert.AreEqual(2, spiffHeader.BitsPerSample);
-        Assert.AreEqual(SpiffCompressionType.JpegLS, spiffHeader.CompressionType);
-        Assert.AreEqual(SpiffResolutionUnit.AspectRatio, spiffHeader.ResolutionUnit);
-        Assert.AreEqual(1, spiffHeader.VerticalResolution);
-        Assert.AreEqual(1, spiffHeader.HorizontalResolution);
+            Assert.That(spiffHeader!.ProfileId, Is.EqualTo(SpiffProfileId.None));
+            Assert.That(spiffHeader.ComponentCount, Is.EqualTo(1));
+            Assert.That(spiffHeader.Height, Is.EqualTo(1));
+            Assert.That(spiffHeader.Width, Is.EqualTo(1));
+            Assert.That(spiffHeader.ColorSpace, Is.EqualTo(SpiffColorSpace.Grayscale));
+            Assert.That(spiffHeader.BitsPerSample, Is.EqualTo(2));
+            Assert.That(spiffHeader.CompressionType, Is.EqualTo(SpiffCompressionType.JpegLS));
+            Assert.That(spiffHeader.ResolutionUnit, Is.EqualTo(SpiffResolutionUnit.AspectRatio));
+            Assert.That(spiffHeader.VerticalResolution, Is.EqualTo(1));
+            Assert.That(spiffHeader.HorizontalResolution, Is.EqualTo(1));
+        });
     }
 
     [Test]
@@ -167,20 +176,23 @@ public sealed class JpegLSCodecTest
         using JpegLSDecoder decoder = new(encoder.Destination);
 
         var spiffHeader = decoder.SpiffHeader;
-        Assert.IsNotNull(spiffHeader);
+        Assert.That(spiffHeader, Is.Not.Null);
         if (decoder.SpiffHeader == null)
             return;
 
-        Assert.AreEqual(SpiffProfileId.None, spiffHeader!.ProfileId);
-        Assert.AreEqual(1, decoder.SpiffHeader.ComponentCount);
-        Assert.AreEqual(1, spiffHeader.Height);
-        Assert.AreEqual(1, spiffHeader.Width);
-        Assert.AreEqual(SpiffColorSpace.Grayscale, spiffHeader.ColorSpace);
-        Assert.AreEqual(2, spiffHeader.BitsPerSample);
-        Assert.AreEqual(SpiffCompressionType.JpegLS, spiffHeader.CompressionType);
-        Assert.AreEqual(SpiffResolutionUnit.AspectRatio, spiffHeader.ResolutionUnit);
-        Assert.AreEqual(1, spiffHeader.VerticalResolution);
-        Assert.AreEqual(1, spiffHeader.HorizontalResolution);
+        Assert.Multiple(() =>
+        {
+            Assert.That(spiffHeader!.ProfileId, Is.EqualTo(SpiffProfileId.None));
+            Assert.That(decoder.SpiffHeader.ComponentCount, Is.EqualTo(1));
+            Assert.That(spiffHeader.Height, Is.EqualTo(1));
+            Assert.That(spiffHeader.Width, Is.EqualTo(1));
+            Assert.That(spiffHeader.ColorSpace, Is.EqualTo(SpiffColorSpace.Grayscale));
+            Assert.That(spiffHeader.BitsPerSample, Is.EqualTo(2));
+            Assert.That(spiffHeader.CompressionType, Is.EqualTo(SpiffCompressionType.JpegLS));
+            Assert.That(spiffHeader.ResolutionUnit, Is.EqualTo(SpiffResolutionUnit.AspectRatio));
+            Assert.That(spiffHeader.VerticalResolution, Is.EqualTo(1));
+            Assert.That(spiffHeader.HorizontalResolution, Is.EqualTo(1));
+        });
     }
 
     [Test]
@@ -204,18 +216,21 @@ public sealed class JpegLSCodecTest
         using JpegLSDecoder decoder = new(encoder.Destination, false);
         bool spiffHeaderPresent = decoder.TryReadSpiffHeader(out var spiffHeader);
 
-        Assert.IsTrue(spiffHeaderPresent);
+        Assert.Multiple(() =>
+        {
+            Assert.That(spiffHeaderPresent, Is.True);
 
-        Assert.AreEqual(SpiffProfileId.None, spiffHeader!.ProfileId);
-        Assert.AreEqual(1, spiffHeader.ComponentCount);
-        Assert.AreEqual(1, spiffHeader.Height);
-        Assert.AreEqual(1, spiffHeader.Width);
-        Assert.AreEqual(SpiffColorSpace.Grayscale, spiffHeader.ColorSpace);
-        Assert.AreEqual(2, spiffHeader.BitsPerSample);
-        Assert.AreEqual(SpiffCompressionType.JpegLS, spiffHeader.CompressionType);
-        Assert.AreEqual(SpiffResolutionUnit.AspectRatio, spiffHeader.ResolutionUnit);
-        Assert.AreEqual(1, spiffHeader.VerticalResolution);
-        Assert.AreEqual(1, spiffHeader.HorizontalResolution);
+            Assert.That(spiffHeader!.ProfileId, Is.EqualTo(SpiffProfileId.None));
+            Assert.That(spiffHeader.ComponentCount, Is.EqualTo(1));
+            Assert.That(spiffHeader.Height, Is.EqualTo(1));
+            Assert.That(spiffHeader.Width, Is.EqualTo(1));
+            Assert.That(spiffHeader.ColorSpace, Is.EqualTo(SpiffColorSpace.Grayscale));
+            Assert.That(spiffHeader.BitsPerSample, Is.EqualTo(2));
+            Assert.That(spiffHeader.CompressionType, Is.EqualTo(SpiffCompressionType.JpegLS));
+            Assert.That(spiffHeader.ResolutionUnit, Is.EqualTo(SpiffResolutionUnit.AspectRatio));
+            Assert.That(spiffHeader.VerticalResolution, Is.EqualTo(1));
+            Assert.That(spiffHeader.HorizontalResolution, Is.EqualTo(1));
+        });
     }
 
     [Test]
@@ -224,7 +239,7 @@ public sealed class JpegLSCodecTest
         var source = "33"u8.ToArray();
 
         var exception = Assert.Throws<InvalidDataException>(() => Decode(source));
-        Assert.AreEqual(JpegLSError.JpegMarkerStartByteNotFound, exception!.Data["JpegLSError"]);
+        Assert.That(exception!.Data["JpegLSError"], Is.EqualTo(JpegLSError.JpegMarkerStartByteNotFound));
     }
 
     [Test]
@@ -237,7 +252,7 @@ public sealed class JpegLSCodecTest
             0x00, 0x00 // Length of data of the marker
         };
         var exception = Assert.Throws<InvalidDataException>(() => Decode(source));
-        Assert.AreEqual(JpegLSError.EncodingNotSupported, exception!.Data["JpegLSError"]);
+        Assert.That(exception!.Data["JpegLSError"], Is.EqualTo(JpegLSError.EncodingNotSupported));
     }
 
     [Test]
@@ -251,7 +266,7 @@ public sealed class JpegLSCodecTest
         };
 
         var exception = Assert.Throws<InvalidDataException>(() => Decode(source));
-        Assert.AreEqual(JpegLSError.UnknownJpegMarkerFound, exception!.Data["JpegLSError"]);
+        Assert.That(exception!.Data["JpegLSError"], Is.EqualTo(JpegLSError.UnknownJpegMarkerFound));
     }
 
     [Test]
@@ -266,7 +281,7 @@ public sealed class JpegLSCodecTest
         var destination = new byte[size];
         decoder.Decode(destination);
 
-        Assert.AreEqual(source, destination);
+        Assert.That(destination, Is.EqualTo(source));
     }
 
     [Test]
@@ -281,7 +296,7 @@ public sealed class JpegLSCodecTest
         var destination = new byte[size];
         decoder.Decode(destination);
 
-        Assert.AreEqual(source, destination);
+        Assert.That(destination, Is.EqualTo(source));
     }
 
     private static byte[] TripletToPlanar(IList<byte> buffer, int width, int height)

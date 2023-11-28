@@ -15,7 +15,7 @@ public sealed class ExceptionExtensionsTest
 
         exception.SetJpegLSError(JpegLSError.DuplicateStartOfFrameMarker);
 
-        Assert.AreEqual(JpegLSError.DuplicateStartOfFrameMarker, exception.GetJpegLSError());
+        Assert.That(exception.GetJpegLSError(), Is.EqualTo(JpegLSError.DuplicateStartOfFrameMarker));
     }
 
     [Test]
@@ -23,6 +23,6 @@ public sealed class ExceptionExtensionsTest
     {
         var exception = new InvalidDataException();
 
-        Assert.AreEqual(JpegLSError.None, exception.GetJpegLSError());
+        Assert.That(exception.GetJpegLSError(), Is.EqualTo(JpegLSError.None));
     }
 }

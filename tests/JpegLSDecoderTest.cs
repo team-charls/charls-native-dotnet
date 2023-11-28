@@ -1,6 +1,7 @@
 // Copyright (c) Team CharLS.
 // SPDX-License-Identifier: BSD-3-Clause
 
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using NUnit.Framework;
 
@@ -16,11 +17,14 @@ public sealed class JpegLSDecoderTest
         using JpegLSDecoder decoder = new(source);
         var presetCodingParameters = decoder.PresetCodingParameters;
 
-        Assert.AreEqual(255, presetCodingParameters.MaximumSampleValue);
-        Assert.AreEqual(9, presetCodingParameters.Threshold1);
-        Assert.AreEqual(9, presetCodingParameters.Threshold2);
-        Assert.AreEqual(9, presetCodingParameters.Threshold3);
-        Assert.AreEqual(31, presetCodingParameters.ResetValue);
+        Assert.Multiple(() =>
+        {
+            Assert.That(presetCodingParameters.MaximumSampleValue, Is.EqualTo(255));
+            Assert.That(presetCodingParameters.Threshold1, Is.EqualTo(9));
+            Assert.That(presetCodingParameters.Threshold2, Is.EqualTo(9));
+            Assert.That(presetCodingParameters.Threshold3, Is.EqualTo(9));
+            Assert.That(presetCodingParameters.ResetValue, Is.EqualTo(31));
+        });
     }
 
     [Test]
@@ -67,8 +71,11 @@ public sealed class JpegLSDecoderTest
         using JpegLSDecoder decoder = new(source, false);
         bool result = decoder.TryReadSpiffHeader(out var header);
 
-        Assert.IsFalse(result);
-        Assert.IsNull(header);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.False);
+            Assert.That(header, Is.Null);
+        });
     }
 
     [Test]
@@ -78,7 +85,7 @@ public sealed class JpegLSDecoderTest
 
         using JpegLSDecoder decoder = new(source);
 
-        Assert.IsNull(decoder.SpiffHeader);
+        Assert.That(decoder.SpiffHeader, Is.Null);
     }
 
     [Test]
@@ -122,7 +129,7 @@ public sealed class JpegLSDecoderTest
 
         using JpegLSDecoder decoder = new(source);
 
-        Assert.IsNotNull(decoder.Source);
+        Assert.That(decoder.Source.IsEmpty, Is.False);
     }
 
     [Test]
@@ -133,7 +140,7 @@ public sealed class JpegLSDecoderTest
 
         _ = Assert.Throws<ObjectDisposedException>(() => { _ = decoder.TryReadSpiffHeader(out _); });
 
-        Assert.IsNotNull(decoder.Source);
+        Assert.That(decoder.Source.ToArray(), Is.Not.Null);
 
         _ = Assert.Throws<ObjectDisposedException>(() => { _ = decoder.GetDestinationSize(); });
 
@@ -168,12 +175,15 @@ public sealed class JpegLSDecoderTest
         decoder.Comment += CommentHandler;
         decoder.ReadHeader();
 
-        Assert.IsNotNull(comment2);
-        Assert.AreEqual(4, comment2!.Length);
-        Assert.AreEqual(1, comment2![0]);
-        Assert.AreEqual(2, comment2![1]);
-        Assert.AreEqual(3, comment2![2]);
-        Assert.AreEqual(4, comment2![3]);
+        Assert.That(comment2, Is.Not.Null);
+        Assert.That(comment2!, Has.Length.EqualTo(4));
+        Assert.Multiple(() =>
+        {
+            Assert.That(comment2![0], Is.EqualTo(1));
+            Assert.That(comment2![1], Is.EqualTo(2));
+            Assert.That(comment2![2], Is.EqualTo(3));
+            Assert.That(comment2![3], Is.EqualTo(4));
+        });
         return;
 
         void CommentHandler(object? _, CommentEventArgs e)
@@ -231,12 +241,15 @@ public sealed class JpegLSDecoderTest
         decoder.ApplicationData += ApplicationDataHandler;
         decoder.ReadHeader();
 
-        Assert.IsNotNull(applicationData2);
-        Assert.AreEqual(4, applicationData2!.Length);
-        Assert.AreEqual(1, applicationData2![0]);
-        Assert.AreEqual(2, applicationData2![1]);
-        Assert.AreEqual(3, applicationData2![2]);
-        Assert.AreEqual(4, applicationData2![3]);
+        Assert.That(applicationData2, Is.Not.Null);
+        Assert.That(applicationData2!, Has.Length.EqualTo(4));
+        Assert.Multiple(() =>
+        {
+            Assert.That(applicationData2![0], Is.EqualTo(1));
+            Assert.That(applicationData2![1], Is.EqualTo(2));
+            Assert.That(applicationData2![2], Is.EqualTo(3));
+            Assert.That(applicationData2![3], Is.EqualTo(4));
+        });
         return;
 
         void ApplicationDataHandler(object? _, ApplicationDataEventArgs e)
@@ -287,7 +300,7 @@ public sealed class JpegLSDecoderTest
         using JpegLSDecoder decoder = new(encoder.EncodedData, false);
         decoder.ReadHeader(false);
 
-        Assert.IsNull(decoder.SpiffHeader);
+        Assert.That(decoder.SpiffHeader, Is.Null);
     }
 
     [Test]
@@ -300,9 +313,10 @@ public sealed class JpegLSDecoderTest
         using JpegLSDecoder decoder = new(encoder.EncodedData, false);
 
         var exception = Assert.Throws<InvalidDataException>(() => { decoder.ReadHeader(); });
-        Assert.AreEqual(JpegLSError.InvalidSpiffHeader, exception!.GetJpegLSError());
+        Assert.That(exception!.GetJpegLSError(), Is.EqualTo(JpegLSError.InvalidSpiffHeader));
     }
 
+    [SuppressMessage("Structure", "NUnit1028:The non-test method is public", Justification = "shared code across tests")]
     internal static bool CanHandleEmptyBuffer()
     {
         Interop.CharLSGetVersionNumber(out int _, out int minor, out int patch);

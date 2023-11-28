@@ -14,11 +14,14 @@ public sealed class JpegLSPresetCodingParametersTest
     {
         JpegLSPresetCodingParameters presetCodingParameters = new(255, 9, 10, 11, 31);
 
-        Assert.AreEqual(255, presetCodingParameters.MaximumSampleValue);
-        Assert.AreEqual(9, presetCodingParameters.Threshold1);
-        Assert.AreEqual(10, presetCodingParameters.Threshold2);
-        Assert.AreEqual(11, presetCodingParameters.Threshold3);
-        Assert.AreEqual(31, presetCodingParameters.ResetValue);
+        Assert.Multiple(() =>
+        {
+            Assert.That(presetCodingParameters.MaximumSampleValue, Is.EqualTo(255));
+            Assert.That(presetCodingParameters.Threshold1, Is.EqualTo(9));
+            Assert.That(presetCodingParameters.Threshold2, Is.EqualTo(10));
+            Assert.That(presetCodingParameters.Threshold3, Is.EqualTo(11));
+            Assert.That(presetCodingParameters.ResetValue, Is.EqualTo(31));
+        });
     }
 
     [Test]
@@ -33,11 +36,14 @@ public sealed class JpegLSPresetCodingParametersTest
             ResetValue = 31
         };
 
-        Assert.AreEqual(255, presetCodingParameters.MaximumSampleValue);
-        Assert.AreEqual(9, presetCodingParameters.Threshold1);
-        Assert.AreEqual(10, presetCodingParameters.Threshold2);
-        Assert.AreEqual(11, presetCodingParameters.Threshold3);
-        Assert.AreEqual(31, presetCodingParameters.ResetValue);
+        Assert.Multiple(() =>
+        {
+            Assert.That(presetCodingParameters.MaximumSampleValue, Is.EqualTo(255));
+            Assert.That(presetCodingParameters.Threshold1, Is.EqualTo(9));
+            Assert.That(presetCodingParameters.Threshold2, Is.EqualTo(10));
+            Assert.That(presetCodingParameters.Threshold3, Is.EqualTo(11));
+            Assert.That(presetCodingParameters.ResetValue, Is.EqualTo(31));
+        });
     }
 
     [Test]
@@ -46,12 +52,22 @@ public sealed class JpegLSPresetCodingParametersTest
         JpegLSPresetCodingParameters a = new(255, 9, 10, 11, 31);
         JpegLSPresetCodingParameters b = new(255, 9, 10, 11, 31);
 
-        Assert.IsTrue(a.Equals(b));
-        Assert.IsTrue(a.Equals((object)b));
-        Assert.AreEqual(a, b);
-        Assert.AreEqual(b, a);
-        Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
-        Assert.IsTrue(a == b);
+        bool equals = a.Equals(b);
+        bool equalsObject = a.Equals((object)b);
+        bool equalsOperator = a == b;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(equals, Is.True);
+            Assert.That(equalsObject, Is.True);
+            Assert.That(b, Is.EqualTo(a));
+            Assert.That(a, Is.EqualTo(b));
+        });
+        Assert.Multiple(() =>
+        {
+            Assert.That(b.GetHashCode(), Is.EqualTo(a.GetHashCode()));
+            Assert.That(equalsOperator, Is.True);
+        });
     }
 
     [Test]
@@ -60,9 +76,16 @@ public sealed class JpegLSPresetCodingParametersTest
         JpegLSPresetCodingParameters a = new(255, 9, 10, 11, 31);
         JpegLSPresetCodingParameters b = new(255, 9, 10, 11, 32);
 
-        Assert.IsFalse(a.Equals(b));
-        Assert.IsFalse(a.Equals((object)b));
-        Assert.IsTrue(a != b);
+        bool equals = a.Equals(b);
+        bool equalsObject = a.Equals((object)b);
+        bool equalsOperator = a == b;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(equals, Is.False);
+            Assert.That(equalsObject, Is.False);
+            Assert.That(equalsOperator, Is.False);
+        });
     }
 
     [Test]
@@ -71,7 +94,13 @@ public sealed class JpegLSPresetCodingParametersTest
     {
         JpegLSPresetCodingParameters a = new(2556, 9, 10, 11, 31);
 
-        Assert.IsFalse(a.Equals(null!));
-        Assert.IsFalse(a!.Equals((object)null!));
+        bool equals = a.Equals(null!);
+        bool equalsObject = a!.Equals((object)null!);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(equals, Is.False);
+            Assert.That(equalsObject, Is.False);
+        });
     }
 }
