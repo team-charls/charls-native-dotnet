@@ -14,16 +14,19 @@ public sealed class SpiffHeaderTest
     {
         SpiffHeader header = new();
 
-        Assert.AreEqual(SpiffProfileId.None, header.ProfileId);
-        Assert.AreEqual(0, header.ComponentCount);
-        Assert.AreEqual(0, header.Width);
-        Assert.AreEqual(0, header.Height);
-        Assert.AreEqual(SpiffColorSpace.None, header.ColorSpace);
-        Assert.AreEqual(0, header.BitsPerSample);
-        Assert.AreEqual(SpiffCompressionType.JpegLS, header.CompressionType);
-        Assert.AreEqual(SpiffResolutionUnit.AspectRatio, header.ResolutionUnit);
-        Assert.AreEqual(1, header.VerticalResolution);
-        Assert.AreEqual(1, header.HorizontalResolution);
+        Assert.Multiple(() =>
+        {
+            Assert.That(header.ProfileId, Is.EqualTo(SpiffProfileId.None));
+            Assert.That(header.ComponentCount, Is.EqualTo(0));
+            Assert.That(header.Width, Is.EqualTo(0));
+            Assert.That(header.Height, Is.EqualTo(0));
+            Assert.That(header.ColorSpace, Is.EqualTo(SpiffColorSpace.None));
+            Assert.That(header.BitsPerSample, Is.EqualTo(0));
+            Assert.That(header.CompressionType, Is.EqualTo(SpiffCompressionType.JpegLS));
+            Assert.That(header.ResolutionUnit, Is.EqualTo(SpiffResolutionUnit.AspectRatio));
+            Assert.That(header.VerticalResolution, Is.EqualTo(1));
+            Assert.That(header.HorizontalResolution, Is.EqualTo(1));
+        });
     }
 
     [Test]
@@ -36,10 +39,13 @@ public sealed class SpiffHeaderTest
             ColorSpace = SpiffColorSpace.Rgb
         };
 
-        Assert.AreEqual(3, header.ComponentCount);
-        Assert.AreEqual(512, header.Width);
-        Assert.AreEqual(1024, header.Height);
-        Assert.AreEqual(SpiffColorSpace.Rgb, header.ColorSpace);
+        Assert.Multiple(() =>
+        {
+            Assert.That(header.ComponentCount, Is.EqualTo(3));
+            Assert.That(header.Width, Is.EqualTo(512));
+            Assert.That(header.Height, Is.EqualTo(1024));
+            Assert.That(header.ColorSpace, Is.EqualTo(SpiffColorSpace.Rgb));
+        });
     }
 
     [Test]
@@ -51,8 +57,11 @@ public sealed class SpiffHeaderTest
         };
 
         bool result = SpiffHeader.TryCreate(native, out var header);
-        Assert.IsFalse(result);
-        Assert.IsNull(header);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.False);
+            Assert.That(header, Is.Null);
+        });
     }
 
     [Test]
@@ -66,7 +75,7 @@ public sealed class SpiffHeaderTest
         };
 
         var usefulText = header.ToString();
-        Assert.IsFalse(string.IsNullOrWhiteSpace(usefulText));
+        Assert.That(string.IsNullOrWhiteSpace(usefulText), Is.False);
     }
 
     [Test]
@@ -75,11 +84,17 @@ public sealed class SpiffHeaderTest
         SpiffHeader a = new();
         SpiffHeader b = new();
 
-        Assert.IsTrue(a.Equals(b));
-        Assert.IsTrue(a.Equals((object)b));
-        Assert.AreEqual(a, b);
-        Assert.AreEqual(b, a);
-        Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        var equal = a.Equals(b);
+        var equalObject = a.Equals((object)b);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(equal, Is.True);
+            Assert.That(equalObject, Is.True);
+            Assert.That(b, Is.EqualTo(a));
+            Assert.That(a, Is.EqualTo(b));
+        });
+        Assert.That(b.GetHashCode(), Is.EqualTo(a.GetHashCode()));
     }
 
     [Test]
@@ -88,8 +103,14 @@ public sealed class SpiffHeaderTest
         SpiffHeader a = new();
         SpiffHeader b = new() { Height = 2 };
 
-        Assert.IsFalse(a.Equals(b));
-        Assert.IsFalse(a.Equals((object)b));
+        var equal = a.Equals(b);
+        var equalObject = a.Equals((object)b);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(equal, Is.False);
+            Assert.That(equalObject, Is.False);
+        });
     }
 
     [Test]
@@ -98,107 +119,110 @@ public sealed class SpiffHeaderTest
     {
         SpiffHeader a = new();
 
-        Assert.IsFalse(a.Equals(null));
-        Assert.IsFalse(a!.Equals((object)null!));
+        Assert.Multiple(() =>
+        {
+            Assert.That(a, Is.Not.EqualTo(null));
+            Assert.That(a!, Is.Not.EqualTo(null!));
+        });
     }
 
     [Test]
     public void UseAllSpiffColorSpaceValues()
     {
         SpiffHeader header = new() { ColorSpace = SpiffColorSpace.BiLevelBlack };
-        Assert.AreEqual(SpiffColorSpace.BiLevelBlack, header.ColorSpace);
+        Assert.That(header.ColorSpace, Is.EqualTo(SpiffColorSpace.BiLevelBlack));
 
         header = new() { ColorSpace = SpiffColorSpace.YcbcrItuBT709Video };
-        Assert.AreEqual(SpiffColorSpace.YcbcrItuBT709Video, header.ColorSpace);
+        Assert.That(header.ColorSpace, Is.EqualTo(SpiffColorSpace.YcbcrItuBT709Video));
 
         header = new() { ColorSpace = SpiffColorSpace.None };
-        Assert.AreEqual(SpiffColorSpace.None, header.ColorSpace);
+        Assert.That(header.ColorSpace, Is.EqualTo(SpiffColorSpace.None));
 
         header = new() { ColorSpace = SpiffColorSpace.YcbcrItuBT6011Rgb };
-        Assert.AreEqual(SpiffColorSpace.YcbcrItuBT6011Rgb, header.ColorSpace);
+        Assert.That(header.ColorSpace, Is.EqualTo(SpiffColorSpace.YcbcrItuBT6011Rgb));
 
         header = new() { ColorSpace = SpiffColorSpace.YcbcrItuBT6011Video };
-        Assert.AreEqual(SpiffColorSpace.YcbcrItuBT6011Video, header.ColorSpace);
+        Assert.That(header.ColorSpace, Is.EqualTo(SpiffColorSpace.YcbcrItuBT6011Video));
 
         header = new() { ColorSpace = SpiffColorSpace.Grayscale };
-        Assert.AreEqual(SpiffColorSpace.Grayscale, header.ColorSpace);
+        Assert.That(header.ColorSpace, Is.EqualTo(SpiffColorSpace.Grayscale));
 
         header = new() { ColorSpace = SpiffColorSpace.PhotoYcc };
-        Assert.AreEqual(SpiffColorSpace.PhotoYcc, header.ColorSpace);
+        Assert.That(header.ColorSpace, Is.EqualTo(SpiffColorSpace.PhotoYcc));
 
         header = new() { ColorSpace = SpiffColorSpace.Rgb };
-        Assert.AreEqual(SpiffColorSpace.Rgb, header.ColorSpace);
+        Assert.That(header.ColorSpace, Is.EqualTo(SpiffColorSpace.Rgb));
 
         header = new() { ColorSpace = SpiffColorSpace.Cmy };
-        Assert.AreEqual(SpiffColorSpace.Cmy, header.ColorSpace);
+        Assert.That(header.ColorSpace, Is.EqualTo(SpiffColorSpace.Cmy));
 
         header = new() { ColorSpace = SpiffColorSpace.Cmyk };
-        Assert.AreEqual(SpiffColorSpace.Cmyk, header.ColorSpace);
+        Assert.That(header.ColorSpace, Is.EqualTo(SpiffColorSpace.Cmyk));
 
         header = new() { ColorSpace = SpiffColorSpace.Ycck };
-        Assert.AreEqual(SpiffColorSpace.Ycck, header.ColorSpace);
+        Assert.That(header.ColorSpace, Is.EqualTo(SpiffColorSpace.Ycck));
 
         header = new() { ColorSpace = SpiffColorSpace.CieLab };
-        Assert.AreEqual(SpiffColorSpace.CieLab, header.ColorSpace);
+        Assert.That(header.ColorSpace, Is.EqualTo(SpiffColorSpace.CieLab));
 
         header = new() { ColorSpace = SpiffColorSpace.BiLevelWhite };
-        Assert.AreEqual(SpiffColorSpace.BiLevelWhite, header.ColorSpace);
+        Assert.That(header.ColorSpace, Is.EqualTo(SpiffColorSpace.BiLevelWhite));
     }
 
     [Test]
     public void UseAllSpiffCompressionTypeValues()
     {
         SpiffHeader header = new() { CompressionType = SpiffCompressionType.Uncompressed };
-        Assert.AreEqual(SpiffCompressionType.Uncompressed, header.CompressionType);
+        Assert.That(header.CompressionType, Is.EqualTo(SpiffCompressionType.Uncompressed));
 
         header = new() { CompressionType = SpiffCompressionType.ModifiedHuffman };
-        Assert.AreEqual(SpiffCompressionType.ModifiedHuffman, header.CompressionType);
+        Assert.That(header.CompressionType, Is.EqualTo(SpiffCompressionType.ModifiedHuffman));
 
         header = new() { CompressionType = SpiffCompressionType.ModifiedRead };
-        Assert.AreEqual(SpiffCompressionType.ModifiedRead, header.CompressionType);
+        Assert.That(header.CompressionType, Is.EqualTo(SpiffCompressionType.ModifiedRead));
 
         header = new() { CompressionType = SpiffCompressionType.ModifiedModifiedRead };
-        Assert.AreEqual(SpiffCompressionType.ModifiedModifiedRead, header.CompressionType);
+        Assert.That(header.CompressionType, Is.EqualTo(SpiffCompressionType.ModifiedModifiedRead));
 
         header = new() { CompressionType = SpiffCompressionType.JBig };
-        Assert.AreEqual(SpiffCompressionType.JBig, header.CompressionType);
+        Assert.That(header.CompressionType, Is.EqualTo(SpiffCompressionType.JBig));
 
         header = new() { CompressionType = SpiffCompressionType.Jpeg };
-        Assert.AreEqual(SpiffCompressionType.Jpeg, header.CompressionType);
+        Assert.That(header.CompressionType, Is.EqualTo(SpiffCompressionType.Jpeg));
 
         header = new() { CompressionType = SpiffCompressionType.JpegLS };
-        Assert.AreEqual(SpiffCompressionType.JpegLS, header.CompressionType);
+        Assert.That(header.CompressionType, Is.EqualTo(SpiffCompressionType.JpegLS));
     }
 
     [Test]
     public void UseAllSpiffProfileIdValues()
     {
         SpiffHeader header = new() { ProfileId = SpiffProfileId.None };
-        Assert.AreEqual(SpiffProfileId.None, header.ProfileId);
+        Assert.That(header.ProfileId, Is.EqualTo(SpiffProfileId.None));
 
         header = new() { ProfileId = SpiffProfileId.ContinuousToneBase };
-        Assert.AreEqual(SpiffProfileId.ContinuousToneBase, header.ProfileId);
+        Assert.That(header.ProfileId, Is.EqualTo(SpiffProfileId.ContinuousToneBase));
 
         header = new() { ProfileId = SpiffProfileId.ContinuousToneProgressive };
-        Assert.AreEqual(SpiffProfileId.ContinuousToneProgressive, header.ProfileId);
+        Assert.That(header.ProfileId, Is.EqualTo(SpiffProfileId.ContinuousToneProgressive));
 
         header = new() { ProfileId = SpiffProfileId.BiLevelFacsimile };
-        Assert.AreEqual(SpiffProfileId.BiLevelFacsimile, header.ProfileId);
+        Assert.That(header.ProfileId, Is.EqualTo(SpiffProfileId.BiLevelFacsimile));
 
         header = new() { ProfileId = SpiffProfileId.ContinuousToneFacsimile };
-        Assert.AreEqual(SpiffProfileId.ContinuousToneFacsimile, header.ProfileId);
+        Assert.That(header.ProfileId, Is.EqualTo(SpiffProfileId.ContinuousToneFacsimile));
     }
 
     [Test]
     public void UseAllSpiffResolutionUnitValues()
     {
         SpiffHeader header = new() { ResolutionUnit = SpiffResolutionUnit.AspectRatio };
-        Assert.AreEqual(SpiffResolutionUnit.AspectRatio, header.ResolutionUnit);
+        Assert.That(header.ResolutionUnit, Is.EqualTo(SpiffResolutionUnit.AspectRatio));
 
         header = new() { ResolutionUnit = SpiffResolutionUnit.DotsPerInch };
-        Assert.AreEqual(SpiffResolutionUnit.DotsPerInch, header.ResolutionUnit);
+        Assert.That(header.ResolutionUnit, Is.EqualTo(SpiffResolutionUnit.DotsPerInch));
 
         header = new() { ResolutionUnit = SpiffResolutionUnit.DotsPerCentimeter };
-        Assert.AreEqual(SpiffResolutionUnit.DotsPerCentimeter, header.ResolutionUnit);
+        Assert.That(header.ResolutionUnit, Is.EqualTo(SpiffResolutionUnit.DotsPerCentimeter));
     }
 }

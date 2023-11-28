@@ -14,10 +14,13 @@ public sealed class FrameInfoTest
     {
         FrameInfo frameInfo = new(256, 1024, 8, 3);
 
-        Assert.AreEqual(256, frameInfo.Width);
-        Assert.AreEqual(1024, frameInfo.Height);
-        Assert.AreEqual(8, frameInfo.BitsPerSample);
-        Assert.AreEqual(3, frameInfo.ComponentCount);
+        Assert.Multiple(() =>
+        {
+            Assert.That(frameInfo.Width, Is.EqualTo(256));
+            Assert.That(frameInfo.Height, Is.EqualTo(1024));
+            Assert.That(frameInfo.BitsPerSample, Is.EqualTo(8));
+            Assert.That(frameInfo.ComponentCount, Is.EqualTo(3));
+        });
     }
 
     [Test]
@@ -31,10 +34,13 @@ public sealed class FrameInfoTest
             ComponentCount = 3
         };
 
-        Assert.AreEqual(256, frameInfo.Width);
-        Assert.AreEqual(1024, frameInfo.Height);
-        Assert.AreEqual(8, frameInfo.BitsPerSample);
-        Assert.AreEqual(3, frameInfo.ComponentCount);
+        Assert.Multiple(() =>
+        {
+            Assert.That(frameInfo.Width, Is.EqualTo(256));
+            Assert.That(frameInfo.Height, Is.EqualTo(1024));
+            Assert.That(frameInfo.BitsPerSample, Is.EqualTo(8));
+            Assert.That(frameInfo.ComponentCount, Is.EqualTo(3));
+        });
     }
 
     [Test]
@@ -43,12 +49,22 @@ public sealed class FrameInfoTest
         FrameInfo a = new(256, 1024, 8, 3);
         FrameInfo b = new(256, 1024, 8, 3);
 
-        Assert.IsTrue(a.Equals(b));
-        Assert.IsTrue(a.Equals((object)b));
-        Assert.AreEqual(a, b);
-        Assert.AreEqual(b, a);
-        Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
-        Assert.IsTrue(a == b);
+        bool equals = a.Equals(b);
+        bool equalsObject = a.Equals((object)b);
+        bool equalsOperator = a == b;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(equals, Is.True);
+            Assert.That(equalsObject, Is.True);
+            Assert.That(b, Is.EqualTo(a));
+            Assert.That(a, Is.EqualTo(b));
+        });
+        Assert.Multiple(() =>
+        {
+            Assert.That(b.GetHashCode(), Is.EqualTo(a.GetHashCode()));
+            Assert.That(equalsOperator, Is.True);
+        });
     }
 
     [Test]
@@ -57,9 +73,16 @@ public sealed class FrameInfoTest
         FrameInfo a = new(256, 1024, 8, 3);
         FrameInfo b = new(256, 1024, 8, 4);
 
-        Assert.IsFalse(a.Equals(b));
-        Assert.IsFalse(a.Equals((object)b));
-        Assert.IsTrue(a != b);
+        bool equals = a.Equals(b);
+        bool equalsObject = a.Equals((object)b);
+        bool equalsOperator = a == b;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(equals, Is.False);
+            Assert.That(equalsObject, Is.False);
+            Assert.That(equalsOperator, Is.False);
+        });
     }
 
     [Test]
@@ -68,8 +91,14 @@ public sealed class FrameInfoTest
     {
         FrameInfo a = new(256, 1024, 8, 3);
 
-        Assert.IsFalse(a.Equals(null!));
-        Assert.IsFalse(a!.Equals((object)null!));
+        bool equals = a.Equals(null!);
+        bool equalsObject = a!.Equals((object)null!);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(equals, Is.False);
+            Assert.That(equalsObject, Is.False);
+        });
     }
 
     [Test]
