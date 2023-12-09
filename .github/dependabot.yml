@@ -1,7 +1,16 @@
+# Copyright (c) Team CharLS.
+# SPDX-License-Identifier: BSD-3-Clause
+
 version: 2
+
 updates:
 - package-ecosystem: nuget
   directory: "/"
   schedule:
     interval: daily
   open-pull-requests-limit: 25
+
+- package-ecosystem: "github-actions"
+  directory: "/"
+  schedule:
+    interval: "weekly"
