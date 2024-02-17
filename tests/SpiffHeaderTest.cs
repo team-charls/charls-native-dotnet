@@ -122,7 +122,7 @@ public sealed class SpiffHeaderTest
         Assert.Multiple(() =>
         {
             Assert.That(a, Is.Not.EqualTo(null));
-            Assert.That(a!, Is.Not.EqualTo(null!));
+            Assert.That(a, Is.Not.EqualTo(null!));
         });
     }
 

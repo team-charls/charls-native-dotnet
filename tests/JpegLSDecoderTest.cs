@@ -281,7 +281,7 @@ public sealed class JpegLSDecoderTest
     {
         using JpegLSEncoder encoder = new(new FrameInfo(1, 1, 8, 1), true, 100);
 
-        encoder.WriteApplicationData(7, new byte[] { 1, 2, 3, 4 });
+        encoder.WriteApplicationData(7, [1, 2, 3, 4]);
         encoder.Encode(new byte[1]);
 
         using JpegLSDecoder decoder = new(encoder.EncodedData, false);
