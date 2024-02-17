@@ -393,7 +393,7 @@ public sealed class JpegLSEncoderTest
     {
         using JpegLSEncoder encoder = new(new FrameInfo(1, 1, 8, 1), true, 100);
 
-        encoder.WriteApplicationData(15, Array.Empty<byte>());
+        encoder.WriteApplicationData(15, []);
         encoder.Encode(new byte[1]);
 
         int applicationDataId = -1;
@@ -418,7 +418,7 @@ public sealed class JpegLSEncoderTest
     public void FailApplicationDataEvent()
     {
         using JpegLSEncoder encoder = new(new FrameInfo(1, 1, 8, 1), true, 100);
-        encoder.WriteApplicationData(3, Array.Empty<byte>());
+        encoder.WriteApplicationData(3, []);
         encoder.Encode(new byte[1]);
 
         using JpegLSDecoder decoder = new(encoder.EncodedData, false);
