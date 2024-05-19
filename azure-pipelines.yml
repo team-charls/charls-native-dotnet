@@ -25,6 +25,11 @@ jobs:
 
   - task: NuGetToolInstaller@1
 
+  - task: UseDotNet@2
+    displayName: 'Install .NET 8.0.205 SDK'
+    inputs:
+      version: 8.0.205
+
   - task: NuGetCommand@2
     inputs:
       feedsToUse: config
@@ -66,27 +71,13 @@ jobs:
       runSettingsFile: 'tests\CodeCoverage.runsettings'
 
   - task: VSTest@2
-    displayName: 'Test Charls.Native (.NET 6.0 x64)'
+    displayName: 'Test Charls.Native (.NET 8.0 x64)'
     inputs:
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
-      otherConsoleOptions: --Framework:".NETCoreApp,Version=v6.0" --Platform:x64
+      otherConsoleOptions: --Framework:".NETCoreApp,Version=v8.0" --Platform:x64
       testAssemblyVer2: |
-        **\net6.0\CharLS.Native.Test.dll
-        !**\*TestAdapter.dll
-        !**\intermediates\**
-      runInParallel: true
-      codeCoverageEnabled: true
-      runSettingsFile: 'tests\CodeCoverage.runsettings'
-
-  - task: VSTest@2
-    displayName: 'Test Charls.Native (.NET 7.0 x64)'
-    inputs:
-      platform: '$(buildPlatform)'
-      configuration: '$(buildConfiguration)'
-      otherConsoleOptions: --Framework:".NETCoreApp,Version=v7.0" --Platform:x64
-      testAssemblyVer2: |
-        **\net7.0\CharLS.Native.Test.dll
+        **\net8.0\CharLS.Native.Test.dll
         !**\*TestAdapter.dll
         !**\intermediates\**
       runInParallel: true
@@ -148,8 +139,7 @@ jobs:
   - task: UseDotNet@2
     displayName: 'Install .NET 8.0 SDK'
     inputs:
-      version: 8.0.x
-      includePreviewVersions : true
+      version: 8.0.205
 
   - task: DotNetCoreCLI@2
     displayName: 'Restore NuGet packages'
@@ -234,8 +224,7 @@ jobs:
   - task: UseDotNet@2
     displayName: 'Install .NET 8.0 SDK'
     inputs:
-      version: 8.0.x
-      includePreviewVersions : true
+      version: 8.0.205
 
   - task: DotNetCoreCLI@2
     displayName: 'Restore NuGet packages'

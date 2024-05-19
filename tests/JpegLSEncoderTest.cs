@@ -4,6 +4,7 @@
 using System.ComponentModel;
 using System.Text;
 using NUnit.Framework;
+using System.Diagnostics.CodeAnalysis;
 
 namespace CharLS.Native.Test;
 
@@ -281,6 +282,7 @@ public sealed class JpegLSEncoderTest
     }
 
     [Test]
+    [SuppressMessage("Style", "IDE0301:Simplify collection initialization", Justification = "Not possible for .NET 6.0 build")]
     public void WriteEmptyComment()
     {
         using JpegLSEncoder encoder = new(new FrameInfo(1, 1, 8, 1), true, 100);
@@ -334,6 +336,7 @@ public sealed class JpegLSEncoderTest
     }
 
     [Test]
+    [SuppressMessage("Style", "IDE0301:Simplify collection initialization", Justification = "Not possible for .NET 6.0 build")]
     public void FailCommentEvent()
     {
         using JpegLSEncoder encoder = new(new FrameInfo(1, 1, 8, 1), true, 100);
