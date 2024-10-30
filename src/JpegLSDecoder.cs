@@ -13,6 +13,11 @@ namespace CharLS.Native;
 /// </summary>
 public sealed class JpegLSDecoder : IDisposable
 {
+    /// <summary>
+    /// Special value to indicate that decoder needs to calculate the required stride.
+    /// </summary>
+    public const int AutoCalculateStride = 0;
+
     private readonly SafeHandleJpegLSDecoder _decoder = CreateDecoder();
     private FrameInfo? _frameInfo;
     private int? _nearLossless;
@@ -23,6 +28,36 @@ public sealed class JpegLSDecoder : IDisposable
     private AtApplicationDataHandler? _atApplicationData;
     private EventHandler<CommentEventArgs>? _comment;
     private EventHandler<ApplicationDataEventArgs>? _applicationData;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="JpegLSDecoder"/> class.
+    /// </summary>
+    public JpegLSDecoder()
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="JpegLSDecoder"/> class.
+    /// </summary>
+    /// <param name="source">The buffer containing the encoded data.</param>
+    /// <param name="readHeader">When true the header from the JPEG-LS stream is parsed.</param>
+    /// <exception cref="InvalidDataException">Thrown when the JPEG-LS stream is not valid.</exception>
+    public JpegLSDecoder(ReadOnlyMemory<byte> source, bool readHeader = true)
+    {
+        try
+        {
+            Source = source;
+            if (readHeader)
+            {
+                ReadHeader();
+            }
+        }
+        catch
+        {
+            _decoder.Dispose();
+            throw;
+        }
+    }
 
     /// <summary>
     /// Occurs when a comment (COM segment) is read.
@@ -58,36 +93,6 @@ public sealed class JpegLSDecoder : IDisposable
         }
 
         remove => _applicationData -= value;// Note: Keep the delegate installed, it will be cleaned when the instance is disposed.
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="JpegLSDecoder"/> class.
-    /// </summary>
-    public JpegLSDecoder()
-    {
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="JpegLSDecoder"/> class.
-    /// </summary>
-    /// <param name="source">The buffer containing the encoded data.</param>
-    /// <param name="readHeader">When true the header from the JPEG-LS stream is parsed.</param>
-    /// <exception cref="InvalidDataException">Thrown when the JPEG-LS stream is not valid.</exception>
-    public JpegLSDecoder(ReadOnlyMemory<byte> source, bool readHeader = true)
-    {
-        try
-        {
-            Source = source;
-            if (readHeader)
-            {
-                ReadHeader();
-            }
-        }
-        catch
-        {
-            _decoder.Dispose();
-            throw;
-        }
     }
 
     /// <summary>
@@ -148,13 +153,13 @@ public sealed class JpegLSDecoder : IDisposable
     {
         get
         {
-            if (_frameInfo is null)
+            if (!_frameInfo.HasValue)
             {
                 HandleJpegLSError(CharLSGetFrameInfo(_decoder, out var frameInfoNative));
-                _frameInfo = new(frameInfoNative);
+                _frameInfo = new FrameInfo(frameInfoNative);
             }
 
-            return _frameInfo;
+            return _frameInfo.Value;
         }
     }
 
@@ -235,12 +240,12 @@ public sealed class JpegLSDecoder : IDisposable
     /// <summary>
     /// Gets the required size of the destination buffer.
     /// </summary>
-    /// <param name="stride">The stride to use; byte count to the next pixel row. Pass 0 for the default.</param>
+    /// <param name="stride">The stride to use; byte count to the next pixel row. Pass 0 (AutoCalculateStride) for the default.</param>
     /// <returns>The size of the destination buffer in bytes.</returns>
     /// <exception cref="OverflowException">When the required destination size doesn't fit in an int.</exception>
     /// <exception cref="ObjectDisposedException">Thrown when the instance is used after being disposed.</exception>
     /// <exception cref="InvalidOperationException">Thrown when this method is called before <see cref="ReadHeader(bool)"/>.</exception>
-    public int GetDestinationSize(int stride = 0)
+    public int GetDestinationSize(int stride = AutoCalculateStride)
     {
         HandleJpegLSError(CharLSGetDestinationSize(_decoder, ConvertStrideToUint32(stride), out nuint destinationSize));
         return Convert.ToInt32(destinationSize);
@@ -313,12 +318,12 @@ public sealed class JpegLSDecoder : IDisposable
     /// <summary>
     /// Decodes the encoded JPEG-LS data and returns the created byte buffer.
     /// </summary>
-    /// <param name="stride">The stride to use, or 0 for the default.</param>
+    /// <param name="stride">The stride to use, or 0 (AutoCalculateStride) for the default.</param>
     /// <returns>A byte array with the decoded JPEG-LS data.</returns>
     /// <exception cref="InvalidDataException">Thrown when the JPEG-LS stream is not valid.</exception>
     /// <exception cref="ObjectDisposedException">Thrown when the instance is used after being disposed.</exception>
     /// <exception cref="InvalidOperationException">Thrown when this method is called before <see cref="ReadHeader(bool)"/>.</exception>
-    public byte[] Decode(int stride = 0)
+    public byte[] Decode(int stride = AutoCalculateStride)
     {
         var destination = new byte[GetDestinationSize()];
         Decode(destination, stride);
@@ -329,10 +334,10 @@ public sealed class JpegLSDecoder : IDisposable
     /// Decodes the encoded JPEG-LS data to the passed byte buffer.
     /// </summary>
     /// <param name="destination">The memory region that is the destination for the decoded data.</param>
-    /// <param name="stride">The stride to use, or 0 for the default.</param>
+    /// <param name="stride">The stride to use, or 0 (AutoCalculateStride) for the default.</param>
     /// <exception cref="InvalidDataException">Thrown when the JPEG-LS stream is not valid.</exception>
     /// <exception cref="ObjectDisposedException">Thrown when the instance is used after being disposed.</exception>
-    public void Decode(Span<byte> destination, int stride = 0)
+    public void Decode(Span<byte> destination, int stride = AutoCalculateStride)
     {
         HandleJpegLSError(CharLSDecodeToBuffer(_decoder, ref MemoryMarshal.GetReference(destination),
             (nuint)destination.Length, ConvertStrideToUint32(stride)));
@@ -350,19 +355,37 @@ public sealed class JpegLSDecoder : IDisposable
         return stride < 0 ? throw new ArgumentOutOfRangeException(nameof(stride), "Stride needs to be >= 0") : (uint)stride;
     }
 
+    [SuppressMessage("Usage", "CA1031", Justification = "Native code will trigger error, which wil be converted to exception.")]
     private unsafe int AtComment(IntPtr data, nuint size, nint userContextPtr)
     {
         // Take a copy to prevent that subscribers to this event need to be unsafe to read the comment.
         var eventArgs = new CommentEventArgs(new ReadOnlySpan<byte>(data.ToPointer(), (int)size).ToArray());
-        _comment?.Invoke(this, eventArgs);
-        return Convert.ToInt32(eventArgs.Failed);
+
+        try
+        {
+            _comment?.Invoke(this, eventArgs);
+            return 0;
+        }
+        catch
+        {
+            return 1; // will trigger jpegls_errc::callback_failed.
+        }
     }
 
+    [SuppressMessage("Usage", "CA1031", Justification = "Native code will trigger error, which wil be converted to exception.")]
     private unsafe int AtApplicationData(int applicationDataId, IntPtr data, nuint size, nint userContextPtr)
     {
         // Take a copy to prevent that subscribers to this event need to be unsafe to read the comment.
         var eventArgs = new ApplicationDataEventArgs(applicationDataId, new ReadOnlySpan<byte>(data.ToPointer(), (int)size).ToArray());
-        _applicationData?.Invoke(this, eventArgs);
-        return Convert.ToInt32(eventArgs.Failed);
+
+        try
+        {
+            _applicationData?.Invoke(this, eventArgs);
+            return 0;
+        }
+        catch
+        {
+            return 1; // will trigger jpegls_errc::callback_failed.
+        }
     }
 }

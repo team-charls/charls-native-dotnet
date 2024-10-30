@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace CharLS.Native.Test;
 
 [TestFixture]
-public sealed class SpiffHeaderTest
+internal sealed class SpiffHeaderTest
 {
     [Test]
     public void ConstructDefault()

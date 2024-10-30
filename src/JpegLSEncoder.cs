@@ -15,8 +15,13 @@ namespace CharLS.Native;
 /// </summary>
 public sealed class JpegLSEncoder : IDisposable
 {
+    /// <summary>
+    /// Special value to indicate that encoder needs to calculate the required stride.
+    /// </summary>
+    public const int AutoCalculateStride = 0;
+
     private readonly SafeHandleJpegLSEncoder _encoder = CreateEncoder();
-    private FrameInfo? _frameInfo;
+    private FrameInfo _frameInfo;
     private int _nearLossless;
     private JpegLSInterleaveMode _interleaveMode;
     private JpegLSPresetCodingParameters? _presetCodingParameters;
@@ -87,19 +92,12 @@ public sealed class JpegLSEncoder : IDisposable
     /// </value>
     /// <exception cref="ArgumentException">Thrown when the passed FrameInfo is invalid.</exception>
     /// <exception cref="ArgumentNullException">Thrown when the passed FrameInfo instance is null.</exception>
-    public FrameInfo? FrameInfo
+    public FrameInfo FrameInfo
     {
         get => _frameInfo;
 
         set
         {
-#if NET6_0_OR_GREATER
-            ArgumentNullException.ThrowIfNull(value);
-#else
-            if (value is null)
-                throw new ArgumentNullException(nameof(value));
-#endif
-
             FrameInfoNative infoNative = new()
             {
                 Height = (uint)value.Height,
@@ -180,7 +178,7 @@ public sealed class JpegLSEncoder : IDisposable
 
         set
         {
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
             ArgumentNullException.ThrowIfNull(value);
 #else
             if (value is null)
@@ -202,7 +200,7 @@ public sealed class JpegLSEncoder : IDisposable
     }
 
     /// <summary>
-    /// Gets the estimated size in bytes of the memory buffer that should used as output destination.
+    /// Gets the estimated size in bytes of the memory buffer that should be used as output destination.
     /// </summary>
     /// <value>
     /// The size in bytes of the memory buffer.
@@ -258,7 +256,7 @@ public sealed class JpegLSEncoder : IDisposable
     /// <value>
     /// The memory region with the encoded data.
     /// </value>
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
     public ReadOnlyMemory<byte> EncodedData => _destination[..BytesWritten];
 #else
     public ReadOnlyMemory<byte> EncodedData => _destination.Slice(0, BytesWritten);
@@ -294,7 +292,7 @@ public sealed class JpegLSEncoder : IDisposable
     /// </summary>
     /// <param name="source">The memory region that is the source input to the encoding process.</param>
     /// <param name="stride">The stride of the image pixel of the source input.</param>
-    public void Encode(ReadOnlySpan<byte> source, int stride = 0)
+    public void Encode(ReadOnlySpan<byte> source, int stride = AutoCalculateStride)
     {
         HandleJpegLSError(CharLSEncodeFromBuffer(_encoder, ref MemoryMarshal.GetReference(source), (nuint)source.Length, (uint)stride));
     }

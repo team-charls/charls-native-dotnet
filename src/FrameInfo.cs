@@ -6,7 +6,7 @@ namespace CharLS.Native;
 /// <summary>
 /// Hold information about an image frame.
 /// </summary>
-public sealed record FrameInfo
+public readonly record struct FrameInfo
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="FrameInfo"/> record.
@@ -39,12 +39,12 @@ public sealed record FrameInfo
     }
 
     /// <summary>
-    /// Gets the width of the image, valid range is [1, 65535].
+    /// Gets the width of the image, valid range is [1, int.MaxValue].
     /// </summary>
     public int Width { get; init; }
 
     /// <summary>
-    /// Gets the height of the image, valid range is [1, 65535].
+    /// Gets the height of the image, valid range is [1, int.MaxValue].
     /// </summary>
     public int Height { get; init; }
 

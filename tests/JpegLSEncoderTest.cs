@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace CharLS.Native.Test;
 
 [TestFixture]
-public sealed class JpegLSEncoderTest
+internal sealed class JpegLSEncoderTest
 {
     [Test]
     public void CreateEncoderWithBadWidth()
@@ -43,16 +43,6 @@ public sealed class JpegLSEncoderTest
         {
             Assert.That(encoder.FrameInfo, Is.EqualTo(expected));
             Assert.That(encoder.Destination.IsEmpty, Is.False);
-        });
-    }
-
-    [Test]
-    public void InitializeFrameInfoWithNull()
-    {
-        using JpegLSEncoder encoder = new();
-        _ = Assert.Throws<ArgumentNullException>(() =>
-        {
-            encoder.FrameInfo = null;
         });
     }
 
@@ -204,7 +194,7 @@ public sealed class JpegLSEncoderTest
         Assert.That(versionComment, Is.Not.Null);
 
         string versionString = Encoding.UTF8.GetString(versionComment!);
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
         versionString = versionString[..7];
 #else
         versionString = versionString.Substring(0, 7);
@@ -344,10 +334,7 @@ public sealed class JpegLSEncoderTest
         encoder.Encode(new byte[1]);
 
         using JpegLSDecoder decoder = new(encoder.EncodedData, false);
-        decoder.Comment += (_, e) =>
-        {
-            e.Failed = true;
-        };
+        decoder.Comment += (_, _) => throw new InvalidCastException();
 
         var exception = Assert.Throws<InvalidDataException>(() =>
         {
@@ -425,10 +412,7 @@ public sealed class JpegLSEncoderTest
         encoder.Encode(new byte[1]);
 
         using JpegLSDecoder decoder = new(encoder.EncodedData, false);
-        decoder.ApplicationData += (_, e) =>
-        {
-            e.Failed = true;
-        };
+        decoder.ApplicationData += (_, _) => throw new InvalidCastException();
 
         var exception = Assert.Throws<InvalidDataException>(() =>
         {

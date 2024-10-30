@@ -12,6 +12,7 @@ TestResults/
 .vs/
 .vscode/
 **/Properties/launchSettings.json
+*.csproj.user
 
 # Ignore files created by MSBuild
 *.binlog

@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace CharLS.Native.Test;
 
 [TestFixture]
-public sealed class JpegLSPresetCodingParametersTest
+internal sealed class JpegLSPresetCodingParametersTest
 {
     [Test]
     public void ConstructDefault()

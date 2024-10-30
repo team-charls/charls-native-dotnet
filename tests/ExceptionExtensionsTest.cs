@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace CharLS.Native.Test;
 
 [TestFixture]
-public sealed class ExceptionExtensionsTest
+internal sealed class ExceptionExtensionsTest
 {
     [Test]
     public void SetAndGetJpegLSError()

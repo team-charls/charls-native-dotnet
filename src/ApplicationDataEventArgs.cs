@@ -20,12 +20,7 @@ public sealed class ApplicationDataEventArgs : EventArgs
     public int Id { get; }
 
     /// <summary>
-    /// Returns the application data.
+    /// Gets the application data.
     /// </summary>
     public ReadOnlyMemory<byte> Data { get; }
-
-    /// <summary>
-    /// When set will abort the decoding process.
-    /// </summary>
-    public bool Failed { get; set; }
 }

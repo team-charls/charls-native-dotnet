@@ -14,12 +14,7 @@ public sealed class CommentEventArgs : EventArgs
     }
 
     /// <summary>
-    /// Returns the data of the comment.
+    /// Gets the data of the comment.
     /// </summary>
     public ReadOnlyMemory<byte> Data { get; }
-
-    /// <summary>
-    /// `When set will abort the decoding process.
-    /// </summary>
-    public bool Failed { get; set; }
 }
