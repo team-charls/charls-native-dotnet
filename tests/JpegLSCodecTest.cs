@@ -299,9 +299,9 @@ public sealed class JpegLSCodecTest
         Assert.That(destination, Is.EqualTo(source));
     }
 
-    private static byte[] TripletToPlanar(IList<byte> buffer, int width, int height)
+    private static byte[] TripletToPlanar(byte[] buffer, int width, int height)
     {
-        var result = new byte[buffer.Count];
+        var result = new byte[buffer.Length];
 
         int bytePlaneCount = width * height;
         for (int i = 0; i < bytePlaneCount; i++)
