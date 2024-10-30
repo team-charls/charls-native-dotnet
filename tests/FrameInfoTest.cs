@@ -92,12 +92,10 @@ internal sealed class FrameInfoTest
         FrameInfo a = new(256, 1024, 8, 3);
 
         bool equals = a.Equals(null!);
-        bool equalsObject = a!.Equals((object)null!);
 
         Assert.Multiple(() =>
         {
             Assert.That(equals, Is.False);
-            Assert.That(equalsObject, Is.False);
         });
     }
 

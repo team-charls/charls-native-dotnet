@@ -9,6 +9,8 @@
 CharLS.Native .NET is an adapter assembly that provides access to the native CharLS JPEG-LS C++ implementation for .NET based applications.  
 JPEG-LS (ISO-14495-1) is a lossless/near-lossless compression standard for continuous-tone images.
 
+Remark: a pure C# implemenation is provided with the [CharLS .NET](https://github.com/team-charls/charls-dotnet) project.
+
 ## Features
 
 * .NET Framework 4.8, .NET 6.0, Net 7.0 and .NET 8.0 class library.

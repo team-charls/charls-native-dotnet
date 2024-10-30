@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 
 - Throwing an exception from an event handler is now handled and the Failed property has been removed.
+- Changed type of FrameInfo to readonly record struct (aligns with CharLS.DotNet)
 
 ## Removed
 
