@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Support for .NET 9.0
 
+### Changed
+
+- Throwing an exception from an event handler is now handled and the Failed property has been removed.
+
 ## Removed
 
 - Support for .NET 6.0 (.NET 6.0 is end of support since 2024-11-12).

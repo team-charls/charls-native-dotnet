@@ -350,19 +350,37 @@ public sealed class JpegLSDecoder : IDisposable
         return stride < 0 ? throw new ArgumentOutOfRangeException(nameof(stride), "Stride needs to be >= 0") : (uint)stride;
     }
 
+    [SuppressMessage("Usage", "CA1031", Justification = "Native code will trigger error, which wil be converted to exception.")]
     private unsafe int AtComment(IntPtr data, nuint size, nint userContextPtr)
     {
         // Take a copy to prevent that subscribers to this event need to be unsafe to read the comment.
         var eventArgs = new CommentEventArgs(new ReadOnlySpan<byte>(data.ToPointer(), (int)size).ToArray());
-        _comment?.Invoke(this, eventArgs);
-        return Convert.ToInt32(eventArgs.Failed);
+
+        try
+        {
+            _comment?.Invoke(this, eventArgs);
+            return 0;
+        }
+        catch
+        {
+            return 1; // will trigger jpegls_errc::callback_failed.
+        }
     }
 
+    [SuppressMessage("Usage", "CA1031", Justification = "Native code will trigger error, which wil be converted to exception.")]
     private unsafe int AtApplicationData(int applicationDataId, IntPtr data, nuint size, nint userContextPtr)
     {
         // Take a copy to prevent that subscribers to this event need to be unsafe to read the comment.
         var eventArgs = new ApplicationDataEventArgs(applicationDataId, new ReadOnlySpan<byte>(data.ToPointer(), (int)size).ToArray());
-        _applicationData?.Invoke(this, eventArgs);
-        return Convert.ToInt32(eventArgs.Failed);
+
+        try
+        {
+            _applicationData?.Invoke(this, eventArgs);
+            return 0;
+        }
+        catch
+        {
+            return 1; // will trigger jpegls_errc::callback_failed.
+        }
     }
 }

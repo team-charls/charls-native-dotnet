@@ -344,10 +344,7 @@ internal sealed class JpegLSEncoderTest
         encoder.Encode(new byte[1]);
 
         using JpegLSDecoder decoder = new(encoder.EncodedData, false);
-        decoder.Comment += (_, e) =>
-        {
-            e.Failed = true;
-        };
+        decoder.Comment += (_, _) => throw new InvalidCastException();
 
         var exception = Assert.Throws<InvalidDataException>(() =>
         {
@@ -425,10 +422,7 @@ internal sealed class JpegLSEncoderTest
         encoder.Encode(new byte[1]);
 
         using JpegLSDecoder decoder = new(encoder.EncodedData, false);
-        decoder.ApplicationData += (_, e) =>
-        {
-            e.Failed = true;
-        };
+        decoder.ApplicationData += (_, _) => throw new InvalidCastException();
 
         var exception = Assert.Throws<InvalidDataException>(() =>
         {

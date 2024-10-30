@@ -23,6 +23,12 @@ jobs:
     submodules: 'true'
     fetchDepth: '1'
 
+  - task: UseDotNet@2
+    displayName: 'Install .NET 9.0 SDK'
+    inputs:
+      version: 9.0.x
+      includePreviewVersions: true
+
   - task: NuGetToolInstaller@1
 
   - task: NuGetCommand@2
@@ -144,6 +150,7 @@ jobs:
     displayName: 'Install .NET 9.0 SDK'
     inputs:
       version: 9.0.x
+      includePreviewVersions: true
 
   - task: DotNetCoreCLI@2
     displayName: 'Restore NuGet packages'
@@ -221,6 +228,7 @@ jobs:
     displayName: 'Install .NET 9.0 SDK'
     inputs:
       version: 9.0.x
+      includePreviewVersions: true
 
   - task: DotNetCoreCLI@2
     displayName: 'Restore NuGet packages'

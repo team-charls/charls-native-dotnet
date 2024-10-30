@@ -12,6 +12,7 @@
     <Copyright>Copyright 2024 Team CharLS</Copyright>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly> <!-- Explicit enable for build acceleration and target .NET 4.8 -->
 
     <!-- Use strong naming -->
     <SignAssembly>true</SignAssembly>
