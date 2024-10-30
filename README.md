@@ -2,7 +2,7 @@
 
 # CharLS.Native .NET
 
-[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://raw.githubusercontent.com/team-charls/charls-dotnet/main/LICENSE.md)
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://raw.githubusercontent.com/team-charls/charls-native-dotnet/main/LICENSE.md)
 [![Build Status](https://dev.azure.com/team-charls/charls-native-dotnet/_apis/build/status/team-charls.charls-native-dotnet?branchName=main)](https://dev.azure.com/team-charls/charls-native-dotnet/_build/latest?definitionId=4&branchName=main)
 [![NuGet](https://img.shields.io/nuget/v/CharLS.Native.svg)](https://www.nuget.org/packages/CharLS.Native)
 
