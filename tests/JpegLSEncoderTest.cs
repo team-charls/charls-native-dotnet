@@ -47,16 +47,6 @@ internal sealed class JpegLSEncoderTest
     }
 
     [Test]
-    public void InitializeFrameInfoWithNull()
-    {
-        using JpegLSEncoder encoder = new();
-        _ = Assert.Throws<ArgumentNullException>(() =>
-        {
-            encoder.FrameInfo = null;
-        });
-    }
-
-    [Test]
     public void GetAndSetNearLossless()
     {
         using JpegLSEncoder encoder = new();

@@ -350,7 +350,7 @@ internal sealed class JpegLSDecoderTest
 #if NET8_0_OR_GREATER
             return Path.Join(Path.GetDirectoryName(assemblyLocation.LocalPath), "DataFiles");
 #else
-            return Path.Combine(Path.GetDirectoryName(assemblyLocation.LocalPath), "DataFiles");
+            return Path.Combine(Path.GetDirectoryName(assemblyLocation.LocalPath)!, "DataFiles");
 #endif
         }
     }

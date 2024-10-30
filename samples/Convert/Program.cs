@@ -1,7 +1,6 @@
 // Copyright (c) Team CharLS.
 // SPDX-License-Identifier: BSD-3-Clause
 
-using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Imaging;
 using CharLS.Native;
@@ -82,13 +81,13 @@ catch (ArgumentException e)
 // chose for the in-memory representation of the bitmap data.
 // PNG 8bits/grayscale is loaded as PixelFormat32bppARGB
 // JPG/TIFF 8bits/grayscale are loaded as PixelFormat8bppIndexed
-bool TryGetFrameInfoAndPixelFormat(Image sourceImage, [NotNullWhen(true)] out FrameInfo? frameInfo, out PixelFormat filePixelFormat)
+bool TryGetFrameInfoAndPixelFormat(Image sourceImage, out FrameInfo frameInfo, out PixelFormat filePixelFormat)
 {
     var pixelFormat = sourceImage.PixelFormat;
     var flags = sourceImage.Flags;
     var colorSpaceGray = (flags & (int)ImageFlags.ColorSpaceGray) > 0;
 
-    frameInfo = null;
+    frameInfo = default;
     filePixelFormat = default;
     if (pixelFormat is PixelFormat.Format8bppIndexed
         or PixelFormat.Format24bppRgb)
@@ -113,7 +112,7 @@ bool TryGetFrameInfoAndPixelFormat(Image sourceImage, [NotNullWhen(true)] out Fr
         };
     }
 
-    return frameInfo != null && filePixelFormat != default;
+    return frameInfo != default && filePixelFormat != default;
 }
 
 string GetOutputPath(string inputPathArg)
