@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace CharLS.Native.Test;
 
 [TestFixture]
-public sealed class JpegLSDecoderTest
+internal sealed class JpegLSDecoderTest
 {
     [Test]
     public void ReadPresetCodingParameters()
@@ -325,7 +325,7 @@ public sealed class JpegLSDecoderTest
 
     private static byte[] ReadAllBytes(string path, int bytesToSkip = 0)
     {
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
         var fullPath = Path.Join(DataFileDirectory, path);
 #else
         var fullPath = Path.Combine(DataFileDirectory, path);
@@ -347,7 +347,7 @@ public sealed class JpegLSDecoderTest
         get
         {
             Uri assemblyLocation = new(Assembly.GetExecutingAssembly().Location);
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
             return Path.Join(Path.GetDirectoryName(assemblyLocation.LocalPath), "DataFiles");
 #else
             return Path.Combine(Path.GetDirectoryName(assemblyLocation.LocalPath), "DataFiles");

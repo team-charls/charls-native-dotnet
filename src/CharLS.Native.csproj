@@ -6,10 +6,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>3.2.0</Version>
-    <AssemblyVersion>3.0.0.0</AssemblyVersion>
-    <FileVersion>3.2.0.0</FileVersion>
-    <Copyright>Copyright 2023 Team CharLS</Copyright>
+    <Version>4.0.0</Version>
+    <AssemblyVersion>4.0.0.0</AssemblyVersion>
+    <FileVersion>4.0.0.0</FileVersion>
+    <Copyright>Copyright 2024 Team CharLS</Copyright>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
@@ -107,14 +107,11 @@
     <Message Text="Signing CharLS.Native.dll (.NET Framework 4.8)" />
     <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)net48\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
 
-    <Message Text="Signing CharLS.Native.dll (.NET 6.0)" />
-    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)net6.0\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
-
-    <Message Text="Signing CharLS.Native.dll (.NET 7.0)" />
-    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)net7.0\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
-
     <Message Text="Signing CharLS.Native.dll (.NET 8.0)" />
     <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)net8.0\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
+
+    <Message Text="Signing CharLS.Native.dll (.NET 9.0)" />
+    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)net9.0\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
 
     <Message Text="Signing charls-2-x64.dll" />
     <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)charls-2-x64.dll" TargetFrameworkVersion="v4.5" />

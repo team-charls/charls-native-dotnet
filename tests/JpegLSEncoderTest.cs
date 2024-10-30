@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace CharLS.Native.Test;
 
 [TestFixture]
-public sealed class JpegLSEncoderTest
+internal sealed class JpegLSEncoderTest
 {
     [Test]
     public void CreateEncoderWithBadWidth()
@@ -204,7 +204,7 @@ public sealed class JpegLSEncoderTest
         Assert.That(versionComment, Is.Not.Null);
 
         string versionString = Encoding.UTF8.GetString(versionComment!);
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
         versionString = versionString[..7];
 #else
         versionString = versionString.Substring(0, 7);

@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace CharLS.Native.Test;
 
 [TestFixture]
-public sealed class JpegLSCodecTest
+internal sealed class JpegLSCodecTest
 {
     [Test]
     public void GetMetadataInfoFromLosslessEncodedColorImage()
@@ -316,7 +316,7 @@ public sealed class JpegLSCodecTest
 
     private static byte[] ReadAllBytes(string path, int bytesToSkip = 0)
     {
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
         var fullPath = Path.Join(DataFileDirectory, path);
 #else
         var fullPath = Path.Combine(DataFileDirectory, path);
@@ -338,7 +338,7 @@ public sealed class JpegLSCodecTest
         get
         {
             var assemblyLocation = new Uri(Assembly.GetExecutingAssembly().Location);
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
             return Path.Join(Path.GetDirectoryName(assemblyLocation.LocalPath), "DataFiles");
 #else
             return Path.Combine(Path.GetDirectoryName(assemblyLocation.LocalPath), "DataFiles");

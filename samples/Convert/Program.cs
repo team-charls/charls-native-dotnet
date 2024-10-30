@@ -124,7 +124,7 @@ string GetOutputPath(string inputPathArg)
 void Save(string path, ReadOnlySpan<byte> encodedData)
 {
     using FileStream output = new(path, FileMode.OpenOrCreate);
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
     output.Write(encodedData);
 #else
     output.Write(encodedData.ToArray(), 0, encodedData.Length);

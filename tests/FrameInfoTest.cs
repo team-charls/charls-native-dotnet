@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace CharLS.Native.Test;
 
 [TestFixture]
-public sealed class FrameInfoTest
+internal sealed class FrameInfoTest
 {
     [Test]
     public void ConstructDefault()
