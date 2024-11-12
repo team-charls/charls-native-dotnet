@@ -23,6 +23,17 @@ jobs:
     submodules: 'true'
     fetchDepth: '1'
 
+  - task: UseDotNet@2
+    displayName: 'Install .NET 8.0 SDK'
+    inputs:
+      version: 8.0.x
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET 9.0 SDK'
+    inputs:
+      version: 9.0.x
+      includePreviewVersions: true
+
   - task: NuGetToolInstaller@1
 
   - task: NuGetCommand@2
@@ -66,34 +77,6 @@ jobs:
       runSettingsFile: 'tests\CodeCoverage.runsettings'
 
   - task: VSTest@2
-    displayName: 'Test Charls.Native (.NET 6.0 x64)'
-    inputs:
-      platform: '$(buildPlatform)'
-      configuration: '$(buildConfiguration)'
-      otherConsoleOptions: --Framework:".NETCoreApp,Version=v6.0" --Platform:x64
-      testAssemblyVer2: |
-        **\net6.0\CharLS.Native.Test.dll
-        !**\*TestAdapter.dll
-        !**\intermediates\**
-      runInParallel: true
-      codeCoverageEnabled: true
-      runSettingsFile: 'tests\CodeCoverage.runsettings'
-
-  - task: VSTest@2
-    displayName: 'Test Charls.Native (.NET 7.0 x64)'
-    inputs:
-      platform: '$(buildPlatform)'
-      configuration: '$(buildConfiguration)'
-      otherConsoleOptions: --Framework:".NETCoreApp,Version=v7.0" --Platform:x64
-      testAssemblyVer2: |
-        **\net7.0\CharLS.Native.Test.dll
-        !**\*TestAdapter.dll
-        !**\intermediates\**
-      runInParallel: true
-      codeCoverageEnabled: true
-      runSettingsFile: 'tests\CodeCoverage.runsettings'
-
-  - task: VSTest@2
     displayName: 'Test Charls.Native (.NET 8.0 x64)'
     inputs:
       platform: '$(buildPlatform)'
@@ -101,6 +84,20 @@ jobs:
       otherConsoleOptions: --Framework:".NETCoreApp,Version=v8.0" --Platform:x64
       testAssemblyVer2: |
         **\net8.0\CharLS.Native.Test.dll
+        !**\*TestAdapter.dll
+        !**\intermediates\**
+      runInParallel: true
+      codeCoverageEnabled: true
+      runSettingsFile: 'tests\CodeCoverage.runsettings'
+
+  - task: VSTest@2
+    displayName: 'Test Charls.Native (.NET 9.0 x64)'
+    inputs:
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+      otherConsoleOptions: --Framework:".NETCoreApp,Version=v9.0" --Platform:x64
+      testAssemblyVer2: |
+        **\net9.0\CharLS.Native.Test.dll
         !**\*TestAdapter.dll
         !**\intermediates\**
       runInParallel: true
@@ -150,19 +147,15 @@ jobs:
       cmakeArgs: --build .
 
   - task: UseDotNet@2
-    displayName: 'Install .NET 6.0 SDK'
-    inputs:
-      version: 6.0.x
-
-  - task: UseDotNet@2
-    displayName: 'Install .NET 7.0 SDK'
-    inputs:
-      version: 7.0.x
-
-  - task: UseDotNet@2
     displayName: 'Install .NET 8.0 SDK'
     inputs:
       version: 8.0.x
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET 9.0 SDK'
+    inputs:
+      version: 9.0.x
+      includePreviewVersions: true
 
   - task: DotNetCoreCLI@2
     displayName: 'Restore NuGet packages'
@@ -176,14 +169,11 @@ jobs:
       arguments: '--configuration $(buildConfiguration) --no-restore'
       platform: '$(buildPlatform)'
 
-  - script: cp $(Build.BinariesDirectory)/build/libcharls.so.2 $(Build.SourcesDirectory)/build/bin/$(buildConfiguration)/net6.0/
-    displayName: "Copy shared library to .NET 6.0 unit test location"
-
-  - script: cp $(Build.BinariesDirectory)/build/libcharls.so.2 $(Build.SourcesDirectory)/build/bin/$(buildConfiguration)/net7.0/
-    displayName: "Copy shared library to .NET 7.0 unit test location"
-
   - script: cp $(Build.BinariesDirectory)/build/libcharls.so.2 $(Build.SourcesDirectory)/build/bin/$(buildConfiguration)/net8.0/
     displayName: "Copy shared library to .NET 8.0 unit test location"
+
+  - script: cp $(Build.BinariesDirectory)/build/libcharls.so.2 $(Build.SourcesDirectory)/build/bin/$(buildConfiguration)/net9.0/
+    displayName: "Copy shared library to .NET 9.0 unit test location"
 
   - task: DotNetCoreCLI@2
     displayName: 'Test Charls.Native'
@@ -235,19 +225,15 @@ jobs:
       cmakeArgs: --build .
 
   - task: UseDotNet@2
-    displayName: 'Install .NET 6.0 SDK'
-    inputs:
-      version: 6.0.x
-
-  - task: UseDotNet@2
-    displayName: 'Install .NET 7.0 SDK'
-    inputs:
-      version: 7.0.x
-
-  - task: UseDotNet@2
     displayName: 'Install .NET 8.0 SDK'
     inputs:
       version: 8.0.x
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET 9.0 SDK'
+    inputs:
+      version: 9.0.x
+      includePreviewVersions: true
 
   - task: DotNetCoreCLI@2
     displayName: 'Restore NuGet packages'
@@ -261,14 +247,11 @@ jobs:
       arguments: '--configuration $(buildConfiguration) --no-restore'
       platform: '$(buildPlatform)'
 
-  - script: cp $(Build.BinariesDirectory)/build/libcharls.2.dylib $(Build.SourcesDirectory)/build/bin/$(buildConfiguration)/net6.0/
-    displayName: "Copy shared library to .NET 6.0 unit test location"
-
-  - script: cp $(Build.BinariesDirectory)/build/libcharls.2.dylib $(Build.SourcesDirectory)/build/bin/$(buildConfiguration)/net7.0/
-    displayName: "Copy shared library to .NET 7.0 unit test location"
-
   - script: cp $(Build.BinariesDirectory)/build/libcharls.2.dylib $(Build.SourcesDirectory)/build/bin/$(buildConfiguration)/net8.0/
     displayName: "Copy shared library to .NET 8.0 unit test location"
+
+  - script: cp $(Build.BinariesDirectory)/build/libcharls.2.dylib $(Build.SourcesDirectory)/build/bin/$(buildConfiguration)/net9.0/
+    displayName: "Copy shared library to .NET 9.0 unit test location"
 
   - task: DotNetCoreCLI@2
     displayName: 'Test Charls.Native'

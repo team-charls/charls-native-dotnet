@@ -11,11 +11,6 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\src\CharLS.Native.KeyPair.snk</AssemblyOriginatorKeyFile>
     <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
-      <!--
-      CS1591: Missing XML comment for publicly visible type or member 'Type_or_Member'
-      AD0001: Microsoft.NetCore.Analyzers.Runtime.AvoidConstArraysAnalyzer' threw an exception of type 'System.NullReferenceException [Fixed in .NET 8.0, Preview 6]
-      -->
-      <NoWarn>$(NoWarn),1591, AD0001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

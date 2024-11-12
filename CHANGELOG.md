@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.0 - 2024-11-12]
+
+### Added
+
+- Support for .NET 9.0
+
+### Changed
+
+- Throwing an exception from an event handler is now handled and the Failed property has been removed.
+- Changed type of FrameInfo to readonly record struct (aligns with CharLS.DotNet)
+
+## Removed
+
+- Support for .NET 6.0 (.NET 6.0 is end of support since 2024-11-12).
+- Support for .NET 7.0 (.NET 7.0 is end of support since 2024-05-14).
+
 ## [3.2.0 - 2023-11-24]
 
 ### Added
@@ -13,7 +29,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 
 - CharLS Windows DLLs updated to v2.4.2
-
 
 ## [3.1.0 - 2023-4-14]
 

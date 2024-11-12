@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace CharLS.Native.Test;
 
 [TestFixture]
-public sealed class FrameInfoTest
+internal sealed class FrameInfoTest
 {
     [Test]
     public void ConstructDefault()
@@ -92,12 +92,10 @@ public sealed class FrameInfoTest
         FrameInfo a = new(256, 1024, 8, 3);
 
         bool equals = a.Equals(null!);
-        bool equalsObject = a!.Equals((object)null!);
 
         Assert.Multiple(() =>
         {
             Assert.That(equals, Is.False);
-            Assert.That(equalsObject, Is.False);
         });
     }
 
