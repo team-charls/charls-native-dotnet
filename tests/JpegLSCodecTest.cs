@@ -1,7 +1,6 @@
 // Copyright (c) Team CharLS.
 // SPDX-License-Identifier: BSD-3-Clause
 
-using System.Reflection;
 using NUnit.Framework;
 
 namespace CharLS.Native.Test;
@@ -337,11 +336,11 @@ internal sealed class JpegLSCodecTest
     {
         get
         {
-            var assemblyLocation = new Uri(Assembly.GetExecutingAssembly().Location);
+            string assemblyLocation = AppContext.BaseDirectory;
 #if NET8_0_OR_GREATER
-            return Path.Join(Path.GetDirectoryName(assemblyLocation.LocalPath), "DataFiles");
+            return Path.Join(Path.GetDirectoryName(assemblyLocation), "DataFiles");
 #else
-            return Path.Combine(Path.GetDirectoryName(assemblyLocation.LocalPath)!, "DataFiles");
+            return Path.Combine(Path.GetDirectoryName(assemblyLocation)!, "DataFiles");
 #endif
         }
     }
