@@ -27,21 +27,9 @@ csharp_style_expression_bodied_accessors = true:silent
 csharp_style_expression_bodied_lambdas = true:silent
 csharp_style_expression_bodied_local_functions = false:silent
 csharp_style_throw_expression = true:suggestion
-
-[*.props]
-indent_size = 2
-
-[*.md]
-trim_trailing_whitespace = false
-
-[*.csproj]
-indent_size = 2
-
-[*.{cs,vb}]
-indent_size = 4
-tab_width = 4
-indent_size = 4
-end_of_line = crlf
+csharp_style_prefer_primary_constructors = true:suggestion
+csharp_prefer_system_threading_lock = true:suggestion
+csharp_space_around_binary_operators = before_and_after
 
 # New line preferences
 csharp_new_line_before_open_brace = all
@@ -69,15 +57,26 @@ csharp_space_between_method_declaration_parameter_list_parentheses = false
 
 csharp_preserve_single_line_blocks = true
 
-csharp_style_expression_bodied_constructors = false:suggestion
-csharp_style_expression_bodied_methods = false:suggestion
-csharp_style_expression_bodied_properties = true:suggestion
 csharp_style_inlined_variable_declaration = false:suggestion
 csharp_style_var_for_built_in_types = false:none
 csharp_style_var_when_type_is_apparent = true:suggestion
 csharp_style_var_elsewhere = true:none
-csharp_style_namespace_declarations = file_scoped:silent
-csharp_prefer_braces = when_multiline:suggestion
+
+resharper_remove_redundant_braces_highlighting = none
+
+[*.props]
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.csproj]
+indent_size = 2
+
+[*.{cs,vb}]
+indent_size = 4
+tab_width = 4
+end_of_line = crlf
 
 dotnet_sort_system_directives_first = true
 
@@ -86,17 +85,6 @@ dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
 dotnet_style_qualification_for_field = false:suggestion
 dotnet_style_qualification_for_method = false:suggestion
 dotnet_style_qualification_for_property = false:suggestion
-csharp_using_directive_placement = outside_namespace:silent
-csharp_prefer_simple_using_statement = true:suggestion
-csharp_style_prefer_method_group_conversion = true:silent
-csharp_style_prefer_top_level_statements = true:silent
-csharp_style_expression_bodied_operators = false:silent
-csharp_style_expression_bodied_indexers = true:silent
-csharp_style_expression_bodied_accessors = true:silent
-csharp_style_expression_bodied_lambdas = true:silent
-csharp_style_expression_bodied_local_functions = false:silent
-csharp_style_throw_expression = true:suggestion
-csharp_indent_labels = one_less_than_current
 
 #### Naming styles ####
 

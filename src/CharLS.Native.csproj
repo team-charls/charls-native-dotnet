@@ -13,6 +13,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly> <!-- Explicit enable for build acceleration and target .NET 4.8 -->
+    <IsAotCompatible Condition="'$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0'">true</IsAotCompatible>
 
     <!-- Use strong naming -->
     <SignAssembly>true</SignAssembly>
