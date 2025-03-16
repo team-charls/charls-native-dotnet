@@ -112,10 +112,10 @@ jobs:
   strategy:
     matrix:
       Debug:
-        buildConfiguration: Debug
+        buildConfiguration: debug
 
       Release:
-        buildConfiguration: Release
+        buildConfiguration: release
 
   steps:
   - checkout: self
@@ -169,10 +169,10 @@ jobs:
       arguments: '--configuration $(buildConfiguration) --no-restore'
       platform: '$(buildPlatform)'
 
-  - script: cp $(Build.BinariesDirectory)/build/libcharls.so.2 $(Build.SourcesDirectory)/build/bin/$(buildConfiguration)/net8.0/
+  - script: cp $(Build.BinariesDirectory)/build/libcharls.so.2 $(Build.SourcesDirectory)/artifacts/bin/CharLS.Native.Test/$(buildConfiguration)_net8.0/
     displayName: "Copy shared library to .NET 8.0 unit test location"
 
-  - script: cp $(Build.BinariesDirectory)/build/libcharls.so.2 $(Build.SourcesDirectory)/build/bin/$(buildConfiguration)/net9.0/
+  - script: cp $(Build.BinariesDirectory)/build/libcharls.so.2 $(Build.SourcesDirectory)/artifacts/bin/CharLS.Native.Test/$(buildConfiguration)_net9.0/
     displayName: "Copy shared library to .NET 9.0 unit test location"
 
   - task: DotNetCoreCLI@2
@@ -190,10 +190,10 @@ jobs:
   strategy:
     matrix:
       Debug:
-        buildConfiguration: Debug
+        buildConfiguration: debug
 
       Release:
-        buildConfiguration: Release
+        buildConfiguration: release
 
   steps:
   - checkout: self
@@ -247,10 +247,10 @@ jobs:
       arguments: '--configuration $(buildConfiguration) --no-restore'
       platform: '$(buildPlatform)'
 
-  - script: cp $(Build.BinariesDirectory)/build/libcharls.2.dylib $(Build.SourcesDirectory)/build/bin/$(buildConfiguration)/net8.0/
+  - script: cp $(Build.BinariesDirectory)/build/libcharls.2.dylib $(Build.SourcesDirectory)/artifacts/bin/CharLS.Native.Test/$(buildConfiguration)_net8.0/
     displayName: "Copy shared library to .NET 8.0 unit test location"
 
-  - script: cp $(Build.BinariesDirectory)/build/libcharls.2.dylib $(Build.SourcesDirectory)/build/bin/$(buildConfiguration)/net9.0/
+  - script: cp $(Build.BinariesDirectory)/build/libcharls.2.dylib $(Build.SourcesDirectory)/artifacts/bin/CharLS.Native.Test/$(buildConfiguration)_net9.0/
     displayName: "Copy shared library to .NET 9.0 unit test location"
 
   - task: DotNetCoreCLI@2
