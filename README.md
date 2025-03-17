@@ -61,7 +61,8 @@ A sample application is included in the GitHub repository that demonstrates how 
 ```
 
 * Use CMake to build the native C++ shared library, see the CharLS project how to do that. When building with Visual Studio, this step can be skipped.
-* Use the .NET 9.0 CLI or Visual Studio 2022 (v17.12 or newer) to build the solution file CharLSNativeDotNet.sln. For example: `dotnet build && dotnet test && dotnet publish` to build the nuget package.
+* Use the .NET 9.0 CLI or Visual Studio 2022 (v17.13 or newer) to build the solution file CharLSNativeDotNet.slnx.
+  For example: `dotnet build && dotnet test && dotnet publish` to build the nuget package.
 
 ### Building Windows DLLs and code signing all components
 

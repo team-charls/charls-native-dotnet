@@ -2,8 +2,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 # Ignore build output
-build/
-bin/
+artifacts/
 TestResults/
 *.opensdf
 *.sdf

@@ -29,9 +29,7 @@
     <NoWarn>$(NoWarn),1573,1591,1712</NoWarn>
 
     <!-- Build -->
-    <!-- Build to a folder outside the source folders, making it easier to clean. -->
-    <OutputPath>$(MSBuildThisFileDirectory)build\bin\$(Configuration)\</OutputPath>
-    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)build\intermediates\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+    <UseArtifactsOutput>true</UseArtifactsOutput>
 
     <!-- Static Analysis -->
     <AnalysisLevel>latest-All</AnalysisLevel>
