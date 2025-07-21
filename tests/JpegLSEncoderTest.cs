@@ -4,7 +4,6 @@
 using System.ComponentModel;
 using System.Text;
 using NUnit.Framework;
-using System.Diagnostics.CodeAnalysis;
 
 namespace CharLS.Native.Test;
 
@@ -26,11 +25,11 @@ internal sealed class JpegLSEncoderTest
         FrameInfo expected = new(256, 500, 8, 3);
         using JpegLSEncoder encoder = new(256, 500, 8, 3);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(encoder.FrameInfo, Is.EqualTo(expected));
             Assert.That(encoder.Destination.IsEmpty, Is.False);
-        });
+        }
     }
 
     [Test]
@@ -39,11 +38,11 @@ internal sealed class JpegLSEncoderTest
         FrameInfo expected = new(256, 500, 8, 3);
         using JpegLSEncoder encoder = new(expected);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(encoder.FrameInfo, Is.EqualTo(expected));
             Assert.That(encoder.Destination.IsEmpty, Is.False);
-        });
+        }
     }
 
     [Test]
@@ -51,7 +50,7 @@ internal sealed class JpegLSEncoderTest
     {
         using JpegLSEncoder encoder = new();
 
-        Assert.That(encoder.NearLossless, Is.EqualTo(0));
+        Assert.That(encoder.NearLossless, Is.Zero);
 
         encoder.NearLossless = 1;
         Assert.That(encoder.NearLossless, Is.EqualTo(1));
@@ -262,22 +261,21 @@ internal sealed class JpegLSEncoderTest
 
         Assert.That(comment2, Is.Not.Null);
         Assert.That(comment2!, Has.Length.EqualTo(4));
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(comment2![0], Is.EqualTo(1));
             Assert.That(comment2![1], Is.EqualTo(2));
             Assert.That(comment2![2], Is.EqualTo(3));
             Assert.That(comment2![3], Is.EqualTo(4));
-        });
+        }
     }
 
     [Test]
-    [SuppressMessage("Style", "IDE0301:Simplify collection initialization", Justification = "Not possible for .NET 6.0 build")]
     public void WriteEmptyComment()
     {
         using JpegLSEncoder encoder = new(new FrameInfo(1, 1, 8, 1), true, 100);
 
-        encoder.WriteComment(Array.Empty<byte>());
+        encoder.WriteComment([]);
         encoder.Encode(new byte[1]);
 
         byte[]? comment = null;
@@ -308,29 +306,28 @@ internal sealed class JpegLSEncoderTest
         };
         decoder.ReadHeader();
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(comment.IsEmpty, Is.False);
             Assert.That(comment!.Length, Is.EqualTo(6));
-        });
+        }
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(comment.Span[0], Is.EqualTo((byte)'H'));
             Assert.That(comment.Span[1], Is.EqualTo((byte)'e'));
             Assert.That(comment.Span[2], Is.EqualTo((byte)'l'));
             Assert.That(comment.Span[3], Is.EqualTo((byte)'l'));
             Assert.That(comment.Span[4], Is.EqualTo((byte)'o'));
-            Assert.That(comment.Span[5], Is.EqualTo(0));
-        });
+            Assert.That(comment.Span[5], Is.Zero);
+        }
     }
 
     [Test]
-    [SuppressMessage("Style", "IDE0301:Simplify collection initialization", Justification = "Not possible for .NET 6.0 build")]
     public void FailCommentEvent()
     {
         using JpegLSEncoder encoder = new(new FrameInfo(1, 1, 8, 1), true, 100);
-        encoder.WriteComment(Array.Empty<byte>());
+        encoder.WriteComment([]);
         encoder.Encode(new byte[1]);
 
         using JpegLSDecoder decoder = new(encoder.EncodedData, false);
@@ -363,19 +360,19 @@ internal sealed class JpegLSEncoderTest
         };
         decoder.ReadHeader();
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(applicationDataId, Is.EqualTo(3));
             Assert.That(applicationData2, Is.Not.Null);
-        });
+        }
         Assert.That(applicationData2!, Has.Length.EqualTo(4));
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(applicationData2![0], Is.EqualTo(1));
             Assert.That(applicationData2![1], Is.EqualTo(2));
             Assert.That(applicationData2![2], Is.EqualTo(3));
             Assert.That(applicationData2![3], Is.EqualTo(4));
-        });
+        }
     }
 
     [Test]
@@ -396,11 +393,11 @@ internal sealed class JpegLSEncoderTest
         };
         decoder.ReadHeader();
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(applicationDataId, Is.EqualTo(15));
             Assert.That(applicationData, Is.Not.Null);
-        });
+        }
         Assert.That(applicationData!, Is.Empty);
     }
 

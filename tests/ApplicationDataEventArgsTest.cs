@@ -14,10 +14,10 @@ internal class ApplicationDataEventArgsTest
         byte[] data = [1, 2, 3];
         var eventArgs = new ApplicationDataEventArgs(3, data);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(eventArgs.Id, Is.EqualTo(3));
             Assert.That(eventArgs.Data.Span.SequenceEqual(data), Is.True);
-        });
+        }
     }
 }

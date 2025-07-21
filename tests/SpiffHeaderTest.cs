@@ -14,60 +14,63 @@ internal sealed class SpiffHeaderTest
     {
         SpiffHeader header = new();
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(header.ProfileId, Is.EqualTo(SpiffProfileId.None));
-            Assert.That(header.ComponentCount, Is.EqualTo(0));
-            Assert.That(header.Width, Is.EqualTo(0));
-            Assert.That(header.Height, Is.EqualTo(0));
+            Assert.That(header.ComponentCount, Is.Zero);
+            Assert.That(header.Width, Is.Zero);
+            Assert.That(header.Height, Is.Zero);
             Assert.That(header.ColorSpace, Is.EqualTo(SpiffColorSpace.None));
-            Assert.That(header.BitsPerSample, Is.EqualTo(0));
+            Assert.That(header.BitsPerSample, Is.Zero);
             Assert.That(header.CompressionType, Is.EqualTo(SpiffCompressionType.JpegLS));
             Assert.That(header.ResolutionUnit, Is.EqualTo(SpiffResolutionUnit.AspectRatio));
             Assert.That(header.VerticalResolution, Is.EqualTo(1));
             Assert.That(header.HorizontalResolution, Is.EqualTo(1));
-        });
+        }
     }
 
     [Test]
     public void ConstructAndModify()
     {
-        SpiffHeader header = new() {
+        SpiffHeader header = new()
+        {
             ComponentCount = 3,
             Width = 512,
             Height = 1024,
             ColorSpace = SpiffColorSpace.Rgb
         };
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(header.ComponentCount, Is.EqualTo(3));
             Assert.That(header.Width, Is.EqualTo(512));
             Assert.That(header.Height, Is.EqualTo(1024));
             Assert.That(header.ColorSpace, Is.EqualTo(SpiffColorSpace.Rgb));
-        });
+        }
     }
 
     [Test]
     public void ConstructFromUnsupportedNative()
     {
-        SpiffHeaderNative native = new() {
+        SpiffHeaderNative native = new()
+        {
             Height = uint.MaxValue,
             ColorSpace = SpiffColorSpace.Rgb
         };
 
         bool result = SpiffHeader.TryCreate(native, out var header);
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(result, Is.False);
             Assert.That(header, Is.Null);
-        });
+        }
     }
 
     [Test]
     public void ToStringIsNotDefault()
     {
-        SpiffHeader header = new() {
+        SpiffHeader header = new()
+        {
             ComponentCount = 3,
             Width = 512,
             Height = 1024,
@@ -87,13 +90,13 @@ internal sealed class SpiffHeaderTest
         var equal = a.Equals(b);
         var equalObject = a.Equals((object)b);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(equal, Is.True);
             Assert.That(equalObject, Is.True);
             Assert.That(b, Is.EqualTo(a));
             Assert.That(a, Is.EqualTo(b));
-        });
+        }
         Assert.That(b.GetHashCode(), Is.EqualTo(a.GetHashCode()));
     }
 
@@ -106,11 +109,11 @@ internal sealed class SpiffHeaderTest
         var equal = a.Equals(b);
         var equalObject = a.Equals((object)b);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(equal, Is.False);
             Assert.That(equalObject, Is.False);
-        });
+        }
     }
 
     [Test]
@@ -119,11 +122,7 @@ internal sealed class SpiffHeaderTest
     {
         SpiffHeader a = new();
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(a, Is.Not.EqualTo(null));
-            Assert.That(a, Is.Not.EqualTo(null!));
-        });
+        Assert.That(a, Is.Not.Null);
     }
 
     [Test]
