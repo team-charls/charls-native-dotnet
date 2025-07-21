@@ -16,14 +16,14 @@ internal sealed class JpegLSDecoderTest
         using JpegLSDecoder decoder = new(source);
         var presetCodingParameters = decoder.PresetCodingParameters;
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(presetCodingParameters.MaximumSampleValue, Is.EqualTo(255));
             Assert.That(presetCodingParameters.Threshold1, Is.EqualTo(9));
             Assert.That(presetCodingParameters.Threshold2, Is.EqualTo(9));
             Assert.That(presetCodingParameters.Threshold3, Is.EqualTo(9));
             Assert.That(presetCodingParameters.ResetValue, Is.EqualTo(31));
-        });
+        }
     }
 
     [Test]
@@ -70,11 +70,11 @@ internal sealed class JpegLSDecoderTest
         using JpegLSDecoder decoder = new(source, false);
         bool result = decoder.TryReadSpiffHeader(out var header);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(result, Is.False);
             Assert.That(header, Is.Null);
-        });
+        }
     }
 
     [Test]
@@ -176,13 +176,13 @@ internal sealed class JpegLSDecoderTest
 
         Assert.That(comment2, Is.Not.Null);
         Assert.That(comment2!, Has.Length.EqualTo(4));
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(comment2![0], Is.EqualTo(1));
             Assert.That(comment2![1], Is.EqualTo(2));
             Assert.That(comment2![2], Is.EqualTo(3));
             Assert.That(comment2![3], Is.EqualTo(4));
-        });
+        }
         return;
 
         void CommentHandler(object? _, CommentEventArgs e)
@@ -242,13 +242,13 @@ internal sealed class JpegLSDecoderTest
 
         Assert.That(applicationData2, Is.Not.Null);
         Assert.That(applicationData2!, Has.Length.EqualTo(4));
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(applicationData2![0], Is.EqualTo(1));
             Assert.That(applicationData2![1], Is.EqualTo(2));
             Assert.That(applicationData2![2], Is.EqualTo(3));
             Assert.That(applicationData2![3], Is.EqualTo(4));
-        });
+        }
         return;
 
         void ApplicationDataHandler(object? _, ApplicationDataEventArgs e)

@@ -14,14 +14,14 @@ internal sealed class JpegLSPresetCodingParametersTest
     {
         JpegLSPresetCodingParameters presetCodingParameters = new(255, 9, 10, 11, 31);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(presetCodingParameters.MaximumSampleValue, Is.EqualTo(255));
             Assert.That(presetCodingParameters.Threshold1, Is.EqualTo(9));
             Assert.That(presetCodingParameters.Threshold2, Is.EqualTo(10));
             Assert.That(presetCodingParameters.Threshold3, Is.EqualTo(11));
             Assert.That(presetCodingParameters.ResetValue, Is.EqualTo(31));
-        });
+        }
     }
 
     [Test]
@@ -36,14 +36,14 @@ internal sealed class JpegLSPresetCodingParametersTest
             ResetValue = 31
         };
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(presetCodingParameters.MaximumSampleValue, Is.EqualTo(255));
             Assert.That(presetCodingParameters.Threshold1, Is.EqualTo(9));
             Assert.That(presetCodingParameters.Threshold2, Is.EqualTo(10));
             Assert.That(presetCodingParameters.Threshold3, Is.EqualTo(11));
             Assert.That(presetCodingParameters.ResetValue, Is.EqualTo(31));
-        });
+        }
     }
 
     [Test]
@@ -56,18 +56,18 @@ internal sealed class JpegLSPresetCodingParametersTest
         bool equalsObject = a.Equals((object)b);
         bool equalsOperator = a == b;
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(equals, Is.True);
             Assert.That(equalsObject, Is.True);
             Assert.That(b, Is.EqualTo(a));
             Assert.That(a, Is.EqualTo(b));
-        });
-        Assert.Multiple(() =>
+        }
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(b.GetHashCode(), Is.EqualTo(a.GetHashCode()));
             Assert.That(equalsOperator, Is.True);
-        });
+        }
     }
 
     [Test]
@@ -80,12 +80,12 @@ internal sealed class JpegLSPresetCodingParametersTest
         bool equalsObject = a.Equals((object)b);
         bool equalsOperator = a == b;
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(equals, Is.False);
             Assert.That(equalsObject, Is.False);
             Assert.That(equalsOperator, Is.False);
-        });
+        }
     }
 
     [Test]
@@ -97,10 +97,10 @@ internal sealed class JpegLSPresetCodingParametersTest
         bool equals = a.Equals(null!);
         bool equalsObject = a!.Equals((object)null!);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(equals, Is.False);
             Assert.That(equalsObject, Is.False);
-        });
+        }
     }
 }

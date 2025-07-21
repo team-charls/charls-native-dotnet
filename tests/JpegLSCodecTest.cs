@@ -13,14 +13,14 @@ internal sealed class JpegLSCodecTest
     {
         using JpegLSDecoder decoder = new(ReadAllBytes("t8c0e0.jls"));
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(decoder.FrameInfo.Height, Is.EqualTo(256));
             Assert.That(decoder.FrameInfo.Width, Is.EqualTo(256));
             Assert.That(decoder.FrameInfo.BitsPerSample, Is.EqualTo(8));
             Assert.That(decoder.FrameInfo.ComponentCount, Is.EqualTo(3));
-            Assert.That(decoder.NearLossless, Is.EqualTo(0));
-        });
+            Assert.That(decoder.NearLossless, Is.Zero);
+        }
     }
 
     [Test]
@@ -29,14 +29,14 @@ internal sealed class JpegLSCodecTest
         using JpegLSDecoder decoder = new(ReadAllBytes("t8c0e3.jls"));
 
         var frameInfo = decoder.FrameInfo;
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(frameInfo.Height, Is.EqualTo(256));
             Assert.That(frameInfo.Width, Is.EqualTo(256));
             Assert.That(frameInfo.BitsPerSample, Is.EqualTo(8));
             Assert.That(frameInfo.ComponentCount, Is.EqualTo(3));
             Assert.That(decoder.NearLossless, Is.EqualTo(3));
-        });
+        }
     }
 
     [Test]
@@ -146,7 +146,7 @@ internal sealed class JpegLSCodecTest
         using JpegLSDecoder decoder = new(encoder.Destination, false);
         bool spiffHeaderPresent = decoder.TryReadSpiffHeader(out var spiffHeader);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(spiffHeaderPresent, Is.True);
 
@@ -160,7 +160,7 @@ internal sealed class JpegLSCodecTest
             Assert.That(spiffHeader.ResolutionUnit, Is.EqualTo(SpiffResolutionUnit.AspectRatio));
             Assert.That(spiffHeader.VerticalResolution, Is.EqualTo(1));
             Assert.That(spiffHeader.HorizontalResolution, Is.EqualTo(1));
-        });
+        }
     }
 
     [Test]
@@ -179,7 +179,7 @@ internal sealed class JpegLSCodecTest
         if (decoder.SpiffHeader == null)
             return;
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(spiffHeader!.ProfileId, Is.EqualTo(SpiffProfileId.None));
             Assert.That(decoder.SpiffHeader.ComponentCount, Is.EqualTo(1));
@@ -191,7 +191,7 @@ internal sealed class JpegLSCodecTest
             Assert.That(spiffHeader.ResolutionUnit, Is.EqualTo(SpiffResolutionUnit.AspectRatio));
             Assert.That(spiffHeader.VerticalResolution, Is.EqualTo(1));
             Assert.That(spiffHeader.HorizontalResolution, Is.EqualTo(1));
-        });
+        }
     }
 
     [Test]
@@ -215,7 +215,7 @@ internal sealed class JpegLSCodecTest
         using JpegLSDecoder decoder = new(encoder.Destination, false);
         bool spiffHeaderPresent = decoder.TryReadSpiffHeader(out var spiffHeader);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(spiffHeaderPresent, Is.True);
 
@@ -229,7 +229,7 @@ internal sealed class JpegLSCodecTest
             Assert.That(spiffHeader.ResolutionUnit, Is.EqualTo(SpiffResolutionUnit.AspectRatio));
             Assert.That(spiffHeader.VerticalResolution, Is.EqualTo(1));
             Assert.That(spiffHeader.HorizontalResolution, Is.EqualTo(1));
-        });
+        }
     }
 
     [Test]

@@ -14,13 +14,13 @@ internal sealed class FrameInfoTest
     {
         FrameInfo frameInfo = new(256, 1024, 8, 3);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(frameInfo.Width, Is.EqualTo(256));
             Assert.That(frameInfo.Height, Is.EqualTo(1024));
             Assert.That(frameInfo.BitsPerSample, Is.EqualTo(8));
             Assert.That(frameInfo.ComponentCount, Is.EqualTo(3));
-        });
+        }
     }
 
     [Test]
@@ -34,13 +34,13 @@ internal sealed class FrameInfoTest
             ComponentCount = 3
         };
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(frameInfo.Width, Is.EqualTo(256));
             Assert.That(frameInfo.Height, Is.EqualTo(1024));
             Assert.That(frameInfo.BitsPerSample, Is.EqualTo(8));
             Assert.That(frameInfo.ComponentCount, Is.EqualTo(3));
-        });
+        }
     }
 
     [Test]
@@ -53,18 +53,18 @@ internal sealed class FrameInfoTest
         bool equalsObject = a.Equals((object)b);
         bool equalsOperator = a == b;
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(equals, Is.True);
             Assert.That(equalsObject, Is.True);
             Assert.That(b, Is.EqualTo(a));
             Assert.That(a, Is.EqualTo(b));
-        });
-        Assert.Multiple(() =>
+        }
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(b.GetHashCode(), Is.EqualTo(a.GetHashCode()));
             Assert.That(equalsOperator, Is.True);
-        });
+        }
     }
 
     [Test]
@@ -77,12 +77,12 @@ internal sealed class FrameInfoTest
         bool equalsObject = a.Equals((object)b);
         bool equalsOperator = a == b;
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(equals, Is.False);
             Assert.That(equalsObject, Is.False);
             Assert.That(equalsOperator, Is.False);
-        });
+        }
     }
 
     [Test]
@@ -92,11 +92,8 @@ internal sealed class FrameInfoTest
         FrameInfo a = new(256, 1024, 8, 3);
 
         bool equals = a.Equals(null!);
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(equals, Is.False);
-        });
+       
+        Assert.That(equals, Is.False);
     }
 
     [Test]

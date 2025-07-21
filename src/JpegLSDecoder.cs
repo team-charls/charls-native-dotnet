@@ -267,7 +267,7 @@ public sealed class JpegLSDecoder : IDisposable
         }
         else
         {
-            spiffHeader = default;
+            spiffHeader = null;
         }
 
         return found;

@@ -95,7 +95,7 @@ public sealed record SpiffHeader
             headerNative.VerticalResolution > int.MaxValue ||
             headerNative.HorizontalResolution > int.MaxValue)
         {
-            spiffHeader = default;
+            spiffHeader = null;
             return false;
         }
 
