@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 
 - Switched to the artifacts output directory model.
+- Updated referenced NuGet packages.
 
 ## [4.0.0 - 2024-11-13]
 
@@ -44,7 +45,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed
 
-- Fixed [#45](https://github.com/team-charls/charls-native-dotnet/issues/45), Callbacks AtCommentHandler and AtApplicationDataHandler fail in x86 mode on Windows.
+- Fixed [#45](https://github.com/team-charls/charls-native-dotnet/issues/45),
+Callbacks AtCommentHandler and AtApplicationDataHandler fail in x86 mode on Windows.
 
 ## [3.0.1 - 2023-1-2]
 
@@ -56,7 +58,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 
-- Support for Charls v2.4.0. CharLS v2.4.0 is now the minimum required version.
+- Support for CharLS v2.4.0. CharLS v2.4.0 is now the minimum required version.
 - Support for .NET 7.0.
 - Support for the native ARM64 CharLS DLL on Windows.
 - Added support to retrieve the JpegLSError value from a thrown exception.
@@ -67,7 +69,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 
-- Support for Charls v2.3.4. CharLS v2.3.0 is now the minimum required version.
+- Support for CharLS v2.3.4. CharLS v2.3.0 is now the minimum required version.
 - JpegLSEncoder constructor has an additional argument extraBytes to create a larger destination buffer.
 - JpegLSEncoder.Rewind() method.
 
