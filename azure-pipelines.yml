@@ -32,7 +32,11 @@ jobs:
     displayName: 'Install .NET 9.0 SDK'
     inputs:
       version: 9.0.x
-      includePreviewVersions: true
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET 10.0 SDK'
+    inputs:
+      version: 10.0.x
 
   - task: NuGetToolInstaller@1
 
@@ -104,6 +108,20 @@ jobs:
       codeCoverageEnabled: true
       runSettingsFile: 'tests\CodeCoverage.runsettings'
 
+  - task: VSTest@2
+    displayName: 'Test Charls.Native (.NET 10.0 x64)'
+    inputs:
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+      otherConsoleOptions: --Framework:".NETCoreApp,Version=v10.0" --Platform:x64
+      testAssemblyVer2: |
+        **\net10.0\CharLS.Native.Test.dll
+        !**\*TestAdapter.dll
+        !**\intermediates\**
+      runInParallel: true
+      codeCoverageEnabled: true
+      runSettingsFile: 'tests\CodeCoverage.runsettings'
+
 - job: 'linux'
   pool:
     vmImage: ubuntu-latest
@@ -155,7 +173,11 @@ jobs:
     displayName: 'Install .NET 9.0 SDK'
     inputs:
       version: 9.0.x
-      includePreviewVersions: true
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET 10.0 SDK'
+    inputs:
+      version: 10.0.x
 
   - task: DotNetCoreCLI@2
     displayName: 'Restore NuGet packages'
@@ -174,6 +196,9 @@ jobs:
 
   - script: cp $(Build.BinariesDirectory)/build/libcharls.so.2 $(Build.SourcesDirectory)/artifacts/bin/CharLS.Native.Test/$(buildConfiguration)_net9.0/
     displayName: "Copy shared library to .NET 9.0 unit test location"
+
+  - script: cp $(Build.BinariesDirectory)/build/libcharls.so.2 $(Build.SourcesDirectory)/artifacts/bin/CharLS.Native.Test/$(buildConfiguration)_net10.0/
+    displayName: "Copy shared library to .NET 10.0 unit test location"
 
   - task: DotNetCoreCLI@2
     displayName: 'Test Charls.Native'
@@ -233,7 +258,11 @@ jobs:
     displayName: 'Install .NET 9.0 SDK'
     inputs:
       version: 9.0.x
-      includePreviewVersions: true
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET 10.0 SDK'
+    inputs:
+      version: 10.0.x
 
   - task: DotNetCoreCLI@2
     displayName: 'Restore NuGet packages'
@@ -252,6 +281,9 @@ jobs:
 
   - script: cp $(Build.BinariesDirectory)/build/libcharls.2.dylib $(Build.SourcesDirectory)/artifacts/bin/CharLS.Native.Test/$(buildConfiguration)_net9.0/
     displayName: "Copy shared library to .NET 9.0 unit test location"
+
+  - script: cp $(Build.BinariesDirectory)/build/libcharls.2.dylib $(Build.SourcesDirectory)/artifacts/bin/CharLS.Native.Test/$(buildConfiguration)_net10.0/
+    displayName: "Copy shared library to .NET 10.0 unit test location"
 
   - task: DotNetCoreCLI@2
     displayName: 'Test Charls.Native'

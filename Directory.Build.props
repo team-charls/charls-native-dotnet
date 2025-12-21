@@ -6,7 +6,7 @@
 <Project>
   <PropertyGroup>
     <!-- General -->
-    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <TargetFrameworks Condition="'$(MSBuildRuntimeType)'=='Full'">$(TargetFrameworks);net48</TargetFrameworks>
     <LangVersion>latest</LangVersion><!-- Use the latest released C# language version -->
     <Features>strict</Features>
