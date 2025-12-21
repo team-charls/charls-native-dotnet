@@ -11,6 +11,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Switched to the artifacts output directory model.
 - Updated referenced NuGet packages.
 
+### Added
+
+- Support for .NET 10.0
+
 ## [4.0.0 - 2024-11-13]
 
 ### Added

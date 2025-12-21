@@ -13,7 +13,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly> <!-- Explicit enable for build acceleration and target .NET 4.8 -->
-    <IsAotCompatible Condition="'$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0'">true</IsAotCompatible>
+    <IsAotCompatible Condition="'$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0'">true</IsAotCompatible>
 
     <!-- Use strong naming -->
     <SignAssembly>true</SignAssembly>
@@ -114,6 +114,9 @@
 
     <Message Text="Signing CharLS.Native.dll (.NET 9.0)" />
     <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)net9.0\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
+
+    <Message Text="Signing CharLS.Native.dll (.NET 10.0)" />
+    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)net10.0\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
 
     <Message Text="Signing charls-2-x64.dll" />
     <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)charls-2-x64.dll" TargetFrameworkVersion="v4.5" />
