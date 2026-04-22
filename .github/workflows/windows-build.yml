@@ -19,7 +19,11 @@ jobs:
 
     strategy:
       matrix:
-        buildConfiguration: [Debug, Release]
+        include:
+        - buildConfiguration: Debug
+          artifactsConfiguration: debug
+        - buildConfiguration: Release
+          artifactsConfiguration: release
 
     steps:
     - name: Checkout code
@@ -53,28 +57,46 @@ jobs:
       run: msbuild ${{ env.SOLUTION }} /p:Configuration=${{ matrix.buildConfiguration }} /p:Platform="${{ env.BUILD_PLATFORM }}"
 
     - name: Test CharLS.Native (.NET Framework 4.8 x86)
+      shell: pwsh
       run: |
-        dotnet test --no-build --configuration ${{ matrix.buildConfiguration }} `
-          --logger "trx;LogFileName=test-results-net48-x86.trx" `
-          --collect:"XPlat Code Coverage" `
-          --settings tests/CodeCoverage.runsettings `
-          -- RunConfiguration.TargetPlatform=x86
-      env:
-        VSTEST_PLATFORM_NAME: .NETFramework,Version=v4.8
+        $vstest = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" `
+          -latest `
+          -products * `
+          -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core `
+          -find **\Common7\IDE\Extensions\TestPlatform\vstest.console.exe | Select-Object -First 1
+        if (-not $vstest) {
+          throw "vstest.console.exe not found"
+        }
+
+        $configuration = "${{ matrix.artifactsConfiguration }}"
+        & $vstest "artifacts/bin/CharLS.Native.Test/${configuration}_net48/CharLS.Native.Test.dll" `
+          "/Platform:x86" `
+          "/Logger:trx;LogFileName=test-results-net48-x86.trx" `
+          "/Settings:tests/CodeCoverage.runsettings" `
+          "/EnableCodeCoverage"
 
     - name: Test CharLS.Native (.NET Framework 4.8 x64)
+      shell: pwsh
       run: |
-        dotnet test --no-build --configuration ${{ matrix.buildConfiguration }} `
-          --logger "trx;LogFileName=test-results-net48-x64.trx" `
-          --collect:"XPlat Code Coverage" `
-          --settings tests/CodeCoverage.runsettings `
-          -- RunConfiguration.TargetPlatform=x64
-      env:
-        VSTEST_PLATFORM_NAME: .NETFramework,Version=v4.8
+        $vstest = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" `
+          -latest `
+          -products * `
+          -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core `
+          -find **\Common7\IDE\Extensions\TestPlatform\vstest.console.exe | Select-Object -First 1
+        if (-not $vstest) {
+          throw "vstest.console.exe not found"
+        }
+
+        $configuration = "${{ matrix.artifactsConfiguration }}"
+        & $vstest "artifacts/bin/CharLS.Native.Test/${configuration}_net48/CharLS.Native.Test.dll" `
+          "/Platform:x64" `
+          "/Logger:trx;LogFileName=test-results-net48-x64.trx" `
+          "/Settings:tests/CodeCoverage.runsettings" `
+          "/EnableCodeCoverage"
 
     - name: Test CharLS.Native (.NET 8.0 x64)
       run: |
-        dotnet test --no-build --configuration ${{ matrix.buildConfiguration }} `
+        dotnet test tests/CharLS.Native.Test.csproj --framework net8.0 --no-build --configuration ${{ matrix.buildConfiguration }} `
           --logger "trx;LogFileName=test-results-net80-x64.trx" `
           --collect:"XPlat Code Coverage" `
           --settings tests/CodeCoverage.runsettings `
@@ -82,7 +104,7 @@ jobs:
 
     - name: Test CharLS.Native (.NET 9.0 x64)
       run: |
-        dotnet test --no-build --configuration ${{ matrix.buildConfiguration }} `
+        dotnet test tests/CharLS.Native.Test.csproj --framework net9.0 --no-build --configuration ${{ matrix.buildConfiguration }} `
           --logger "trx;LogFileName=test-results-net90-x64.trx" `
           --collect:"XPlat Code Coverage" `
           --settings tests/CodeCoverage.runsettings `
@@ -90,7 +112,7 @@ jobs:
 
     - name: Test CharLS.Native (.NET 10.0 x64)
       run: |
-        dotnet test --no-build --configuration ${{ matrix.buildConfiguration }} `
+        dotnet test tests/CharLS.Native.Test.csproj --framework net10.0 --no-build --configuration ${{ matrix.buildConfiguration }} `
           --logger "trx;LogFileName=test-results-net100-x64.trx" `
           --collect:"XPlat Code Coverage" `
           --settings tests/CodeCoverage.runsettings `
