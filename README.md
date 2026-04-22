@@ -9,11 +9,11 @@
 CharLS.Native .NET is an adapter assembly that provides access to the native CharLS JPEG-LS C++ implementation for .NET based applications.  
 JPEG-LS (ISO-14495-1) is a lossless/near-lossless compression standard for continuous-tone images.
 
-Remark: a pure C# implemenation is provided with the [CharLS .NET](https://github.com/team-charls/charls-dotnet) project.
+Remark: a pure C# implementation is provided with the [CharLS .NET](https://github.com/team-charls/charls-dotnet) project.
 
 ## Features
 
-* .NET 9.0, .NET 8.0 and .NET Framework 4.8 class library.
+* .NET 10.0, .NET 9.0, .NET 8.0 and .NET Framework 4.8 class library.
 * Support for the .NET platforms: Windows, Linux and macOS.
 * Includes prebuilt native CharLS Windows DLLs (x86, x64 and ARM64).
 
@@ -30,11 +30,11 @@ dotnet add package CharLS.Native
 ### Windows specific installation steps
 
 The NuGet package comes with prebuilt CharLS DLLs for the x86, x64 and ARM64 targets.
-The Microsoft Visual C++ 2015-2022 Redistributable (v14.42 or newer) needs to be installed on the target system.
+The Microsoft Visual C++ v14 Redistributable (v14.50 or newer) needs to be installed on the target system.
 
 ### Linux specific installation steps
 
-A prebuild CharLS shared library can be installed using the Apt package manager:
+A prebuilt CharLS shared library can be installed using the Apt package manager:
 
 ```bash
 sudo apt install libcharls2
@@ -42,7 +42,7 @@ sudo apt install libcharls2
 
 ### MacOS specific installation steps
 
-A prebuild CharLS shared library can be installed using the Homebrew package manager:
+A prebuilt CharLS shared library can be installed using the Homebrew package manager:
 
 ```bash
 brew install team-charls/tap/charls
@@ -61,12 +61,12 @@ A sample application is included in the GitHub repository that demonstrates how 
 ```
 
 * Use CMake to build the native C++ shared library, see the CharLS project how to do that. When building with Visual Studio, this step can be skipped.
-* Use the .NET 9.0 CLI or Visual Studio 2022 (v17.13 or newer) to build the solution file CharLSNativeDotNet.slnx.
+* Use the .NET 10.0 CLI or Visual Studio 2026 (v18.5.1 or newer) to build the solution file CharLSNativeDotNet.sln.
   For example: `dotnet build && dotnet test && dotnet publish` to build the nuget package.
 
 ### Building Windows DLLs and code signing all components
 
-Building the NuGet package with signed Windows DLLs can only be done on the Window platform with Visual Studio 2022 or with Build tools for Visual Studio 2022.
+Building the NuGet package with signed Windows DLLs can only be done on the Window platform with Visual Studio 2026 or with Build tools for Visual Studio 2026.
 To support code signing with a code signing certificate, stored on a smart card, a Windows command file is available: `create-signed-nuget-package.cmd`.
 Instructions:
 
