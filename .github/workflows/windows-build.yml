@@ -1,0 +1,101 @@
+# Copyright (c) Team CharLS.
+# SPDX-License-Identifier: BSD-3-Clause
+
+name: Windows Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  SOLUTION: '*.sln'
+  BUILD_PLATFORM: 'Any CPU'
+
+jobs:
+  windows:
+    runs-on: windows-2025
+
+    strategy:
+      matrix:
+        buildConfiguration: [Debug, Release]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        submodules: 'true'
+        fetch-depth: '1'
+
+    - name: Setup .NET 8.0
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Setup .NET 9.0
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
+
+    - name: Setup .NET 10.0
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.0.x
+
+    - name: Restore NuGet packages
+      run: nuget restore ${{ env.SOLUTION }}
+
+    - name: Build solution
+      run: msbuild ${{ env.SOLUTION }} /p:Configuration=${{ matrix.buildConfiguration }} /p:Platform="${{ env.BUILD_PLATFORM }}"
+
+    - name: Test CharLS.Native (.NET Framework 4.8 x86)
+      run: |
+        dotnet test --no-build --configuration ${{ matrix.buildConfiguration }} `
+          --logger "trx;LogFileName=test-results-net48-x86.trx" `
+          --collect:"XPlat Code Coverage" `
+          --settings tests/CodeCoverage.runsettings `
+          -- RunConfiguration.TargetPlatform=x86
+      env:
+        VSTEST_PLATFORM_NAME: .NETFramework,Version=v4.8
+
+    - name: Test CharLS.Native (.NET Framework 4.8 x64)
+      run: |
+        dotnet test --no-build --configuration ${{ matrix.buildConfiguration }} `
+          --logger "trx;LogFileName=test-results-net48-x64.trx" `
+          --collect:"XPlat Code Coverage" `
+          --settings tests/CodeCoverage.runsettings `
+          -- RunConfiguration.TargetPlatform=x64
+      env:
+        VSTEST_PLATFORM_NAME: .NETFramework,Version=v4.8
+
+    - name: Test CharLS.Native (.NET 8.0 x64)
+      run: |
+        dotnet test --no-build --configuration ${{ matrix.buildConfiguration }} `
+          --logger "trx;LogFileName=test-results-net80-x64.trx" `
+          --collect:"XPlat Code Coverage" `
+          --settings tests/CodeCoverage.runsettings `
+          -- RunConfiguration.TargetPlatform=x64
+
+    - name: Test CharLS.Native (.NET 9.0 x64)
+      run: |
+        dotnet test --no-build --configuration ${{ matrix.buildConfiguration }} `
+          --logger "trx;LogFileName=test-results-net90-x64.trx" `
+          --collect:"XPlat Code Coverage" `
+          --settings tests/CodeCoverage.runsettings `
+          -- RunConfiguration.TargetPlatform=x64
+
+    - name: Test CharLS.Native (.NET 10.0 x64)
+      run: |
+        dotnet test --no-build --configuration ${{ matrix.buildConfiguration }} `
+          --logger "trx;LogFileName=test-results-net100-x64.trx" `
+          --collect:"XPlat Code Coverage" `
+          --settings tests/CodeCoverage.runsettings `
+          -- RunConfiguration.TargetPlatform=x64
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results-${{ matrix.buildConfiguration }}
+        path: '**/TestResults/**'

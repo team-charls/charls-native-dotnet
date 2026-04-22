@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Switched to the artifacts output directory model.
 - Updated referenced NuGet packages.
+- Updated the minimal required Visual Studio version to 2026 when building for Windows
 
 ### Added
 
