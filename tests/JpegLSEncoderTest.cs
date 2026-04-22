@@ -192,7 +192,7 @@ internal sealed class JpegLSEncoderTest
 
         Assert.That(versionComment, Is.Not.Null);
 
-        string versionString = Encoding.UTF8.GetString(versionComment!);
+        string versionString = Encoding.UTF8.GetString(versionComment);
 #if NET8_0_OR_GREATER
         versionString = versionString[..7];
 #else
@@ -287,7 +287,7 @@ internal sealed class JpegLSEncoderTest
         decoder.ReadHeader();
 
         Assert.That(comment, Is.Not.Null);
-        Assert.That(comment!, Is.Empty);
+        Assert.That(comment, Is.Empty);
     }
 
     [Test]
@@ -309,7 +309,7 @@ internal sealed class JpegLSEncoderTest
         using (Assert.EnterMultipleScope())
         {
             Assert.That(comment.IsEmpty, Is.False);
-            Assert.That(comment!.Length, Is.EqualTo(6));
+            Assert.That(comment.Length, Is.EqualTo(6));
         }
 
         using (Assert.EnterMultipleScope())
@@ -398,7 +398,7 @@ internal sealed class JpegLSEncoderTest
             Assert.That(applicationDataId, Is.EqualTo(15));
             Assert.That(applicationData, Is.Not.Null);
         }
-        Assert.That(applicationData!, Is.Empty);
+        Assert.That(applicationData, Is.Empty);
     }
 
     [Test]

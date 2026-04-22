@@ -91,7 +91,7 @@ internal sealed class FrameInfoTest
     {
         FrameInfo a = new(256, 1024, 8, 3);
 
-        bool equals = a.Equals(null!);
+        bool equals = a.Equals(null);
        
         Assert.That(equals, Is.False);
     }

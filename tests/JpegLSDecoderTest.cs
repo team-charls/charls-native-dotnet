@@ -348,9 +348,9 @@ internal sealed class JpegLSDecoderTest
             string assemblyLocation = AppContext.BaseDirectory;
 
 #if NET8_0_OR_GREATER
-            return Path.Join(Path.GetDirectoryName(assemblyLocation), "DataFiles");
+            return Path.Join(assemblyLocation, "DataFiles");
 #else
-            return Path.Combine(Path.GetDirectoryName(assemblyLocation)!, "DataFiles");
+            return Path.Combine(Path.GetDirectoryName(assemblyLocation), "DataFiles");
 #endif
         }
     }
