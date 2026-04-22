@@ -8,7 +8,7 @@ variables:
 jobs:
 - job: 'windows'
   pool:
-    vmImage: 'windows-latest'
+    vmImage: 'windows-2025-vs2026'
   displayName: 'Windows - '
 
   strategy:
@@ -53,7 +53,7 @@ jobs:
       configuration: '$(buildConfiguration)'
 
   - task: VSTest@2
-    displayName: 'Test Charls.Native (.NET Framework 4.8 x86)'
+    displayName: 'Test CharLS.Native (.NET Framework 4.8 x86)'
     inputs:
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
@@ -67,7 +67,7 @@ jobs:
       runSettingsFile: 'tests\CodeCoverage.runsettings'
 
   - task: VSTest@2
-    displayName: 'Test Charls.Native (.NET Framework 4.8 x64)'
+    displayName: 'Test CharLS.Native (.NET Framework 4.8 x64)'
     inputs:
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
@@ -81,7 +81,7 @@ jobs:
       runSettingsFile: 'tests\CodeCoverage.runsettings'
 
   - task: VSTest@2
-    displayName: 'Test Charls.Native (.NET 8.0 x64)'
+    displayName: 'Test CharLS.Native (.NET 8.0 x64)'
     inputs:
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
@@ -95,7 +95,7 @@ jobs:
       runSettingsFile: 'tests\CodeCoverage.runsettings'
 
   - task: VSTest@2
-    displayName: 'Test Charls.Native (.NET 9.0 x64)'
+    displayName: 'Test CharLS.Native (.NET 9.0 x64)'
     inputs:
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
@@ -109,7 +109,7 @@ jobs:
       runSettingsFile: 'tests\CodeCoverage.runsettings'
 
   - task: VSTest@2
-    displayName: 'Test Charls.Native (.NET 10.0 x64)'
+    displayName: 'Test CharLS.Native (.NET 10.0 x64)'
     inputs:
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
