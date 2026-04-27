@@ -21,11 +21,6 @@ public sealed class JpegLSEncoder : IDisposable
     public const int AutoCalculateStride = 0;
 
     private readonly SafeHandleJpegLSEncoder _encoder = CreateEncoder();
-    private FrameInfo _frameInfo;
-    private int _nearLossless;
-    private JpegLSInterleaveMode _interleaveMode;
-    private JpegLSPresetCodingParameters? _presetCodingParameters;
-    private EncodingOptions _encodingOptions = EncodingOptions.IncludePCParametersJai;
     private Memory<byte> _destination;
     private MemoryHandle _destinationPin;
 
@@ -94,7 +89,7 @@ public sealed class JpegLSEncoder : IDisposable
     /// <exception cref="ArgumentNullException">Thrown when the passed FrameInfo instance is null.</exception>
     public FrameInfo FrameInfo
     {
-        get => _frameInfo;
+        get;
 
         set
         {
@@ -107,7 +102,7 @@ public sealed class JpegLSEncoder : IDisposable
             };
 
             HandleJpegLSError(CharLSSetFrameInfo(_encoder, ref infoNative));
-            _frameInfo = value;
+            field = value;
         }
     }
 
@@ -120,12 +115,12 @@ public sealed class JpegLSEncoder : IDisposable
     /// <exception cref="ArgumentException">Thrown when the passed value is invalid.</exception>
     public int NearLossless
     {
-        get => _nearLossless;
+        get;
 
         set
         {
             HandleJpegLSError(CharLSSetNearLossless(_encoder, value));
-            _nearLossless = value;
+            field = value;
         }
     }
 
@@ -138,12 +133,12 @@ public sealed class JpegLSEncoder : IDisposable
     /// <exception cref="ArgumentException">Thrown when the passed value is invalid for the defined image.</exception>
     public JpegLSInterleaveMode InterleaveMode
     {
-        get => _interleaveMode;
+        get;
 
         set
         {
             HandleJpegLSError(CharLSSetInterleaveMode(_encoder, value));
-            _interleaveMode = value;
+            field = value;
         }
     }
 
@@ -156,14 +151,14 @@ public sealed class JpegLSEncoder : IDisposable
     /// <exception cref="InvalidEnumArgumentException">Thrown when the passed enum value is invalid.</exception>
     public EncodingOptions EncodingOptions
     {
-        get => _encodingOptions;
+        get;
 
         set
         {
             HandleJpegLSError(CharLSSetEncodingOptions(_encoder, value));
-            _encodingOptions = value;
+            field = value;
         }
-    }
+    } = EncodingOptions.IncludePCParametersJai;
 
     /// <summary>
     /// Gets or sets the JPEG-LS preset coding parameters.
@@ -174,7 +169,7 @@ public sealed class JpegLSEncoder : IDisposable
     /// <exception cref="ArgumentNullException">value.</exception>
     public JpegLSPresetCodingParameters? PresetCodingParameters
     {
-        get => _presetCodingParameters;
+        get;
 
         set
         {
@@ -195,7 +190,7 @@ public sealed class JpegLSEncoder : IDisposable
             };
 
             HandleJpegLSError(CharLSSetPresetCodingParameters(_encoder, ref native));
-            _presetCodingParameters = value;
+            field = value;
         }
     }
 
