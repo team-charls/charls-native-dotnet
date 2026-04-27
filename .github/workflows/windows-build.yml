@@ -119,7 +119,7 @@ jobs:
           -- RunConfiguration.TargetPlatform=x64
 
     - name: Upload test results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       if: always()
       with:
         name: test-results-${{ matrix.buildConfiguration }}
