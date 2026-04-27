@@ -22,7 +22,6 @@ public sealed class JpegLSDecoder : IDisposable
     private FrameInfo? _frameInfo;
     private int? _nearLossless;
     private JpegLSInterleaveMode? _interleaveMode;
-    private ReadOnlyMemory<byte> _source;
     private MemoryHandle _sourcePin;
     private AtCommentHandler? _atCommentHandler;
     private AtApplicationDataHandler? _atApplicationData;
@@ -104,7 +103,7 @@ public sealed class JpegLSDecoder : IDisposable
     /// <exception cref="ObjectDisposedException">Thrown when the instance is used after being disposed.</exception>
     public ReadOnlyMemory<byte> Source
     {
-        get => _source;
+        get;
 
         set
         {
@@ -119,7 +118,7 @@ public sealed class JpegLSDecoder : IDisposable
                         (nuint)value.Length));
                 }
 
-                _source = value;
+                field = value;
             }
             catch
             {
