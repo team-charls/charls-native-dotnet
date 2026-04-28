@@ -6,9 +6,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>4.0.0</Version>
+    <Version>4.1.0</Version>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
-    <FileVersion>4.0.0.0</FileVersion>
+    <FileVersion>4.1.0.0</FileVersion>
     <Copyright>Copyright 2024 Team CharLS</Copyright>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -41,7 +41,9 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
 
     <_CertificateThumbprint>$(CertificateThumbprint)</_CertificateThumbprint>
-    <_CertificateThumbprint Condition="'$(_CertificateThumbprint)' == ''">b834c6c1d7e0ae8e76cadcf9e2e7a273133a5df6</_CertificateThumbprint>
+    <_CertificateThumbprint Condition="'$(_CertificateThumbprint)' == ''">0a0a208b4bcf6681eb32abc5a60ef1dee52903c6</_CertificateThumbprint>
+    <_CertificateThumbprint256>$(CertificateThumbprint256)</_CertificateThumbprint256>
+    <_CertificateThumbprint256 Condition="'$(_CertificateThumbprint256)' == ''">99E11E2A44D25F4AFA247A4074FB8655A223C69BB607024A9DCB03747654A0BE</_CertificateThumbprint256>
     <_TimestampUrl>$(TimestampUrl)</_TimestampUrl>
     <_TimestampUrl Condition="'$(_TimestampUrl)' == ''">http://time.certum.pl/</_TimestampUrl>
   </PropertyGroup>
@@ -107,16 +109,16 @@
   <Target Name="SignWindowsDlls" BeforeTargets="GenerateNuspec" Condition="'$(MSBuildRuntimeType)'=='Full'">
     <!-- Use TargetFrameworkVersion=v4.5 to sign with SHA256 -->
     <Message Text="Signing CharLS.Native.dll (.NET Framework 4.8)" />
-    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)net48\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
+    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath.TrimEnd('\'))_net48\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
 
     <Message Text="Signing CharLS.Native.dll (.NET 8.0)" />
-    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)net8.0\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
+    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath.TrimEnd('\'))_net8.0\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
 
     <Message Text="Signing CharLS.Native.dll (.NET 9.0)" />
-    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)net9.0\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
+    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath.TrimEnd('\'))_net9.0\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
 
     <Message Text="Signing CharLS.Native.dll (.NET 10.0)" />
-    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)net10.0\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
+    <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath.TrimEnd('\'))_net10.0\CharLS.Native.dll" TargetFrameworkVersion="v4.5" />
 
     <Message Text="Signing charls-2-x64.dll" />
     <SignFile CertificateThumbprint="$(_CertificateThumbprint)" TimestampUrl="$(_TimestampUrl)" SigningTarget="$(OutputPath)charls-2-x64.dll" TargetFrameworkVersion="v4.5" />
@@ -129,8 +131,8 @@
   </Target>
 
   <Target Name="SignPackage" AfterTargets="Pack" Condition="'$(MSBuildRuntimeType)'=='Full'">
-    <Exec Command="nuget sign $(OutputPath)$(PackageId).$(Version).nupkg -Timestamper $(_TimestampUrl) -CertificateFingerprint $(_CertificateThumbprint)" />
-    <Exec Command="nuget sign $(OutputPath)$(PackageId).$(Version).snupkg -Timestamper $(_TimestampUrl) -CertificateFingerprint $(_CertificateThumbprint)" />
+    <Exec Command="nuget sign $(ArtifactsPath)\package\$(Configuration)\$(PackageId).$(Version).nupkg -Timestamper $(_TimestampUrl) -CertificateFingerprint $(_CertificateThumbprint256)" />
+    <Exec Command="nuget sign $(ArtifactsPath)\package\$(Configuration)\$(PackageId).$(Version).snupkg -Timestamper $(_TimestampUrl) -CertificateFingerprint $(_CertificateThumbprint256)" />
   </Target>
 
 </Project>
