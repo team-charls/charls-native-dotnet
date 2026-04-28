@@ -42,7 +42,7 @@
 
     <_CertificateThumbprint>$(CertificateThumbprint)</_CertificateThumbprint>
     <_CertificateThumbprint Condition="'$(_CertificateThumbprint)' == ''">0a0a208b4bcf6681eb32abc5a60ef1dee52903c6</_CertificateThumbprint>
-    <_CertificateThumbprint256 Condition="'$(_CertificateThumbprint256)' != ''">$(CertificateThumbprint256)</_CertificateThumbprint256>
+    <_CertificateThumbprint256>$(CertificateThumbprint256)</_CertificateThumbprint256>
     <_CertificateThumbprint256 Condition="'$(_CertificateThumbprint256)' == ''">99E11E2A44D25F4AFA247A4074FB8655A223C69BB607024A9DCB03747654A0BE</_CertificateThumbprint256>
     <_TimestampUrl>$(TimestampUrl)</_TimestampUrl>
     <_TimestampUrl Condition="'$(_TimestampUrl)' == ''">http://time.certum.pl/</_TimestampUrl>
