@@ -1,4 +1,4 @@
-4.0.0
- - Added support for .NET 9.0
- - Removed support for .NET 6.0
- - Removed support for .NET 7.0
+4.1.0
+ - Added support for .NET 10.0
+ - Updated CharLS binary to v2.3.4
+ 
