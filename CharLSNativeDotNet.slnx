@@ -1,0 +1,18 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".globalconfig" />
+    <File Path="azure-pipelines.yml" />
+    <File Path="CHANGELOG.md" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="LICENSE.md" />
+    <File Path="nuget.config" />
+    <File Path="README.md" />
+    <File Path="SECURITY.md" />
+  </Folder>
+  <Project Path="aot-compatibility-test/AotCompatibilityTestApp.csproj" />
+  <Project Path="samples/Convert/Convert.csproj" />
+  <Project Path="src/CharLS.Native.csproj" />
+  <Project Path="tests/CharLS.Native.Test.csproj" />
+</Solution>

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 variables:
-  solution: '*.sln'
+  solution: '*.slnx'
   buildPlatform: 'Any CPU'
 
 jobs:
