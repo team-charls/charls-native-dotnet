@@ -10,7 +10,7 @@ on:
     branches: [main]
 
 env:
-  SOLUTION: 'CharLSNativeDotNet.sln'
+  SOLUTION: 'CharLSNativeDotNet.slnx'
   BUILD_PLATFORM: 'Any CPU'
 
 jobs:
