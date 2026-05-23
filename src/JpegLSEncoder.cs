@@ -21,7 +21,6 @@ public sealed class JpegLSEncoder : IDisposable
     public const int AutoCalculateStride = 0;
 
     private readonly SafeHandleJpegLSEncoder _encoder = CreateEncoder();
-    private Memory<byte> _destination;
     private MemoryHandle _destinationPin;
 
     /// <summary>
@@ -219,7 +218,7 @@ public sealed class JpegLSEncoder : IDisposable
     /// <exception cref="ArgumentException">Thrown when the passed value is an empty buffer.</exception>
     public Memory<byte> Destination
     {
-        get => _destination;
+        get;
 
         set
         {
@@ -234,11 +233,11 @@ public sealed class JpegLSEncoder : IDisposable
                         (byte*)_destinationPin.Pointer, (nuint)value.Length));
                 }
 
-                _destination = value;
+                field = value;
             }
             catch
             {
-                _destination = default;
+                field = default;
                 _destinationPin.Dispose();
                 throw;
             }
@@ -252,9 +251,9 @@ public sealed class JpegLSEncoder : IDisposable
     /// The memory region with the encoded data.
     /// </value>
 #if NET8_0_OR_GREATER
-    public ReadOnlyMemory<byte> EncodedData => _destination[..BytesWritten];
+    public ReadOnlyMemory<byte> EncodedData => Destination[..BytesWritten];
 #else
-    public ReadOnlyMemory<byte> EncodedData => _destination.Slice(0, BytesWritten);
+    public ReadOnlyMemory<byte> EncodedData => Destination.Slice(0, BytesWritten);
 #endif
 
     /// <summary>
