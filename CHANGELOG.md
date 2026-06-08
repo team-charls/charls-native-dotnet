@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1.1 - 2026-06-08]
+
+### Changed
+
+- Updated CharLS binary for Windows to v2.4.4.
+
 ## [4.1.0 - 2026-05-23]
 
 ### Changed
@@ -11,7 +17,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Switched to the artifacts output directory model.
 - Updated referenced NuGet packages.
 - Updated the minimal required Visual Studio version to 2026 when building for Windows
-- Updated CharLS binary for Windows to v2.3.4.
+- Updated CharLS binary for Windows to v2.4.3.
 
 ### Added
 
