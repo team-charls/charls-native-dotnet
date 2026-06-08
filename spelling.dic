@@ -1,6 +1,7 @@
 accessibilities
 binlog
 buildtransitive
+charls
 contentfiles
 DBUILD
 DCHARLS
@@ -12,12 +13,15 @@ JBIG
 jfif
 libcharls
 MAXVAL
+msbuild
 nunit
 opensdf
 resharper
 RGBRGBRGB
 RRRGGGBBB
+snupkg
 stylecop
+Timestamper
 typeparam
 Unmappable
 VRES
