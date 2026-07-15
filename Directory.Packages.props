@@ -6,7 +6,7 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.8.0" />
     <PackageVersion Include="System.Drawing.Common" Version="10.0.9" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.1.118" />
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.300" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.301" />
     <PackageVersion Include="System.Memory" Version="4.6.3" />
   </ItemGroup>
 </Project>
