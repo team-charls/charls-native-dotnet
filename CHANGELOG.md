@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1.2 - 2026-10-12]
+
+### Changed
+
+- Updated CharLS binary for Windows to v2.4.5.
+
 ## [4.1.1 - 2026-06-08]
 
 ### Changed

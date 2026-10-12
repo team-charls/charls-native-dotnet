@@ -1,3 +1,2 @@
-4.1.1
- - Added support for .NET 10.0
- - Updated CharLS binary to v2.4.4
+4.1.2
+ - Updated CharLS binary to v2.4.5
