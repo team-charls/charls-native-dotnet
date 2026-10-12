@@ -37,7 +37,7 @@ sudo apt install libcharls2
 A prebuilt CharLS shared library can be installed using the Homebrew package manager:
 
 ```bash
-brew install team-charls/tap/charls
+brew install charls
 ```
 
 ### How to use the C# classes in the NuGet package
