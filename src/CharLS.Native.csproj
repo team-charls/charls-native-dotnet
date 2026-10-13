@@ -6,9 +6,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>4.1.2</Version>
+    <Version>4.1.3</Version>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
-    <FileVersion>4.1.2.0</FileVersion>
+    <FileVersion>4.1.3.0</FileVersion>
     <Copyright>Copyright 2024 Team CharLS</Copyright>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -96,7 +96,19 @@
     <MSBuild Projects="..\extern\charls\src\CharLS.vcxproj" Targets="Build" Properties="Configuration=$(Configuration);Platform=ARM64;CHARLS_DETERMINISTIC_BUILD=true" />
   </Target>
 
+  <!-- Copy native Windows CharLS binaries after building them: to allow unit testing -->
   <Target Name="CopyNativeWindowsCharLSFiles" DependsOnTargets="BuildNativeWindowsCharLS" BeforeTargets="AssignTargetPaths" Condition="'$(MSBuildRuntimeType)'=='Full'">
+    <ItemGroup>
+      <MySourceFiles Include="..\extern\charls\build\bin\x86\$(Configuration)\charls-2-x86.dll" />
+      <MySourceFiles Include="..\extern\charls\build\bin\x64\$(Configuration)\charls-2-x64.dll" />
+      <MySourceFiles Include="..\extern\charls\build\bin\ARM64\$(Configuration)\charls-2-arm64.dll" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
+  </Target>
+
+  <!-- Copy native Windows CharLS binaries and symbols after building them: to allow for NuGet packaging -->
+  <Target Name="CopyNativeWindowsCharLSFiles" DependsOnTargets="BuildNativeWindowsCharLS" AfterTargets="Build" Condition="'$(MSBuildRuntimeType)'=='Full'">
     <ItemGroup>
       <MySourceFiles Include="..\extern\charls\build\bin\x86\$(Configuration)\charls-2-x86.dll;..\extern\charls\build\bin\x86\$(Configuration)\charls-2-x86.pdb" />
       <MySourceFiles Include="..\extern\charls\build\bin\x64\$(Configuration)\charls-2-x64.dll;..\extern\charls\build\bin\x64\$(Configuration)\charls-2-x64.pdb" />
