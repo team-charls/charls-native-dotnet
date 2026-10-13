@@ -30,7 +30,7 @@ dotnet add package CharLS.Native
 ### Windows specific installation steps
 
 The NuGet package comes with prebuilt CharLS DLLs for the x86, x64 and ARM64 targets.
-The Microsoft Visual C++ v14 Redistributable (v14.50 or newer) needs to be installed on the target system.
+The Microsoft Visual C++ v14 Redistributable (v14.51 or newer) needs to be installed on the target system.
 
 ### Linux specific installation steps
 
@@ -61,7 +61,7 @@ A sample application is included in the GitHub repository that demonstrates how 
 ```
 
 * Use CMake to build the native C++ shared library, see the CharLS project how to do that. When building with Visual Studio, this step can be skipped.
-* Use the .NET 10.0 CLI or Visual Studio 2026 (v18.5.1 or newer) to build the solution file CharLSNativeDotNet.slnx.
+* Use the .NET 10.0 CLI or Visual Studio 2026 (v18.10.3 or newer) to build the solution file CharLSNativeDotNet.slnx.
   For example: `dotnet build && dotnet test && dotnet publish` to build the nuget package.
 
 ### Building Windows DLLs and code signing all components
