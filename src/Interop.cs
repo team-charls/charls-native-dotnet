@@ -4,7 +4,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-#if NET8_0_OR_GREATER
+#if NET10_0_OR_GREATER
 using System.Reflection;
 #endif
 using System.Runtime.InteropServices;
@@ -12,13 +12,13 @@ using System.Runtime.InteropServices;
 namespace CharLS.Native;
 
 
-#if NET8_0_OR_GREATER
+#if NET10_0_OR_GREATER
 internal static partial class Interop
 #else
 internal static class Interop
 #endif
 {
-#if NET8_0_OR_GREATER
+#if NET10_0_OR_GREATER
     private const string NativeLibraryName = "charls-2";
 #else
     private const string NativeLibraryNameX86 = "charls-2-x86.dll";
@@ -101,7 +101,7 @@ internal static class Interop
         Justification = "Type is unusable if native DLL doesn't match")]
     static Interop()
     {
-#if NET8_0_OR_GREATER
+#if NET10_0_OR_GREATER
         NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), DllImportResolver);
 #endif
         CharLSGetVersionNumber(out int major, out int minor, out int _);
@@ -112,7 +112,7 @@ internal static class Interop
         }
     }
 
-#if NET8_0_OR_GREATER
+#if NET10_0_OR_GREATER
     [LibraryImport(NativeLibraryName, SetLastError = false, EntryPoint = "charls_get_version_number")]
     internal static partial void CharLSGetVersionNumber(out int major, out int minor, out int patch);
 
@@ -1073,7 +1073,7 @@ internal static class Interop
         return Marshal.PtrToStringAnsi(message) ?? string.Empty;
     }
 
-#if NET8_0_OR_GREATER
+#if NET10_0_OR_GREATER
     private static nint DllImportResolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
     {
         return libraryName != NativeLibraryName
