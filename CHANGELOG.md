@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## Removed
 
 - Support for .NET 8 (.NET 8 is end of support since 2026-11-9).
-- Support for .NET 9 (.NET 7 is end of support since 2026-11-9).
+- Support for .NET 9 (.NET 9 is end of support since 2026-11-9).
 
 ## [4.1.3 - 2026-10-13]
 
