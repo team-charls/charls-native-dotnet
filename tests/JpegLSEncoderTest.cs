@@ -193,7 +193,7 @@ internal sealed class JpegLSEncoderTest
         Assert.That(versionComment, Is.Not.Null);
 
         string versionString = Encoding.UTF8.GetString(versionComment);
-#if NET8_0_OR_GREATER
+#if NET10_0_OR_GREATER
         versionString = versionString[..7];
 #else
         versionString = versionString.Substring(0, 7);

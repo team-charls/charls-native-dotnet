@@ -13,13 +13,14 @@ Remark: a pure C# implementation is provided with the [CharLS .NET](https://gith
 
 ## Features
 
-* .NET 10.0, .NET 9.0, .NET 8.0 and .NET Framework 4.8 class library.
+* .NET 11, .NET 10, and .NET Framework 4.8 class library.
 * Support for the .NET platforms: Windows, Linux and macOS.
 * Includes prebuilt native CharLS Windows DLLs (x86, x64 and ARM64).
 
 ## How to use
 
-CharLS.Native can be added to your C# project using the dotnet command line or the NuGet Package Manager in Visual Studio.
+CharLS.Native can be added to your C# project using the dotnet command line or
+the NuGet Package Manager in Visual Studio.
 
 ### Install using the dotnet command line
 
@@ -30,7 +31,8 @@ dotnet add package CharLS.Native
 ### Windows specific installation steps
 
 The NuGet package comes with prebuilt CharLS DLLs for the x86, x64 and ARM64 targets.
-The Microsoft Visual C++ v14 Redistributable (v14.51 or newer) needs to be installed on the target system.
+The Microsoft Visual C++ v14 Redistributable (v14.52 or newer) needs to be installed
+on the target system.
 
 ### Linux specific installation steps
 
@@ -50,7 +52,8 @@ brew install team-charls/tap/charls
 
 ### How to use the C# classes in the NuGet package
 
-A sample application is included in the GitHub repository that demonstrates how to convert common image types like .bmp, .png and .jpg to .jls (JPEG-LS).
+A sample application is included in the GitHub repository that demonstrates how
+to convert common image types like .bmp, .png and .jpg to .jls (JPEG-LS).
 
 ## General steps to build this repository
 
@@ -61,7 +64,7 @@ A sample application is included in the GitHub repository that demonstrates how 
 ```
 
 * Use CMake to build the native C++ shared library, see the CharLS project how to do that. When building with Visual Studio, this step can be skipped.
-* Use the .NET 10.0 CLI or Visual Studio 2026 (v18.10.3 or newer) to build the solution file CharLSNativeDotNet.slnx.
+* Use the .NET 11.0 CLI or Visual Studio 2026 (v18.12 or newer) to build the solution file CharLSNativeDotNet.slnx.
   For example: `dotnet build && dotnet test && dotnet publish` to build the nuget package.
 
 ### Building Windows DLLs and code signing all components

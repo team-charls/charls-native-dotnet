@@ -45,7 +45,7 @@ public sealed class JpegLSEncoder : IDisposable
     {
         try
         {
-#if NET8_0_OR_GREATER
+#if NET10_0_OR_GREATER
             ArgumentOutOfRangeException.ThrowIfNegative(extraBytes);
 #else
             if (extraBytes < 0)
@@ -172,7 +172,7 @@ public sealed class JpegLSEncoder : IDisposable
 
         set
         {
-#if NET8_0_OR_GREATER
+#if NET10_0_OR_GREATER
             ArgumentNullException.ThrowIfNull(value);
 #else
             if (value is null)
@@ -250,7 +250,7 @@ public sealed class JpegLSEncoder : IDisposable
     /// <value>
     /// The memory region with the encoded data.
     /// </value>
-#if NET8_0_OR_GREATER
+#if NET10_0_OR_GREATER
     public ReadOnlyMemory<byte> EncodedData => Destination[..BytesWritten];
 #else
     public ReadOnlyMemory<byte> EncodedData => Destination.Slice(0, BytesWritten);

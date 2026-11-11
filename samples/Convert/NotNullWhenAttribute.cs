@@ -1,7 +1,7 @@
 // Copyright (c) Team CharLS.
 // SPDX-License-Identifier: BSD-3-Clause
 
-#if !NET8_0_OR_GREATER
+#if !NET10_0_OR_GREATER
 #pragma warning disable IDE0290 // Use primary constructor
 
 namespace System.Diagnostics.CodeAnalysis;
