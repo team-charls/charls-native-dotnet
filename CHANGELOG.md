@@ -1,25 +1,30 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to this project are documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
+The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
+project adheres to [Semantic Versioning](http://semver.org/).
 
-## [5.0.0 - UNRELEASED]
+## [5.0.0 - 2026-11-14]
 
 ### Added
 
-- Support for .NET 11.0
+- Added support for .NET 11.
 
 ## Removed
 
-- Support for .NET 8 (.NET 8 is end of support since 2026-11-9).
-- Support for .NET 9 (.NET 9 is end of support since 2026-11-9).
+- Removed support for .NET 8 (.NET 8 is end of support since 2026-11-9).
+- Removed support for .NET 9 (.NET 9 is end of support since 2026-11-9).
+
+### Changed
+
+- Updated referenced NuGet packages.
 
 ## [4.1.3 - 2026-10-13]
 
 ### Changed
 
-- Updated CharLS binary for Windows to v2.4.5.
+- Updated CharLS binary for Windows to v2.4.5
 
 ## [4.1.1 - 2026-06-08]
 
@@ -38,33 +43,34 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 
-- Support for .NET 10.0
+- Support for .NET 10
 
 ## [4.0.0 - 2024-11-13]
 
 ### Added
 
-- Support for .NET 9.0
+- Support for .NET 9
 
 ### Changed
 
-- Throwing an exception from an event handler is now handled and the Failed property has been removed.
+- Throwing an exception from an event handler is now handled and the Failed
+property has been removed.
 - Changed type of FrameInfo to readonly record struct (aligns with CharLS.DotNet)
 
 ## Removed
 
-- Support for .NET 6.0 (.NET 6.0 is end of support since 2024-11-12).
-- Support for .NET 7.0 (.NET 7.0 is end of support since 2024-05-14).
+- Removed support for .NET 6 (.NET 6 is end of support since 2024-11-12).
+- Removed support for .NET 7 (.NET 7 is end of support since 2024-05-14).
 
 ## [3.2.0 - 2023-11-24]
 
 ### Added
 
-- Support for .NET 8.0
+- Added support for .NET 8.
 
 ### Changed
 
-- CharLS Windows DLLs updated to v2.4.2
+- CharLS Windows DLLs updated to v2.4.2.
 
 ## [3.1.0 - 2023-4-14]
 
@@ -81,7 +87,7 @@ Callbacks AtCommentHandler and AtApplicationDataHandler fail in x86 mode on Wind
 
 ### Changed
 
-- CharLS Windows DLLs updated to v2.4.1
+- CharLS Windows DLLs updated to v2.4.1.
 
 ## [3.0.0 - 2022-12-31]
 
@@ -99,7 +105,8 @@ Callbacks AtCommentHandler and AtApplicationDataHandler fail in x86 mode on Wind
 ### Added
 
 - Support for CharLS v2.3.4. CharLS v2.3.0 is now the minimum required version.
-- JpegLSEncoder constructor has an additional argument extraBytes to create a larger destination buffer.
+- JpegLSEncoder constructor has an additional argument extraBytes to create
+a larger destination buffer.
 - JpegLSEncoder.Rewind() method.
 
 ## Removed
@@ -114,7 +121,7 @@ Callbacks AtCommentHandler and AtApplicationDataHandler fail in x86 mode on Wind
 
 ### Added
 
-- Support for .NET 6.0.
+- Support for .NET 6.
 
 ### Changed
 
