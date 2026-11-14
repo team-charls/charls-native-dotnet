@@ -6,10 +6,13 @@
 [![Build Status](https://dev.azure.com/team-charls/charls-native-dotnet/_apis/build/status/team-charls.charls-native-dotnet?branchName=main)](https://dev.azure.com/team-charls/charls-native-dotnet/_build/latest?definitionId=4&branchName=main)
 [![NuGet](https://img.shields.io/nuget/v/CharLS.Native.svg)](https://www.nuget.org/packages/CharLS.Native)
 
-CharLS.Native .NET is an adapter assembly that provides access to the native CharLS JPEG-LS C++ implementation for .NET based applications.  
-JPEG-LS (ISO-14495-1) is a lossless/near-lossless compression standard for continuous-tone images.
+CharLS.Native .NET is an adapter assembly that provides access to the native
+CharLS JPEG-LS C++ implementation for .NET based applications.  
+JPEG-LS (ISO-14495-1) is a lossless/near-lossless compression standard for
+continuous-tone images.
 
-Remark: a pure C# implementation is provided with the [CharLS .NET](https://github.com/team-charls/charls-dotnet) project.
+Remark: a pure C# implementation is provided with the
+[CharLS .NET](https://github.com/team-charls/charls-dotnet) project.
 
 ## Features
 
@@ -63,25 +66,31 @@ to convert common image types like .bmp, .png and .jpg to .jls (JPEG-LS).
  git clone --recurse-submodules
 ```
 
-* Use CMake to build the native C++ shared library, see the CharLS project how to do that. When building with Visual Studio, this step can be skipped.
-* Use the .NET 11.0 CLI or Visual Studio 2026 (v18.12 or newer) to build the solution file CharLSNativeDotNet.slnx.
+* Use CMake to build the native C++ shared library, see the CharLS project
+how to do that. When building with Visual Studio, this step can be skipped.
+* Use the .NET 11.0 CLI or Visual Studio 2026 (v18.12 or newer) to build
+the solution file CharLSNativeDotNet.slnx.
   For example: `dotnet build && dotnet test && dotnet publish` to build the nuget package.
 
 ### Building Windows DLLs and code signing all components
 
-Building the NuGet package with signed Windows DLLs can only be done on the Window platform with Visual Studio 2026 or with Build tools for Visual Studio 2026.
-To support code signing with a code signing certificate, stored on a smart card, a Windows command file is available: `create-signed-nuget-package.cmd`.
+Building the NuGet package with signed Windows DLLs can only be done on the
+Window platform with Visual Studio 2026 or with Build tools for Visual Studio 2026.
+To support code signing with a code signing certificate, stored on a smart card,
+a Windows command file is available: `create-signed-nuget-package.cmd`.  
 Instructions:
 
 * Open a Visual Studio Developer Command Prompt
 * Go the root of the cloned repository
 * Ensure the code signing certificate is available
 * Execute the command `create-signed-nuget-package.cmd certificate-thumb-print time-stamp-url`  
- The certificate thumbprint and time stamp URL arguments are depending on the used code signing certificate.
+The certificate thumbprint and time stamp URL arguments are depending on the used code signing certificate.
 
- All DLLs and the NuGet package itself will be signed.
+All DLLs and the NuGet package itself will be signed.
 
 ## About the JPEG-LS image compression standard
 
-More information about JPEG-LS can be found in the [README](https://github.com/team-charls/charls/blob/master/README.md) from the C++ CharLS project.
-This repository also contains instructions how the build the native C++ CharLS shared library from source.
+More information about JPEG-LS can be found in the
+[README](https://github.com/team-charls/charls/blob/master/README.md) from
+the C++ CharLS project. This repository also contains instructions how the
+build the native C++ CharLS shared library from source.
